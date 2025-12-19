@@ -1,49 +1,72 @@
 // ui.js
-// UI del cotizador – Etapa 1 (Vehículos)
+// UI del cotizador – Vehículo (con filtro por tipo)
 
 import { getVehicles } from "./dataLoader.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-  // =========================
-  // Elementos del DOM
-  // =========================
+  const typeSelect = document.getElementById("vehicle-type-select");
   const brandSelect = document.getElementById("brand");
   const modelSelect = document.getElementById("model");
   const pvpField = document.getElementById("pvp");
   const vehicleTypeField = document.getElementById("vehicle-type");
 
-  // =========================
-  // Cargar vehículos
-  // =========================
   const vehicles = await getVehicles();
 
   // =========================
-  // Poblar marcas (únicas)
+  // Cambio de tipo de vehículo
   // =========================
-  const brands = [...new Set(vehicles.map(v => v.Marca))].sort();
+  typeSelect.addEventListener("change", () => {
+    const selectedType = typeSelect.value;
 
-  brandSelect.innerHTML = `<option value="">Seleccione marca</option>`;
-  brands.forEach(brand => {
-    const opt = document.createElement("option");
-    opt.value = brand;
-    opt.textContent = brand;
-    brandSelect.appendChild(opt);
+    brandSelect.innerHTML = `<option value="">Seleccione marca</option>`;
+    modelSelect.innerHTML = `<option value="">Seleccione modelo</option>`;
+    pvpField.textContent = "-";
+    vehicleTypeField.textContent = "-";
+
+    brandSelect.disabled = true;
+    modelSelect.disabled = true;
+
+    if (!selectedType) return;
+
+    const brands = [
+      ...new Set(
+        vehicles
+          .filter(v => v.TipoVehiculo === selectedType)
+          .map(v => v.Marca)
+      )
+    ].sort();
+
+    brands.forEach(brand => {
+      const opt = document.createElement("option");
+      opt.value = brand;
+      opt.textContent = brand;
+      brandSelect.appendChild(opt);
+    });
+
+    brandSelect.disabled = false;
   });
 
   // =========================
-  // Evento: cambio de marca
+  // Cambio de marca
   // =========================
   brandSelect.addEventListener("change", () => {
+    const selectedType = typeSelect.value;
     const selectedBrand = brandSelect.value;
 
     modelSelect.innerHTML = `<option value="">Seleccione modelo</option>`;
     pvpField.textContent = "-";
     vehicleTypeField.textContent = "-";
 
+    modelSelect.disabled = true;
+
     if (!selectedBrand) return;
 
-    const models = vehicles.filter(v => v.Marca === selectedBrand);
+    const models = vehicles.filter(
+      v =>
+        v.TipoVehiculo === selectedType &&
+        v.Marca === selectedBrand
+    );
 
     models.forEach(v => {
       const opt = document.createElement("option");
@@ -51,19 +74,25 @@ document.addEventListener("DOMContentLoaded", async () => {
       opt.textContent = `${v.Modelo} ${v["Version Modelo"]}`;
       modelSelect.appendChild(opt);
     });
+
+    modelSelect.disabled = false;
   });
 
   // =========================
-  // Evento: cambio de modelo
+  // Cambio de modelo
   // =========================
   modelSelect.addEventListener("change", () => {
+    const selectedType = typeSelect.value;
     const selectedBrand = brandSelect.value;
     const selectedModel = modelSelect.value;
 
-    if (!selectedBrand || !selectedModel) return;
+    if (!selectedModel) return;
 
     const vehicle = vehicles.find(
-      v => v.Marca === selectedBrand && v.Modelo === selectedModel
+      v =>
+        v.TipoVehiculo === selectedType &&
+        v.Marca === selectedBrand &&
+        v.Modelo === selectedModel
     );
 
     if (!vehicle) return;
