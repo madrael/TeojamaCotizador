@@ -1,12 +1,41 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Cotizador Teojama</title>
+  <meta charset="UTF-8" />
+  <title>Cotizador de Vehículos – Teojama</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
-  <h1>Cotizador de Vehículos – Teojama Comercial</h1>
-  <p>GitHub Pages funcionando correctamente.</p>
+
+  <!-- LOGIN -->
+  <section id="login-section">
+    <h1>Cotizador de Vehículos – Teojama Comercial</h1>
+
+    <label>
+      Usuario:
+      <input type="text" id="username" />
+    </label>
+
+    <label>
+      Contraseña:
+      <input type="password" id="password" />
+    </label>
+
+    <button id="login-btn">Ingresar</button>
+
+    <p id="login-error" style="color:red; display:none;"></p>
+  </section>
+
+  <!-- COTIZADOR -->
+  <section id="quote-section" style="display:none;">
+    <h2>Formulario de Cotización</h2>
+    <p>Usuario autenticado correctamente.</p>
+
+    <button id="logout-btn">Cerrar sesión</button>
+  </section>
+
+  <script type="module" src="assets/js/auth.js"></script>
 </body>
 </html>
+
 
