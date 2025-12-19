@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>Cotizador de Vehículos – Teojama Comercial</title>
 
-  <!-- Estilos -->
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
@@ -17,29 +16,25 @@
 
     <div>
       <label for="username">Usuario:</label>
-      <input type="text" id="username" autocomplete="username" />
+      <input type="text" id="username" />
     </div>
 
     <div>
       <label for="password">Contraseña:</label>
-      <input type="password" id="password" autocomplete="current-password" />
+      <input type="password" id="password" />
     </div>
 
-    <div>
-      <button id="login-btn">Ingresar</button>
-    </div>
-
-    <p id="login-error" style="color: red; display: none;"></p>
+    <button id="login-btn">Ingresar</button>
+    <p id="login-error" style="color:red; display:none;"></p>
   </section>
 
   <!-- ===================== -->
   <!-- COTIZADOR -->
   <!-- ===================== -->
-  <section id="quote-section" style="display: none;">
+  <section id="quote-section" style="display:none;">
     <h2>Formulario de Cotización</h2>
 
     <p id="welcome-user"></p>
-
     <button id="logout-btn">Cerrar sesión</button>
 
     <hr />
@@ -50,13 +45,22 @@
     <h3>Datos del vehículo</h3>
 
     <div>
+      <label for="vehicle-type-select">Tipo de vehículo:</label>
+      <select id="vehicle-type-select">
+        <option value="">Seleccione tipo</option>
+        <option value="Liviano">Liviano</option>
+        <option value="Pesado">Pesado</option>
+      </select>
+    </div>
+
+    <div>
       <label for="brand">Marca:</label>
-      <select id="brand"></select>
+      <select id="brand" disabled></select>
     </div>
 
     <div>
       <label for="model">Modelo:</label>
-      <select id="model"></select>
+      <select id="model" disabled></select>
     </div>
 
     <div>
@@ -70,12 +74,7 @@
     </div>
 
     <hr />
-
-    <!-- ===================== -->
-    <!-- PRÓXIMAS SECCIONES -->
-    <!-- ===================== -->
-    <p>🚧 Tasas, dispositivo, seguro y cálculo en construcción…</p>
-
+    <p>🚧 Tasas, dispositivo y cálculo en construcción…</p>
   </section>
 
   <!-- ===================== -->
