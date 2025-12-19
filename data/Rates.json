@@ -1,0 +1,127 @@
+[
+  {
+    "IdTasa": "TZ001",
+    "TasaAnual": 15.99,
+    "Plazos": [{
+              "IdPlazo": "PL01",
+              "VPlazo": 12
+               },
+               {
+              "IdPlazo": "PL02",
+              "VPlazo": 24
+               },
+               {
+              "IdPlazo": "PL03",
+              "VPlazo": 36
+               },
+               {
+              "IdPlazo": "PL04",
+              "VPlazo": 48
+               },
+               {
+              "IdPlazo": "PL05",
+              "VPlazo": 60
+               }
+              ]
+  },
+  {
+    "IdTasa": "TZ002",
+    "TasaAnual": 15.6,
+    "Plazos": [{
+              "IdPlazo": "PL01",
+              "VPlazo": 12
+               },
+               {
+              "IdPlazo": "PL02",
+              "VPlazo": 24
+               },
+               {
+              "IdPlazo": "PL03",
+              "VPlazo": 36
+               },
+               {
+              "IdPlazo": "PL04",
+              "VPlazo": 48
+               },
+               {
+              "IdPlazo": "PL05",
+              "VPlazo": 60
+               }
+              ]
+  },
+  {
+    "IdTasa": "TZ003",
+    "TasaAnual": 15.49,
+    "Plazos": [{
+              "IdPlazo": "PL01",
+              "VPlazo": 12
+               },
+               {
+              "IdPlazo": "PL02",
+              "VPlazo": 24
+               },
+               {
+              "IdPlazo": "PL03",
+              "VPlazo": 36
+               },
+               {
+              "IdPlazo": "PL04",
+              "VPlazo": 48
+               },
+               {
+              "IdPlazo": "PL05",
+              "VPlazo": 60
+               }
+              ]
+  },
+  {
+    "IdTasa": "TZ004",
+    "TasaAnual": 13.99,
+    "Plazos": [{
+              "IdPlazo": "PL01",
+              "VPlazo": 12
+               },
+               {
+              "IdPlazo": "PL02",
+              "VPlazo": 24
+               },
+               {
+              "IdPlazo": "PL03",
+              "VPlazo": 36
+               },
+               {
+              "IdPlazo": "PL04",
+              "VPlazo": 48
+               },
+               {
+              "IdPlazo": "PL05",
+              "VPlazo": 60
+               }
+              ]
+  },
+  {
+    "IdTasa": "TZ005",
+    "TasaAnual": 1,
+    "Plazos": [{
+              "IdPlazo": "PL01",
+              "VPlazo": 12
+               },
+               {
+              "IdPlazo": "PL02",
+              "VPlazo": 24
+               },
+               {
+              "IdPlazo": "PL03",
+              "VPlazo": 36
+               },
+               {
+              "IdPlazo": "PL04",
+              "VPlazo": 48
+               },
+               {
+              "IdPlazo": "PL05",
+              "VPlazo": 60
+               }
+              ]
+  }
+]

@@ -1,0 +1,465 @@
+[
+  {
+    "idPlan": 20,
+    "codigo": "PLAN_COLAB_AUDIOAUTO",
+    "proveedor": "AUDIOAUTO S.A.S.",
+    "tipoCliente": "COLABORADOR",
+    "tipoPlan": "COLABORADORES",
+    "prioridad": 1,
+    "tasaDispositivo": 1,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 380,
+      "2": 520,
+      "3": 660,
+      "4": 800,
+      "5": 950
+    }
+  },
+  {
+    "idPlan": 42,
+    "codigo": "STD_AUDIOAUTO_15.99%",
+    "proveedor": "AUDIOAUTO S.A.S.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 1,
+    "tasaDispositivo": 15.99,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 598,
+      "2": 920,
+      "3": 1253.5,
+      "4": 1575.5,
+      "5": 1897.5,
+      "6": 1897.5
+    }
+  },
+  {
+    "idPlan": 25,
+    "codigo": "STD_AUDIOAUTO_12.99%",
+    "proveedor": "AUDIOAUTO S.A.S.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 2,
+    "tasaDispositivo": 12.99,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 598,
+      "2": 920,
+      "3": 1253.5,
+      "4": 1575.5,
+      "5": 1897.5,
+      "6": 1897.5
+    }
+  },
+  {
+    "idPlan": 24,
+    "codigo": "STD_AUDIOAUTO_13.99%",
+    "proveedor": "AUDIOAUTO S.A.S.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 3,
+    "tasaDispositivo": 13.99,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 598,
+      "2": 920,
+      "3": 1253.5,
+      "4": 1575.5,
+      "5": 1897.5,
+      "6": 1897.5
+    }
+  },
+  {
+    "idPlan": 27,
+    "codigo": "STD_AUDIOAUTO_14.50%",
+    "proveedor": "AUDIOAUTO S.A.S.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 4,
+    "tasaDispositivo": 14.5,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 598,
+      "2": 920,
+      "3": 1253.5,
+      "4": 1575.5,
+      "5": 1897.5,
+      "6": 1897.5
+    }
+  },
+  {
+    "idPlan": 26,
+    "codigo": "STD_AUDIOAUTO_14.99%",
+    "proveedor": "AUDIOAUTO S.A.S.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 5,
+    "tasaDispositivo": 14.99,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 598,
+      "2": 920,
+      "3": 1253.5,
+      "4": 1575.5,
+      "5": 1897.5,
+      "6": 1897.5
+    }
+  },
+  {
+    "idPlan": 28,
+    "codigo": "STD_AUDIOAUTO_15.00%",
+    "proveedor": "AUDIOAUTO S.A.S.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 6,
+    "tasaDispositivo": 15,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 598,
+      "2": 920,
+      "3": 1253.5,
+      "4": 1575.5,
+      "5": 1897.5,
+      "6": 1897.5
+    }
+  },
+  {
+    "idPlan": 23,
+    "codigo": "REFACT_AUDIOAUTO_1%",
+    "proveedor": "AUDIOAUTO S.A.S.",
+    "tipoCliente": "REFINANCIADO",
+    "tipoPlan": "REFINANCIADOS",
+    "prioridad": 7,
+    "tasaDispositivo": 1,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 598,
+      "2": 920,
+      "3": 1253.5,
+      "4": 1575.5,
+      "5": 1897.5
+    }
+  },
+  {
+    "idPlan": 18,
+    "codigo": "PLAN_REF_AUDIOAUTO",
+    "proveedor": "AUDIOAUTO S.A.S.",
+    "tipoCliente": "REFINANCIADO",
+    "tipoPlan": "REFINANCIADOS",
+    "prioridad": 1,
+    "tasaDispositivo": 1,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 598,
+      "2": 920,
+      "3": 1253.5,
+      "4": 1575.5,
+      "5": 1897.5
+    }
+  },
+  {
+    "idPlan": 36,
+    "codigo": "REFINAN_AUDIOAUTO_1% PESADOS",
+    "proveedor": "AUDIOAUTO S.A.S.",
+    "tipoCliente": "REFINANCIADO",
+    "tipoPlan": "REFINANCIADOS",
+    "prioridad": 15,
+    "tasaDispositivo": 1,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 460,
+      "2": 644,
+      "3": 813.05,
+      "4": 987.85,
+      "5": 1198.3
+    }
+  },
+  {
+    "idPlan": 5,
+    "codigo": "PLAN_COLABORADORES",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "COLABORADOR",
+    "tipoPlan": "COLABORADORES",
+    "prioridad": 1,
+    "tasaDispositivo": 1,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 382.38,
+      "2": 524.4,
+      "3": 666.43,
+      "4": 808.45,
+      "5": 950.48
+    }
+  },
+  {
+    "idPlan": 15,
+    "codigo": "PLAN_ESTANDAR_15.60%",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 1,
+    "tasaDispositivo": 15.6,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 693.45,
+      "2": 1046.5,
+      "3": 1311,
+      "4": 1762.95,
+      "5": 2013.65
+    }
+  },
+  {
+    "idPlan": 14,
+    "codigo": "PLAN_ESTANDAR_13.99%",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 2,
+    "tasaDispositivo": 13.99,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 693.45,
+      "2": 1046.5,
+      "3": 1311,
+      "4": 1762.95,
+      "5": 2013.65
+    }
+  },
+  {
+    "idPlan": 12,
+    "codigo": "PLAN_ESTANDAR_14.49%",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 3,
+    "tasaDispositivo": 14.49,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 693.45,
+      "2": 1046.5,
+      "3": 1311,
+      "4": 1762.95,
+      "5": 2013.65
+    }
+  },
+  {
+    "idPlan": 6,
+    "codigo": "PLAN_ESTANDAR_14.50%",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 4,
+    "tasaDispositivo": 14.5,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 693.45,
+      "2": 1046.5,
+      "3": 1311,
+      "4": 1762.95,
+      "5": 2013.65
+    }
+  },
+  {
+    "idPlan": 7,
+    "codigo": "PLAN_ESTANDAR_14.60%",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 5,
+    "tasaDispositivo": 14.6,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 693.45,
+      "2": 1046.5,
+      "3": 1311,
+      "4": 1762.95,
+      "5": 2013.65
+    }
+  },
+  {
+    "idPlan": 8,
+    "codigo": "PLAN_ESTANDAR_14.99%",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 6,
+    "tasaDispositivo": 14.99,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 693.45,
+      "2": 1046.5,
+      "3": 1311,
+      "4": 1762.95,
+      "5": 2013.65
+    }
+  },
+  {
+    "idPlan": 29,
+    "codigo": "STD_RASTRACK_15.00%",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 7,
+    "tasaDispositivo": 15,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 693.45,
+      "2": 1046.5,
+      "3": 1311,
+      "4": 1762.95,
+      "5": 2013.65
+    }
+  },
+  {
+    "idPlan": 16,
+    "codigo": "PLAN_ESTANDAR_15.49%",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 8,
+    "tasaDispositivo": 15.49,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 693.45,
+      "2": 1046.5,
+      "3": 1311,
+      "4": 1762.95,
+      "5": 2013.65
+    }
+  },
+  {
+    "idPlan": 43,
+    "codigo": "STD_BUS_RASTRACK_1%",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "REFINANCIADO",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 9,
+    "tasaDispositivo": 1,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 578.45,
+      "2": 839.5,
+      "3": 954.5,
+      "4": 1199.45,
+      "5": 1358.15
+    }
+  },
+  {
+    "idPlan": 41,
+    "codigo": "STD_BUS_RASTRACK_15.49%",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 10,
+    "tasaDispositivo": 15.49,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 578.45,
+      "2": 839.5,
+      "3": 954.5,
+      "4": 1199.45,
+      "5": 1358.15
+    }
+  },
+  {
+    "idPlan": 35,
+    "codigo": "STD_PES_RASTRACK_15.99%",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 11,
+    "tasaDispositivo": 15.99,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 693.45,
+      "2": 1046.5,
+      "3": 1311,
+      "4": 1762.95,
+      "5": 2013.65,
+      "6": 2013.65
+    }
+  },
+  {
+    "idPlan": 39,
+    "codigo": "STD_PES_RASTRACK_15.49%",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 12,
+    "tasaDispositivo": 15.49,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 693.45,
+      "2": 1046.5,
+      "3": 1311,
+      "4": 1762.95,
+      "5": 2013.65,
+      "6": 2013.65
+    }
+  },
+  {
+    "idPlan": 32,
+    "codigo": "STD_LIV_RASTRACK_15.99%",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 13,
+    "tasaDispositivo": 15.99,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 598,
+      "2": 920,
+      "3": 1253.5,
+      "4": 1575.5,
+      "5": 1897.5
+    }
+  },
+  {
+    "idPlan": 34,
+    "codigo": "STD_LIV_RASTRACK_15.60%",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "NORMAL",
+    "tipoPlan": "ESTANDAR",
+    "prioridad": 14,
+    "tasaDispositivo": 15.6,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 598,
+      "2": 920,
+      "3": 1253.5,
+      "4": 1575.5,
+      "5": 1897.5
+    }
+  },
+  {
+    "idPlan": 4,
+    "codigo": "PLAN_REFINANCIADO",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "REFINANCIADO",
+    "tipoPlan": "REFINANCIADOS",
+    "prioridad": 1,
+    "tasaDispositivo": 1,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 578.45,
+      "2": 839.5,
+      "3": 954.5,
+      "4": 1199.45,
+      "5": 1358.15
+    }
+  },
+  {
+    "idPlan": 30,
+    "codigo": "PLAN_REF_18MESES",
+    "proveedor": "RASTRACK SATELITAL ECUARASTRACK S.A.",
+    "tipoCliente": "REFINANCIADO",
+    "tipoPlan": "REFINANCIADOS",
+    "prioridad": 3,
+    "tasaDispositivo": 1,
+    "activo": true,
+    "valoresPorAnio": {
+      "1": 847.9
+    }
+  }
+]

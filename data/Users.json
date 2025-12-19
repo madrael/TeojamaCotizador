@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "username": "dclavijo",
+    "password": "Teojama2025",
+    "nombre": "Dayana Clavijo",
+    "rol": "ASESOR_COMERCIAL",
+    "activo": true
+  },
+  {
+    "id": 2,
+    "username": "edherrera",
+    "password": "Teojama2025",
+    "nombre": "Edgar Herrera",
+    "rol": "SUPERVISOR_CREDITO",
+    "activo": true
+  },
+  {
+    "id": 3,
+    "username": "ccastro",
+    "password": "Teojama2026",
+    "nombre": "Christian Castro",
+    "rol": "ADMIN",
+    "activo": true
+  }
+]
