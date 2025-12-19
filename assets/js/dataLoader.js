@@ -3,7 +3,7 @@
 
 /**
  * Cache en memoria
- * Simula un backend en AWS / SAP
+ * Simula un backend
  */
 const cache = {
   vehicles: null,
@@ -25,29 +25,29 @@ async function loadJson(path) {
 /**
  * Vehículos
  */
-export async function getVehicles() {
+async function loadVehicles() {
   if (!cache.vehicles) {
-    cache.vehicles = await loadJson("data/Vehicles.json");
+    cache.vehicles = await loadJson("./data/Vehicles.json");
   }
   return cache.vehicles;
 }
 
 /**
- * Tasas de financiamiento del vehículo
+ * Tasas de financiamiento
  */
-export async function getRates() {
+async function loadRates() {
   if (!cache.rates) {
-    cache.rates = await loadJson("data/Rates.json");
+    cache.rates = await loadJson("./data/Rates.json");
   }
   return cache.rates;
 }
 
 /**
- * Planes de dispositivo (con prioridad)
+ * Planes de dispositivo
  */
-export async function getDevicePlans() {
+async function loadDevicePlans() {
   if (!cache.devicePlans) {
-    cache.devicePlans = await loadJson("data/DevicePlans.json");
+    cache.devicePlans = await loadJson("./data/DevicePlans.json");
   }
   return cache.devicePlans;
 }
@@ -55,9 +55,8 @@ export async function getDevicePlans() {
 /**
  * Limpia el cache (útil para pruebas)
  */
-export function clearCache() {
+function clearCache() {
   cache.vehicles = null;
   cache.rates = null;
   cache.devicePlans = null;
 }
-
