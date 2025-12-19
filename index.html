@@ -2,86 +2,75 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Cotizador de Vehículos – Teojama Comercial</title>
+  <title>Cotizador Vehículos Teojama</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <!-- ===================== -->
   <!-- LOGIN -->
-  <!-- ===================== -->
-  <section id="login-section">
-    <h1>Cotizador de Vehículos – Teojama Comercial</h1>
+  <div id="loginContainer">
+    <h2>Acceso Cotizador</h2>
+    <input type="text" id="username" placeholder="Usuario" />
+    <input type="password" id="password" placeholder="Contraseña" />
+    <button id="btnLogin">Ingresar</button>
+    <p id="loginError" class="error"></p>
+  </div>
 
-    <div>
-      <label for="username">Usuario:</label>
-      <input type="text" id="username" />
-    </div>
+  <!-- APP -->
+  <div id="appContainer" style="display:none;">
+    <h2>Cotizador de Vehículos</h2>
 
-    <div>
-      <label for="password">Contraseña:</label>
-      <input type="password" id="password" />
-    </div>
-
-    <button id="login-btn">Ingresar</button>
-    <p id="login-error" style="color:red; display:none;"></p>
-  </section>
-
-  <!-- ===================== -->
-  <!-- COTIZADOR -->
-  <!-- ===================== -->
-  <section id="quote-section" style="display:none;">
-    <h2>Formulario de Cotización</h2>
-
-    <p id="welcome-user"></p>
-    <button id="logout-btn">Cerrar sesión</button>
-
-    <hr />
-
-    <!-- ===================== -->
-    <!-- VEHÍCULO -->
-    <!-- ===================== -->
-    <h3>Datos del vehículo</h3>
-
-    <div>
-      <label for="vehicle-type-select">Tipo de vehículo:</label>
-      <select id="vehicle-type-select">
-        <option value="">Seleccione tipo</option>
+    <div class="form-group">
+      <label for="selectTipoVehiculo">Tipo de Vehículo</label>
+      <select id="selectTipoVehiculo">
+        <option value="">Seleccione</option>
         <option value="Liviano">Liviano</option>
         <option value="Pesado">Pesado</option>
       </select>
     </div>
 
-    <div>
-      <label for="brand">Marca:</label>
-      <select id="brand" disabled></select>
+    <div class="form-group">
+      <label for="selectMarca">Marca</label>
+      <select id="selectMarca" disabled>
+        <option value="">Seleccione</option>
+      </select>
     </div>
 
-    <div>
-      <label for="model">Modelo:</label>
-      <select id="model" disabled></select>
+    <div class="form-group">
+      <label for="selectModelo">Modelo</label>
+      <select id="selectModelo" disabled>
+        <option value="">Seleccione</option>
+      </select>
     </div>
 
-    <div>
-      <strong>PVP:</strong>
-      <span id="pvp">-</span>
+    <!-- NUEVO: TASA -->
+    <div class="form-group">
+      <label for="selectTasa">Tasa de Interés</label>
+      <select id="selectTasa" disabled>
+        <option value="">Seleccione una tasa</option>
+      </select>
     </div>
 
-    <div>
-      <strong>Tipo de vehículo:</strong>
-      <span id="vehicle-type">-</span>
+    <!-- NUEVO: PLAZO -->
+    <div class="form-group">
+      <label for="selectPlazo">Plazo (meses)</label>
+      <select id="selectPlazo" disabled>
+        <option value="">Seleccione un plazo</option>
+      </select>
     </div>
 
-    <hr />
-    <p>🚧 Tasas, dispositivo y cálculo en construcción…</p>
-  </section>
+    <div id="resultado">
+      <p><strong>PVP:</strong> $<span id="pvp"></span></p>
+    </div>
 
-  <!-- ===================== -->
-  <!-- SCRIPTS -->
-  <!-- ===================== -->
-  <script type="module" src="assets/js/auth.js"></script>
-  <script type="module" src="assets/js/ui.js"></script>
+    <button id="btnLogout">Cerrar Sesión</button>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/dataLoader.js"></script>
+  <script src="js/ui.js"></script>
 
 </body>
 </html>
