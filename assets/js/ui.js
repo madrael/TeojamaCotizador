@@ -6,7 +6,9 @@ const appState = {
   marca: null,
   modelo: null,
   tasa: null,
-  plazo: null
+  plazo: null,
+  incluyeSeguro: false,
+  incluyeDispositivo: false
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -29,6 +31,19 @@ function initUI() {
   const selectModelo = document.getElementById("selectModelo");
   const selectTasa = document.getElementById("selectTasa");
   const selectPlazo = document.getElementById("selectPlazo");
+
+  const chkSeguro = document.getElementById("chkSeguro");
+  const chkDispositivo = document.getElementById("chkDispositivo");
+
+  chkSeguro.addEventListener("change", () => {
+    appState.incluyeSeguro = chkSeguro.checked;
+    console.log("Incluye seguro:", appState.incluyeSeguro);
+  });
+
+  chkDispositivo.addEventListener("change", () => {
+    appState.incluyeDispositivo = chkDispositivo.checked;
+    console.log("Incluye dispositivo:", appState.incluyeDispositivo);
+  });
 
   selectTipoVehiculo.addEventListener("change", () => {
     appState.tipoVehiculo = selectTipoVehiculo.value;
