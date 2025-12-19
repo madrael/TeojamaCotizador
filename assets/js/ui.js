@@ -1,5 +1,5 @@
 // ui.js
-// UI del cotizador – Vehículo (con filtro por tipo)
+// UI del cotizador – Vehículo (con filtro por tipo, FIX disabled)
 
 import { getVehicles } from "./dataLoader.js";
 
@@ -19,16 +19,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   typeSelect.addEventListener("change", () => {
     const selectedType = typeSelect.value;
 
+    // Reset UI
     brandSelect.innerHTML = `<option value="">Seleccione marca</option>`;
     modelSelect.innerHTML = `<option value="">Seleccione modelo</option>`;
     pvpField.textContent = "-";
     vehicleTypeField.textContent = "-";
 
-    brandSelect.disabled = true;
-    modelSelect.disabled = true;
+    // Deshabilitar ambos
+    brandSelect.setAttribute("disabled", "disabled");
+    modelSelect.setAttribute("disabled", "disabled");
 
     if (!selectedType) return;
 
+    // Filtrar marcas por tipo
     const brands = [
       ...new Set(
         vehicles
@@ -44,7 +47,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       brandSelect.appendChild(opt);
     });
 
-    brandSelect.disabled = false;
+    // 🔓 Habilitar marca
+    brandSelect.removeAttribute("disabled");
   });
 
   // =========================
@@ -58,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     pvpField.textContent = "-";
     vehicleTypeField.textContent = "-";
 
-    modelSelect.disabled = true;
+    modelSelect.setAttribute("disabled", "disabled");
 
     if (!selectedBrand) return;
 
@@ -75,7 +79,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       modelSelect.appendChild(opt);
     });
 
-    modelSelect.disabled = false;
+    // 🔓 Habilitar modelo
+    modelSelect.removeAttribute("disabled");
   });
 
   // =========================
