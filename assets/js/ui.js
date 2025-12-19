@@ -1,109 +1,134 @@
-// ui.js
-// UI del cotizador – Vehículo (con filtro por tipo, FIX disabled)
+let vehicles = [];
+let rates = [];
 
-import { getVehicles } from "./dataLoader.js";
+const appState = {
+  tipoVehiculo: null,
+  marca: null,
+  modelo: null,
+  tasa: null,
+  plazo: null
+};
 
 document.addEventListener("DOMContentLoaded", async () => {
+  vehicles = await loadVehicles();
+  rates = await loadRates();
 
-  const typeSelect = document.getElementById("vehicle-type-select");
-  const brandSelect = document.getElementById("brand");
-  const modelSelect = document.getElementById("model");
-  const pvpField = document.getElementById("pvp");
-  const vehicleTypeField = document.getElementById("vehicle-type");
+  initUI();
+});
 
-  const vehicles = await getVehicles();
+function initUI() {
+  const selectTipoVehiculo = document.getElementById("selectTipoVehiculo");
+  const selectMarca = document.getElementById("selectMarca");
+  const selectModelo = document.getElementById("selectModelo");
+  const selectTasa = document.getElementById("selectTasa");
+  const selectPlazo = document.getElementById("selectPlazo");
 
-  // =========================
-  // Cambio de tipo de vehículo
-  // =========================
-  typeSelect.addEventListener("change", () => {
-    const selectedType = typeSelect.value;
+  selectTipoVehiculo.addEventListener("change", () => {
+    appState.tipoVehiculo = selectTipoVehiculo.value;
 
-    // Reset UI
-    brandSelect.innerHTML = `<option value="">Seleccione marca</option>`;
-    modelSelect.innerHTML = `<option value="">Seleccione modelo</option>`;
-    pvpField.textContent = "-";
-    vehicleTypeField.textContent = "-";
+    resetSelect(selectMarca, "Seleccione");
+    resetSelect(selectModelo, "Seleccione");
+    resetSelect(selectTasa, "Seleccione una tasa");
+    resetSelect(selectPlazo, "Seleccione un plazo");
 
-    // Deshabilitar ambos
-    brandSelect.setAttribute("disabled", "disabled");
-    modelSelect.setAttribute("disabled", "disabled");
+    document.getElementById("pvp").textContent = "";
 
-    if (!selectedType) return;
+    if (!appState.tipoVehiculo) return;
 
-    // Filtrar marcas por tipo
-    const brands = [
+    const marcas = [
       ...new Set(
         vehicles
-          .filter(v => v.TipoVehiculo === selectedType)
+          .filter(v => v.TipoVehiculo === appState.tipoVehiculo)
           .map(v => v.Marca)
       )
-    ].sort();
+    ];
 
-    brands.forEach(brand => {
-      const opt = document.createElement("option");
-      opt.value = brand;
-      opt.textContent = brand;
-      brandSelect.appendChild(opt);
-    });
-
-    // 🔓 Habilitar marca
-    brandSelect.removeAttribute("disabled");
+    marcas.forEach(m => addOption(selectMarca, m, m));
+    selectMarca.disabled = false;
   });
 
-  // =========================
-  // Cambio de marca
-  // =========================
-  brandSelect.addEventListener("change", () => {
-    const selectedType = typeSelect.value;
-    const selectedBrand = brandSelect.value;
+  selectMarca.addEventListener("change", () => {
+    appState.marca = selectMarca.value;
 
-    modelSelect.innerHTML = `<option value="">Seleccione modelo</option>`;
-    pvpField.textContent = "-";
-    vehicleTypeField.textContent = "-";
+    resetSelect(selectModelo, "Seleccione");
+    resetSelect(selectTasa, "Seleccione una tasa");
+    resetSelect(selectPlazo, "Seleccione un plazo");
 
-    modelSelect.setAttribute("disabled", "disabled");
+    document.getElementById("pvp").textContent = "";
 
-    if (!selectedBrand) return;
+    if (!appState.marca) return;
 
-    const models = vehicles.filter(
+    const modelos = vehicles.filter(
       v =>
-        v.TipoVehiculo === selectedType &&
-        v.Marca === selectedBrand
+        v.TipoVehiculo === appState.tipoVehiculo &&
+        v.Marca === appState.marca
     );
 
-    models.forEach(v => {
-      const opt = document.createElement("option");
-      opt.value = v.Modelo;
-      opt.textContent = `${v.Modelo} ${v["Version Modelo"]}`;
-      modelSelect.appendChild(opt);
-    });
-
-    // 🔓 Habilitar modelo
-    modelSelect.removeAttribute("disabled");
+    modelos.forEach(m => addOption(selectModelo, m.Modelo, m.Modelo));
+    selectModelo.disabled = false;
   });
 
-  // =========================
-  // Cambio de modelo
-  // =========================
-  modelSelect.addEventListener("change", () => {
-    const selectedType = typeSelect.value;
-    const selectedBrand = brandSelect.value;
-    const selectedModel = modelSelect.value;
+  selectModelo.addEventListener("change", () => {
+    appState.modelo = selectModelo.value;
 
-    if (!selectedModel) return;
+    resetSelect(selectTasa, "Seleccione una tasa");
+    resetSelect(selectPlazo, "Seleccione un plazo");
 
-    const vehicle = vehicles.find(
+    if (!appState.modelo) return;
+
+    const vehiculo = vehicles.find(
       v =>
-        v.TipoVehiculo === selectedType &&
-        v.Marca === selectedBrand &&
-        v.Modelo === selectedModel
+        v.TipoVehiculo === appState.tipoVehiculo &&
+        v.Marca === appState.marca &&
+        v.Modelo === appState.modelo
     );
 
-    if (!vehicle) return;
-
-    pvpField.textContent = `$${Number(vehicle.PVP).toLocaleString("es-EC")}`;
-    vehicleTypeField.textContent = vehicle.TipoVehiculo;
+    if (vehiculo) {
+      document.getElementById("pvp").textContent = vehiculo.PVP.toFixed(2);
+      cargarTasas();
+    }
   });
 
-});
+  selectTasa.addEventListener("change", () => {
+    appState.tasa = selectTasa.value;
+
+    resetSelect(selectPlazo, "Seleccione un plazo");
+
+    const tasa = rates.find(r => r.IdTasa === appState.tasa);
+    if (!tasa) return;
+
+    tasa.Plazos.forEach(p =>
+      addOption(selectPlazo, p.VPlazo, `${p.VPlazo} meses`)
+    );
+
+    selectPlazo.disabled = false;
+  });
+
+  selectPlazo.addEventListener("change", () => {
+    appState.plazo = selectPlazo.value;
+  });
+}
+
+function cargarTasas() {
+  const selectTasa = document.getElementById("selectTasa");
+
+  resetSelect(selectTasa, "Seleccione una tasa");
+
+  rates.forEach(t =>
+    addOption(selectTasa, t.IdTasa, `${t.TasaAnual}%`)
+  );
+
+  selectTasa.disabled = false;
+}
+
+function resetSelect(select, placeholder) {
+  select.innerHTML = `<option value="">${placeholder}</option>`;
+  select.disabled = true;
+}
+
+function addOption(select, value, text) {
+  const option = document.createElement("option");
+  option.value = value;
+  option.textContent = text;
+  select.appendChild(option);
+}
