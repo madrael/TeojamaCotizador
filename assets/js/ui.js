@@ -10,8 +10,15 @@ const appState = {
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
-  vehicles = await loadVehicles();
-  rates = await loadRates();
+  try {
+    vehicles = await loadVehicles();
+    rates = await loadRates();
+    console.log("Datos cargados:", vehicles.length, "vehículos,", rates.length, "tasas");
+  } catch (error) {
+    console.error("Error cargando datos:", error);
+    vehicles = [];
+    rates = [];
+  }
 
   initUI();
 });
@@ -44,7 +51,7 @@ function initUI() {
     ];
 
     marcas.forEach(m => addOption(selectMarca, m, m));
-    selectMarca.disabled = false;
+    selectMarca.disabled = marcas.length === 0;
   });
 
   selectMarca.addEventListener("change", () => {
@@ -65,7 +72,7 @@ function initUI() {
     );
 
     modelos.forEach(m => addOption(selectModelo, m.Modelo, m.Modelo));
-    selectModelo.disabled = false;
+    selectModelo.disabled = modelos.length === 0;
   });
 
   selectModelo.addEventListener("change", () => {
@@ -84,7 +91,7 @@ function initUI() {
     );
 
     if (vehiculo) {
-      document.getElementById("pvp").textContent = vehiculo.PVP.toFixed(2);
+      document.getElementById("pvp").textContent = Number(vehiculo.PVP).toFixed(2);
       cargarTasas();
     }
   });
@@ -118,7 +125,7 @@ function cargarTasas() {
     addOption(selectTasa, t.IdTasa, `${t.TasaAnual}%`)
   );
 
-  selectTasa.disabled = false;
+  selectTasa.disabled = rates.length === 0;
 }
 
 function resetSelect(select, placeholder) {
