@@ -1,6 +1,12 @@
+/*************************************************
+ * Archivo: dataLoader.js
+ * Proyecto: Cotizador Vehículos Teojama
+ * Versión: V 1.0 · Compilación 3.03
+ * Cambio: Corrección carga de Rates / DevicePlans
+ *************************************************/
+
 // dataLoader.js
 // Carga y cache de catálogos (MVP – GitHub Pages)
-//V 1.0 · Compilación 3.03
 
 /**
  * Cache en memoria
