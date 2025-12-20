@@ -2,10 +2,9 @@
  * Archivo: ui.js
  * Proyecto: Cotizador Vehículos Teojama
  * Versión: V 1.0 · Compilación 3.09
- * Cambios:
- * - Corrección definitiva carga planes dispositivo
- * - Uso de estructura real DevicePlans.json
- * - Sin regresiones funcionales
+ * Fix crítico:
+ * - Limpieza correcta del combo de planes
+ * - Eliminación de options vacíos
  *************************************************/
 
 let vehicles = [];
@@ -32,7 +31,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   devicePlans = await loadDevicePlans();
 
   console.log("DevicePlans cargados:", devicePlans);
-
   initUI();
 });
 
@@ -63,9 +61,8 @@ function initUI() {
     appState.tipoVehiculo = selTipo.value;
 
     const marcas = [...new Set(
-      vehicles
-        .filter(v => v.TipoVehiculo === appState.tipoVehiculo)
-        .map(v => v.Marca)
+      vehicles.filter(v => v.TipoVehiculo === appState.tipoVehiculo)
+              .map(v => v.Marca)
     )];
 
     marcas.forEach(m => addOption(selMarca, m, m));
@@ -76,12 +73,10 @@ function initUI() {
     resetSelect(selModelo);
     appState.marca = selMarca.value;
 
-    const modelos = vehicles.filter(v =>
+    vehicles.filter(v =>
       v.TipoVehiculo === appState.tipoVehiculo &&
       v.Marca === appState.marca
-    );
-
-    modelos.forEach(m => addOption(selModelo, m.Modelo, m.Modelo));
+    ).forEach(v => addOption(selModelo, v.Modelo, v.Modelo));
   });
 
   /* ===== Modelo ===== */
@@ -132,11 +127,7 @@ function initUI() {
     appState.incluyeDispositivo = chkDispositivo.checked;
     deviceContainer.style.display = chkDispositivo.checked ? "block" : "none";
 
-    if (chkDispositivo.checked) {
-      cargarPlanesDispositivo();
-    } else {
-      limpiarDispositivo();
-    }
+    chkDispositivo.checked ? cargarPlanesDispositivo() : limpiarDispositivo();
   });
 
   selDevicePlan.addEventListener("change", () => {
@@ -148,18 +139,21 @@ function initUI() {
     lblDeviceValue.textContent = "-";
   });
 
-  /* ===== Calcular ===== */
   btnCalcular.addEventListener("click", () => {
     alert("Motor financiero pendiente (siguiente iteración)");
   });
 }
 
 /* =============================
-   DISPOSITIVO
+   DISPOSITIVO (FIX REAL)
 ============================= */
 function cargarPlanesDispositivo() {
   const sel = document.getElementById("selectDevicePlan");
-  sel.innerHTML = `<option value="">Seleccione plan</option>`;
+
+  // 🔥 Limpieza correcta (NO innerHTML)
+  sel.options.length = 0;
+
+  addOption(sel, "", "Seleccione plan");
 
   const planesValidos = devicePlans.filter(p =>
     p.activo === true &&
@@ -169,19 +163,14 @@ function cargarPlanesDispositivo() {
 
   console.log("Planes válidos dispositivo:", planesValidos);
 
-  planesValidos.forEach(p => {
-    addOption(sel, p.codigo, p.codigo);
-  });
-
-  if (planesValidos.length === 1) {
-    sel.value = planesValidos[0].codigo;
-    sel.dispatchEvent(new Event("change"));
-  }
+  planesValidos.forEach(p =>
+    addOption(sel, p.codigo, p.codigo)
+  );
 }
 
 function limpiarDispositivo() {
   const sel = document.getElementById("selectDevicePlan");
-  sel.innerHTML = "";
+  sel.options.length = 0;
   document.getElementById("deviceProvider").textContent = "";
   document.getElementById("deviceValue").textContent = "-";
   appState.dispositivo = null;
@@ -196,7 +185,8 @@ function resetAll() {
 }
 
 function resetSelect(sel) {
-  sel.innerHTML = `<option value="">Seleccione</option>`;
+  sel.options.length = 0;
+  addOption(sel, "", "Seleccione");
 }
 
 function addOption(sel, value, text) {
@@ -205,4 +195,3 @@ function addOption(sel, value, text) {
   o.textContent = text;
   sel.appendChild(o);
 }
-
