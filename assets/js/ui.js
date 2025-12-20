@@ -1,10 +1,9 @@
 /*************************************************
  * Archivo: ui.js
  * Proyecto: Cotizador Vehículos Teojama
- * Versión: V 1.0 · Compilación 3.09
- * Fix crítico:
- * - Limpieza correcta del combo de planes
- * - Eliminación de options vacíos
+ * Versión: V 1.0 · Compilación 3.10
+ * Fix:
+ * - Cálculo correcto valor dispositivo por plazo
  *************************************************/
 
 let vehicles = [];
@@ -29,8 +28,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   vehicles = await loadVehicles();
   rates = await loadRates();
   devicePlans = await loadDevicePlans();
-
-  console.log("DevicePlans cargados:", devicePlans);
   initUI();
 });
 
@@ -55,20 +52,17 @@ function initUI() {
 
   const btnCalcular = document.getElementById("btnCalcular");
 
-  /* ===== Tipo de vehículo ===== */
+  /* ===== Tipo / Marca / Modelo ===== */
   selTipo.addEventListener("change", () => {
     resetAll();
     appState.tipoVehiculo = selTipo.value;
 
-    const marcas = [...new Set(
+    [...new Set(
       vehicles.filter(v => v.TipoVehiculo === appState.tipoVehiculo)
               .map(v => v.Marca)
-    )];
-
-    marcas.forEach(m => addOption(selMarca, m, m));
+    )].forEach(m => addOption(selMarca, m, m));
   });
 
-  /* ===== Marca ===== */
   selMarca.addEventListener("change", () => {
     resetSelect(selModelo);
     appState.marca = selMarca.value;
@@ -79,7 +73,6 @@ function initUI() {
     ).forEach(v => addOption(selModelo, v.Modelo, v.Modelo));
   });
 
-  /* ===== Modelo ===== */
   selModelo.addEventListener("change", () => {
     resetSelect(selTasa);
     resetSelect(selPlazo);
@@ -113,6 +106,7 @@ function initUI() {
   /* ===== Plazo ===== */
   selPlazo.addEventListener("change", () => {
     appState.plazo = Number(selPlazo.value);
+    actualizarValorDispositivo();
   });
 
   /* ===== Seguro ===== */
@@ -126,17 +120,13 @@ function initUI() {
   chkDispositivo.addEventListener("change", () => {
     appState.incluyeDispositivo = chkDispositivo.checked;
     deviceContainer.style.display = chkDispositivo.checked ? "block" : "none";
-
     chkDispositivo.checked ? cargarPlanesDispositivo() : limpiarDispositivo();
   });
 
   selDevicePlan.addEventListener("change", () => {
-    const plan = devicePlans.find(p => p.codigo === selDevicePlan.value);
-    if (!plan) return;
-
-    appState.dispositivo = plan;
-    lblDeviceProvider.textContent = plan.proveedor;
-    lblDeviceValue.textContent = "-";
+    appState.dispositivo = devicePlans.find(p => p.codigo === selDevicePlan.value);
+    lblDeviceProvider.textContent = appState.dispositivo?.proveedor || "";
+    actualizarValorDispositivo();
   });
 
   btnCalcular.addEventListener("click", () => {
@@ -145,34 +135,39 @@ function initUI() {
 }
 
 /* =============================
-   DISPOSITIVO (FIX REAL)
+   DISPOSITIVO
 ============================= */
+function actualizarValorDispositivo() {
+  const lbl = document.getElementById("deviceValue");
+
+  if (!appState.dispositivo || !appState.plazo) {
+    lbl.textContent = "$0.00";
+    return;
+  }
+
+  const anios = appState.plazo / 12;
+  const valor = appState.dispositivo.valoresPorAnio?.[anios];
+
+  lbl.textContent = valor
+    ? `$${Number(valor).toFixed(2)}`
+    : "$0.00";
+}
+
 function cargarPlanesDispositivo() {
   const sel = document.getElementById("selectDevicePlan");
-
-  // 🔥 Limpieza correcta (NO innerHTML)
   sel.options.length = 0;
-
   addOption(sel, "", "Seleccione plan");
 
-  const planesValidos = devicePlans.filter(p =>
-    p.activo === true &&
-    typeof p.codigo === "string" &&
-    p.codigo.trim() !== ""
-  );
-
-  console.log("Planes válidos dispositivo:", planesValidos);
-
-  planesValidos.forEach(p =>
-    addOption(sel, p.codigo, p.codigo)
-  );
+  devicePlans
+    .filter(p => p.activo === true && p.codigo)
+    .forEach(p => addOption(sel, p.codigo, p.codigo));
 }
 
 function limpiarDispositivo() {
   const sel = document.getElementById("selectDevicePlan");
   sel.options.length = 0;
   document.getElementById("deviceProvider").textContent = "";
-  document.getElementById("deviceValue").textContent = "-";
+  document.getElementById("deviceValue").textContent = "$0.00";
   appState.dispositivo = null;
 }
 
