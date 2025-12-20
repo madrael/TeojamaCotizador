@@ -1,10 +1,11 @@
 /*************************************************
  * Archivo: ui.js
  * Proyecto: Cotizador Vehículos Teojama
- * Versión: V 1.0 · Compilación 3.06
- * Fix definitivo:
- * - Corrección carga planes dispositivo
- * - Compatible con DevicePlans.json real
+ * Versión: V 1.0 · Compilación 3.09
+ * Cambios:
+ * - Corrección definitiva carga planes dispositivo
+ * - Uso de estructura real DevicePlans.json
+ * - Sin regresiones funcionales
  *************************************************/
 
 let vehicles = [];
@@ -30,13 +31,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   rates = await loadRates();
   devicePlans = await loadDevicePlans();
 
-  console.log("Device plans cargados:", devicePlans);
+  console.log("DevicePlans cargados:", devicePlans);
 
   initUI();
 });
 
 /* =============================
-   UI
+   UI INIT
 ============================= */
 function initUI() {
   const selTipo = document.getElementById("selectTipoVehiculo");
@@ -56,45 +57,15 @@ function initUI() {
 
   const btnCalcular = document.getElementById("btnCalcular");
 
-  /* ===== Seguro ===== */
-  chkSeguro.addEventListener("change", () => {
-    appState.incluyeSeguro = chkSeguro.checked;
-    inpSeguro.disabled = !chkSeguro.checked;
-    if (!chkSeguro.checked) inpSeguro.value = "";
-  });
-
-  /* ===== Dispositivo ===== */
-  chkDispositivo.addEventListener("change", () => {
-    appState.incluyeDispositivo = chkDispositivo.checked;
-    deviceContainer.style.display = chkDispositivo.checked ? "block" : "none";
-
-    if (chkDispositivo.checked) {
-      cargarPlanesDispositivo();
-    } else {
-      appState.dispositivo = null;
-      selDevicePlan.innerHTML = "";
-      lblDeviceProvider.textContent = "";
-      lblDeviceValue.textContent = "0.00";
-    }
-  });
-
-  selDevicePlan.addEventListener("change", () => {
-    const plan = devicePlans.find(p => p.PlanName === selDevicePlan.value);
-    if (!plan) return;
-
-    appState.dispositivo = plan;
-    lblDeviceProvider.textContent = plan.Provider;
-    lblDeviceValue.textContent = Number(plan.Price).toFixed(2);
-  });
-
-  /* ===== Tipo ===== */
+  /* ===== Tipo de vehículo ===== */
   selTipo.addEventListener("change", () => {
     resetAll();
     appState.tipoVehiculo = selTipo.value;
 
     const marcas = [...new Set(
-      vehicles.filter(v => v.TipoVehiculo === appState.tipoVehiculo)
-              .map(v => v.Marca)
+      vehicles
+        .filter(v => v.TipoVehiculo === appState.tipoVehiculo)
+        .map(v => v.Marca)
     )];
 
     marcas.forEach(m => addOption(selMarca, m, m));
@@ -117,7 +88,6 @@ function initUI() {
   selModelo.addEventListener("change", () => {
     resetSelect(selTasa);
     resetSelect(selPlazo);
-
     appState.modelo = selModelo.value;
 
     const veh = vehicles.find(v =>
@@ -150,8 +120,38 @@ function initUI() {
     appState.plazo = Number(selPlazo.value);
   });
 
+  /* ===== Seguro ===== */
+  chkSeguro.addEventListener("change", () => {
+    appState.incluyeSeguro = chkSeguro.checked;
+    inpSeguro.disabled = !chkSeguro.checked;
+    if (!chkSeguro.checked) inpSeguro.value = "";
+  });
+
+  /* ===== Dispositivo ===== */
+  chkDispositivo.addEventListener("change", () => {
+    appState.incluyeDispositivo = chkDispositivo.checked;
+    deviceContainer.style.display = chkDispositivo.checked ? "block" : "none";
+
+    if (chkDispositivo.checked) {
+      cargarPlanesDispositivo();
+    } else {
+      limpiarDispositivo();
+    }
+  });
+
+  selDevicePlan.addEventListener("change", () => {
+    const plan = devicePlans.find(p => p.codigo === selDevicePlan.value);
+    if (!plan) return;
+
+    appState.dispositivo = plan;
+    lblDeviceProvider.textContent = plan.proveedor;
+    lblDeviceValue.textContent = "-";
+  });
+
   /* ===== Calcular ===== */
-  btnCalcular.addEventListener("click", calcularCotizacion);
+  btnCalcular.addEventListener("click", () => {
+    alert("Motor financiero pendiente (siguiente iteración)");
+  });
 }
 
 /* =============================
@@ -161,21 +161,30 @@ function cargarPlanesDispositivo() {
   const sel = document.getElementById("selectDevicePlan");
   sel.innerHTML = `<option value="">Seleccione plan</option>`;
 
-  devicePlans.forEach(p => {
-    addOption(sel, p.PlanName, p.PlanName);
+  const planesValidos = devicePlans.filter(p =>
+    p.activo === true &&
+    typeof p.codigo === "string" &&
+    p.codigo.trim() !== ""
+  );
+
+  console.log("Planes válidos dispositivo:", planesValidos);
+
+  planesValidos.forEach(p => {
+    addOption(sel, p.codigo, p.codigo);
   });
 
-  if (devicePlans.length === 1) {
-    sel.value = devicePlans[0].PlanName;
+  if (planesValidos.length === 1) {
+    sel.value = planesValidos[0].codigo;
     sel.dispatchEvent(new Event("change"));
   }
 }
 
-/* =============================
-   CÁLCULO (base)
-============================= */
-function calcularCotizacion() {
-  alert("Motor financiero pendiente (siguiente iteración)");
+function limpiarDispositivo() {
+  const sel = document.getElementById("selectDevicePlan");
+  sel.innerHTML = "";
+  document.getElementById("deviceProvider").textContent = "";
+  document.getElementById("deviceValue").textContent = "-";
+  appState.dispositivo = null;
 }
 
 /* =============================
@@ -196,3 +205,4 @@ function addOption(sel, value, text) {
   o.textContent = text;
   sel.appendChild(o);
 }
+
