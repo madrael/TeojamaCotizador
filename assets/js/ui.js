@@ -1,6 +1,6 @@
 /*************************************************
  * UI PRINCIPAL – COTIZADOR TEOJAMA
- * V 1.0 – Compilación 00003.01
+ * V 1.0 – Compilación 3.03
  *************************************************/
 
 let vehicles = [];
@@ -21,13 +21,25 @@ const appState = {
 const PLAZOS = [12, 24, 36, 48, 60];
 
 /* =============================
-   INIT
+   INIT (CLAVE)
 ============================= */
 document.addEventListener("DOMContentLoaded", async () => {
-  vehicles = await loadVehicles();
-  rates = await loadRates();
-  devicePlans = await loadDevicePlans();
-  initUI();
+  try {
+    vehicles = await loadVehicles();
+    rates = await loadRates();
+    devicePlans = await loadDevicePlans();
+
+    console.log("Datos cargados:", {
+      vehicles: vehicles.length,
+      rates: rates.length,
+      devicePlans: devicePlans.length
+    });
+
+    initUI();
+  } catch (e) {
+    console.error("Error cargando datos", e);
+    alert("Error cargando datos base del cotizador");
+  }
 });
 
 /* =============================
@@ -71,10 +83,10 @@ function initUI() {
   selTipo.addEventListener("change", () => {
     appState.tipoVehiculo = selTipo.value;
 
-    resetSelect(selMarca, true);
-    resetSelect(selModelo, true);
-    resetSelect(selTasa, false);
-    resetSelect(selPlazo, false);
+    resetSelect(selMarca);
+    resetSelect(selModelo);
+    resetSelect(selTasa);
+    resetSelect(selPlazo);
     limpiarResultados();
 
     if (!appState.tipoVehiculo) return;
@@ -86,7 +98,6 @@ function initUI() {
     )];
 
     marcas.forEach(m => addOption(selMarca, m, m));
-    selMarca.disabled = false;
   });
 
   /* =============================
@@ -95,9 +106,9 @@ function initUI() {
   selMarca.addEventListener("change", () => {
     appState.marca = selMarca.value;
 
-    resetSelect(selModelo, true);
-    resetSelect(selTasa, false);
-    resetSelect(selPlazo, false);
+    resetSelect(selModelo);
+    resetSelect(selTasa);
+    resetSelect(selPlazo);
     limpiarResultados();
 
     const modelos = vehicles.filter(v =>
@@ -106,7 +117,6 @@ function initUI() {
     );
 
     modelos.forEach(m => addOption(selModelo, m.Modelo, m.Modelo));
-    selModelo.disabled = false;
   });
 
   /* =============================
@@ -115,8 +125,8 @@ function initUI() {
   selModelo.addEventListener("change", () => {
     appState.modelo = selModelo.value;
 
-    resetSelect(selTasa, false);
-    resetSelect(selPlazo, false);
+    resetSelect(selTasa);
+    resetSelect(selPlazo);
     limpiarResultados();
 
     const veh = vehicles.find(v =>
@@ -130,6 +140,12 @@ function initUI() {
     document.getElementById("pvp").textContent =
       Number(veh.PVP).toFixed(2);
 
+    // 🔑 Cargar tasas SOLO si existen
+    if (!rates || rates.length === 0) {
+      console.warn("Rates vacío");
+      return;
+    }
+
     rates.forEach(t =>
       addOption(selTasa, t.IdTasa, `${t.TasaAnual}%`)
     );
@@ -141,11 +157,11 @@ function initUI() {
   selTasa.addEventListener("change", () => {
     appState.tasa = selTasa.value;
 
-    resetSelect(selPlazo, false);
+    resetSelect(selPlazo);
     limpiarResultados();
 
     const tasaObj = rates.find(r => r.IdTasa === appState.tasa);
-    if (!tasaObj) return;
+    if (!tasaObj || !tasaObj.Plazos) return;
 
     tasaObj.Plazos.forEach(p =>
       addOption(selPlazo, p.VPlazo, `${p.VPlazo} meses`)
@@ -221,59 +237,10 @@ function calcularCotizacion() {
 }
 
 /* =============================
-   TABLA
-============================= */
-function renderTablaFinanciamiento(data) {
-  let html = `<table border="1"><tr><th>Concepto</th>`;
-  PLAZOS.forEach(p => html += `<th>${p} meses</th>`);
-  html += `</tr>`;
-
-  const filaFija = (label, value) => {
-    html += `<tr><td>${label}</td>`;
-    PLAZOS.forEach(() => html += `<td>$${value.toFixed(2)}</td>`);
-    html += `</tr>`;
-  };
-
-  filaFija("PVP Vehículo", data.pvp);
-  filaFija("Dispositivo Satelital", data.dispositivo);
-  filaFija("Seguro", data.seguro);
-  filaFija("Monto total", data.montoTotal);
-  filaFija("Cuota de entrada", data.entrada);
-  filaFija("Monto a financiar", data.montoFinanciar);
-
-  html += `<tr><td colspan="6"><hr/></td></tr>`;
-
-  const cuotas = [];
-  const cuotasSeguro = [];
-
-  PLAZOS.forEach(p => {
-    const r = calcularFinanciamiento({
-      montoFinanciar: data.montoFinanciar,
-      tasaAnual: data.tasaAnual,
-      plazoMeses: p
-    });
-    cuotas.push(r.cuotaMensual);
-    cuotasSeguro.push(data.seguro / p);
-  });
-
-  html += filaVariable("Cuota mensual", cuotas);
-  html += filaVariable("Cuota seguro", cuotasSeguro);
-
-  html += `<tr><td colspan="6"><hr/></td></tr>`;
-
-  const total = cuotas.map((c, i) => c + cuotasSeguro[i]);
-  html += filaVariable("Cuota total", total);
-
-  html += `</table>`;
-  document.getElementById("tablaFinanciamiento").innerHTML = html;
-}
-
-/* =============================
    UTILS
 ============================= */
-function resetSelect(sel, disable = false) {
+function resetSelect(sel) {
   sel.innerHTML = `<option value="">Seleccione</option>`;
-  sel.disabled = disable;
 }
 
 function addOption(sel, value, text) {
