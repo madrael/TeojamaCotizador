@@ -3,7 +3,7 @@
  * Proyecto: Cotizador Vehículos Teojama
  * Versión: V 1.0 · Compilación 3.10
  * Fix:
- * - Cálculo correcto valor dispositivo por plazo
+ * - Mostrar correctamente el valor del dispositivo
  *************************************************/
 
 let vehicles = [];
@@ -48,7 +48,6 @@ function initUI() {
   const deviceContainer = document.getElementById("deviceContainer");
   const selDevicePlan = document.getElementById("selectDevicePlan");
   const lblDeviceProvider = document.getElementById("deviceProvider");
-  const lblDeviceValue = document.getElementById("deviceValue");
 
   const btnCalcular = document.getElementById("btnCalcular");
 
@@ -138,10 +137,10 @@ function initUI() {
    DISPOSITIVO
 ============================= */
 function actualizarValorDispositivo() {
-  const lbl = document.getElementById("deviceValue");
+  const lbl = document.getElementById("deviceValueDisplay");
 
   if (!appState.dispositivo || !appState.plazo) {
-    lbl.textContent = "$0.00";
+    lbl.textContent = "-";
     return;
   }
 
@@ -149,8 +148,8 @@ function actualizarValorDispositivo() {
   const valor = appState.dispositivo.valoresPorAnio?.[anios];
 
   lbl.textContent = valor
-    ? `$${Number(valor).toFixed(2)}`
-    : "$0.00";
+    ? Number(valor).toFixed(2)
+    : "-";
 }
 
 function cargarPlanesDispositivo() {
@@ -167,7 +166,7 @@ function limpiarDispositivo() {
   const sel = document.getElementById("selectDevicePlan");
   sel.options.length = 0;
   document.getElementById("deviceProvider").textContent = "";
-  document.getElementById("deviceValue").textContent = "$0.00";
+  document.getElementById("deviceValueDisplay").textContent = "-";
   appState.dispositivo = null;
 }
 
@@ -190,3 +189,4 @@ function addOption(sel, value, text) {
   o.textContent = text;
   sel.appendChild(o);
 }
+
