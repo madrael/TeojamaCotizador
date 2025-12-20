@@ -2,8 +2,9 @@
  * Archivo: ui.js
  * Proyecto: Cotizador Vehículos Teojama
  * Versión: V 1.0 · Compilación 3.06
- * Fix:
- * - Corrección mapeo DevicePlans.json
+ * Fix definitivo:
+ * - Corrección carga planes dispositivo
+ * - Compatible con DevicePlans.json real
  *************************************************/
 
 let vehicles = [];
@@ -29,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   rates = await loadRates();
   devicePlans = await loadDevicePlans();
 
-  console.log("DevicePlans cargados:", devicePlans);
+  console.log("Device plans cargados:", devicePlans);
 
   initUI();
 });
@@ -71,18 +72,19 @@ function initUI() {
       cargarPlanesDispositivo();
     } else {
       appState.dispositivo = null;
+      selDevicePlan.innerHTML = "";
       lblDeviceProvider.textContent = "";
       lblDeviceValue.textContent = "0.00";
     }
   });
 
   selDevicePlan.addEventListener("change", () => {
-    const plan = devicePlans.find(p => p.plan === selDevicePlan.value);
+    const plan = devicePlans.find(p => p.PlanName === selDevicePlan.value);
     if (!plan) return;
 
     appState.dispositivo = plan;
-    lblDeviceProvider.textContent = plan.provider;
-    lblDeviceValue.textContent = Number(plan.price).toFixed(2);
+    lblDeviceProvider.textContent = plan.Provider;
+    lblDeviceValue.textContent = Number(plan.Price).toFixed(2);
   });
 
   /* ===== Tipo ===== */
@@ -91,9 +93,8 @@ function initUI() {
     appState.tipoVehiculo = selTipo.value;
 
     const marcas = [...new Set(
-      vehicles
-        .filter(v => v.TipoVehiculo === appState.tipoVehiculo)
-        .map(v => v.Marca)
+      vehicles.filter(v => v.TipoVehiculo === appState.tipoVehiculo)
+              .map(v => v.Marca)
     )];
 
     marcas.forEach(m => addOption(selMarca, m, m));
@@ -104,12 +105,12 @@ function initUI() {
     resetSelect(selModelo);
     appState.marca = selMarca.value;
 
-    vehicles
-      .filter(v =>
-        v.TipoVehiculo === appState.tipoVehiculo &&
-        v.Marca === appState.marca
-      )
-      .forEach(v => addOption(selModelo, v.Modelo, v.Modelo));
+    const modelos = vehicles.filter(v =>
+      v.TipoVehiculo === appState.tipoVehiculo &&
+      v.Marca === appState.marca
+    );
+
+    modelos.forEach(m => addOption(selModelo, m.Modelo, m.Modelo));
   });
 
   /* ===== Modelo ===== */
@@ -158,53 +159,23 @@ function initUI() {
 ============================= */
 function cargarPlanesDispositivo() {
   const sel = document.getElementById("selectDevicePlan");
-  sel.innerHTML = `<option value="">Seleccione</option>`;
+  sel.innerHTML = `<option value="">Seleccione plan</option>`;
 
-  const activos = devicePlans.filter(p => p.active === true);
+  devicePlans.forEach(p => {
+    addOption(sel, p.PlanName, p.PlanName);
+  });
 
-  activos.forEach(p =>
-    addOption(sel, p.plan, p.plan)
-  );
-
-  if (activos.length === 1) {
-    sel.value = activos[0].plan;
+  if (devicePlans.length === 1) {
+    sel.value = devicePlans[0].PlanName;
     sel.dispatchEvent(new Event("change"));
   }
 }
 
 /* =============================
-   CÁLCULO (BÁSICO)
+   CÁLCULO (base)
 ============================= */
 function calcularCotizacion() {
-  const pvp = Number(document.getElementById("pvp").textContent || 0);
-  const entrada = Number(document.getElementById("inputEntrada").value || 0);
-  const seguro = appState.incluyeSeguro
-    ? Number(document.getElementById("inputSeguro").value || 0)
-    : 0;
-  const dispositivo = appState.incluyeDispositivo
-    ? Number(appState.dispositivo?.price || 0)
-    : 0;
-
-  renderTablaFinanciamiento({
-    pvp,
-    seguro,
-    dispositivo,
-    entrada
-  });
-}
-
-/* =============================
-   TABLA (TEMPORAL)
-============================= */
-function renderTablaFinanciamiento(data) {
-  document.getElementById("tablaFinanciamiento").innerHTML = `
-    <table border="1">
-      <tr><td>PVP Vehículo</td><td>$${data.pvp.toFixed(2)}</td></tr>
-      <tr><td>Dispositivo</td><td>$${data.dispositivo.toFixed(2)}</td></tr>
-      <tr><td>Seguro</td><td>$${data.seguro.toFixed(2)}</td></tr>
-      <tr><td>Cuota entrada</td><td>$${data.entrada.toFixed(2)}</td></tr>
-    </table>
-  `;
+  alert("Motor financiero pendiente (siguiente iteración)");
 }
 
 /* =============================
@@ -225,3 +196,4 @@ function addOption(sel, value, text) {
   o.textContent = text;
   sel.appendChild(o);
 }
+
