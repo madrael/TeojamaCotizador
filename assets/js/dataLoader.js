@@ -1,9 +1,9 @@
 // dataLoader.js
 // Carga y cache de catálogos (MVP – GitHub Pages)
+//V 1.0 · Compilación 3.03
 
 /**
  * Cache en memoria
- * Simula un backend
  */
 const cache = {
   vehicles: null,
@@ -27,33 +27,33 @@ async function loadJson(path) {
  */
 async function loadVehicles() {
   if (!cache.vehicles) {
-    cache.vehicles = await loadJson("./data/Vehicles.json");
+    cache.vehicles = await loadJson("data/Vehicles.json");
   }
   return cache.vehicles;
 }
 
 /**
- * Tasas de financiamiento
+ * Tasas
  */
 async function loadRates() {
   if (!cache.rates) {
-    cache.rates = await loadJson("./data/Rates.json");
+    cache.rates = await loadJson("data/Rates.json");
   }
   return cache.rates;
 }
 
 /**
- * Planes de dispositivo
+ * Dispositivos
  */
 async function loadDevicePlans() {
   if (!cache.devicePlans) {
-    cache.devicePlans = await loadJson("./data/DevicePlans.json");
+    cache.devicePlans = await loadJson("data/DevicePlans.json");
   }
   return cache.devicePlans;
 }
 
 /**
- * Limpia el cache (útil para pruebas)
+ * Limpia cache (debug)
  */
 function clearCache() {
   cache.vehicles = null;
