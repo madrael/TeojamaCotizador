@@ -196,4 +196,3 @@ function addOption(sel, value, text) {
   o.textContent = text;
   sel.appendChild(o);
 }
-
