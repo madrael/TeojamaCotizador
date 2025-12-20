@@ -1,6 +1,6 @@
 /*************************************************
  * UI PRINCIPAL – COTIZADOR TEOJAMA
- * V 1.0 – Compilación 00002
+ * V 1.0 – Compilación 00003
  *************************************************/
 
 let vehicles = [];
@@ -53,6 +53,7 @@ function initUI() {
     appState.incluyeSeguro = chkSeguro.checked;
     inpSeguro.disabled = !chkSeguro.checked;
     if (!chkSeguro.checked) inpSeguro.value = "";
+    limpiarResultados();
   });
 
   /* =============================
@@ -61,6 +62,7 @@ function initUI() {
   chkDispositivo.addEventListener("change", () => {
     appState.incluyeDispositivo = chkDispositivo.checked;
     actualizarDispositivo();
+    limpiarResultados();
   });
 
   /* =============================
@@ -68,6 +70,7 @@ function initUI() {
   ============================= */
   selTipo.addEventListener("change", () => {
     appState.tipoVehiculo = selTipo.value;
+
     resetSelect(selMarca);
     resetSelect(selModelo);
     resetSelect(selTasa);
@@ -77,8 +80,9 @@ function initUI() {
     if (!appState.tipoVehiculo) return;
 
     const marcas = [...new Set(
-      vehicles.filter(v => v.TipoVehiculo === appState.tipoVehiculo)
-              .map(v => v.Marca)
+      vehicles
+        .filter(v => v.TipoVehiculo === appState.tipoVehiculo)
+        .map(v => v.Marca)
     )];
 
     marcas.forEach(m => addOption(selMarca, m, m));
@@ -90,6 +94,7 @@ function initUI() {
   ============================= */
   selMarca.addEventListener("change", () => {
     appState.marca = selMarca.value;
+
     resetSelect(selModelo);
     resetSelect(selTasa);
     resetSelect(selPlazo);
@@ -109,6 +114,7 @@ function initUI() {
   ============================= */
   selModelo.addEventListener("change", () => {
     appState.modelo = selModelo.value;
+
     resetSelect(selTasa);
     resetSelect(selPlazo);
     limpiarResultados();
@@ -124,7 +130,7 @@ function initUI() {
     document.getElementById("pvp").textContent =
       Number(veh.PVP).toFixed(2);
 
-    cargarTasas();
+    cargarTasas(); // 🔑 aquí se habilita tasa
   });
 
   /* =============================
@@ -132,14 +138,18 @@ function initUI() {
   ============================= */
   selTasa.addEventListener("change", () => {
     appState.tasa = selTasa.value;
+
     resetSelect(selPlazo);
     limpiarResultados();
 
-    const tasa = rates.find(r => r.IdTasa === appState.tasa);
-    tasa.Plazos.forEach(p =>
+    const tasaObj = rates.find(r => r.IdTasa === appState.tasa);
+    if (!tasaObj) return;
+
+    tasaObj.Plazos.forEach(p =>
       addOption(selPlazo, p.VPlazo, `${p.VPlazo} meses`)
     );
-    selPlazo.disabled = false;
+
+    selPlazo.disabled = false; // 🔑 habilitar plazo
   });
 
   /* =============================
@@ -148,12 +158,28 @@ function initUI() {
   selPlazo.addEventListener("change", () => {
     appState.plazo = Number(selPlazo.value);
     actualizarDispositivo();
+    limpiarResultados();
   });
 
   /* =============================
      BOTÓN CALCULAR
   ============================= */
   btnCalcular.addEventListener("click", calcularCotizacion);
+}
+
+/* =============================
+   CARGAR TASAS
+============================= */
+function cargarTasas() {
+  const selTasa = document.getElementById("selectTasa");
+
+  resetSelect(selTasa);
+
+  rates.forEach(t =>
+    addOption(selTasa, t.IdTasa, `${t.TasaAnual}%`)
+  );
+
+  selTasa.disabled = false; // ✅ FIX PRINCIPAL
 }
 
 /* =============================
@@ -166,6 +192,7 @@ function actualizarDispositivo() {
   }
 
   const plazoAnios = appState.plazo / 12;
+
   const plan = devicePlans
     .filter(p => p.activo)
     .sort((a, b) => a.prioridad - b.prioridad)[0];
@@ -188,7 +215,8 @@ function calcularCotizacion() {
   const dispositivo = appState.dispositivo?.valor || 0;
 
   const tasaObj = rates.find(r => r.IdTasa === appState.tasa);
-  if (!pvp || !tasaObj) {
+
+  if (!pvp || !tasaObj || !appState.plazo) {
     alert("Complete la selección antes de calcular");
     return;
   }
@@ -208,30 +236,30 @@ function calcularCotizacion() {
 }
 
 /* =============================
-   TABLA
+   TABLA FINANCIERA
 ============================= */
 function renderTablaFinanciamiento(data) {
   let html = `<table border="1"><tr><th>Concepto</th>`;
   PLAZOS.forEach(p => html += `<th>${p} meses</th>`);
   html += `</tr>`;
 
-  const fila = (label, val) => {
+  const filaFija = (label, value) => {
     html += `<tr><td>${label}</td>`;
-    PLAZOS.forEach(() => html += `<td>$${val.toFixed(2)}</td>`);
+    PLAZOS.forEach(() => html += `<td>$${value.toFixed(2)}</td>`);
     html += `</tr>`;
   };
 
-  fila("PVP Vehículo", data.pvp);
-  fila("Dispositivo Satelital", data.dispositivo);
-  fila("Seguro", data.seguro);
-  fila("Monto total", data.montoTotal);
-  fila("Cuota de entrada", data.entrada);
-  fila("Monto a financiar", data.montoFinanciar);
+  filaFija("PVP Vehículo", data.pvp);
+  filaFija("Dispositivo Satelital", data.dispositivo);
+  filaFija("Seguro", data.seguro);
+  filaFija("Monto total", data.montoTotal);
+  filaFija("Cuota de entrada", data.entrada);
+  filaFija("Monto a financiar", data.montoFinanciar);
 
   html += `<tr><td colspan="6"><hr/></td></tr>`;
 
-  let cuotas = [];
-  let cuotasSeguro = [];
+  const cuotas = [];
+  const cuotasSeguro = [];
 
   PLAZOS.forEach(p => {
     const r = calcularFinanciamiento({
@@ -252,6 +280,7 @@ function renderTablaFinanciamiento(data) {
   html += filaVariable("Cuota total", total);
 
   html += `</table>`;
+
   document.getElementById("tablaFinanciamiento").innerHTML = html;
 }
 
