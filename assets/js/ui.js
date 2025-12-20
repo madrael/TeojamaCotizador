@@ -1,3 +1,8 @@
+/*************************************************
+ * UI PRINCIPAL – COTIZADOR TEOJAMA
+ * V 1.0 – Compilación 00002
+ *************************************************/
+
 let vehicles = [];
 let rates = [];
 let devicePlans = [];
@@ -13,230 +18,264 @@ const appState = {
   dispositivo: null
 };
 
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    vehicles = await loadVehicles();
-    rates = await loadRates();
-    devicePlans = await loadDevicePlans();
-    console.log(
-      "Datos cargados:",
-      vehicles.length,
-      "vehículos,",
-      rates.length,
-      "tasas,",
-      devicePlans.length,
-      "planes dispositivo"
-    );
-  } catch (e) {
-    console.error("Error cargando datos", e);
-    vehicles = [];
-    rates = [];
-    devicePlans = [];
-  }
+const PLAZOS = [12, 24, 36, 48, 60];
 
+/* =============================
+   INIT
+============================= */
+document.addEventListener("DOMContentLoaded", async () => {
+  vehicles = await loadVehicles();
+  rates = await loadRates();
+  devicePlans = await loadDevicePlans();
   initUI();
 });
 
+/* =============================
+   UI
+============================= */
 function initUI() {
-  const selectTipoVehiculo = document.getElementById("selectTipoVehiculo");
-  const selectMarca = document.getElementById("selectMarca");
-  const selectModelo = document.getElementById("selectModelo");
-  const selectTasa = document.getElementById("selectTasa");
-  const selectPlazo = document.getElementById("selectPlazo");
+  const selTipo = document.getElementById("selectTipoVehiculo");
+  const selMarca = document.getElementById("selectMarca");
+  const selModelo = document.getElementById("selectModelo");
+  const selTasa = document.getElementById("selectTasa");
+  const selPlazo = document.getElementById("selectPlazo");
 
   const chkSeguro = document.getElementById("chkSeguro");
+  const inpSeguro = document.getElementById("inputSeguro");
   const chkDispositivo = document.getElementById("chkDispositivo");
 
-  /* =====================
-     CHECKBOXES
-  ===================== */
+  const btnCalcular = document.getElementById("btnCalcular");
+
+  /* =============================
+     CHECKBOX SEGURO
+  ============================= */
   chkSeguro.addEventListener("change", () => {
     appState.incluyeSeguro = chkSeguro.checked;
+    inpSeguro.disabled = !chkSeguro.checked;
+    if (!chkSeguro.checked) inpSeguro.value = "";
   });
 
+  /* =============================
+     CHECKBOX DISPOSITIVO
+  ============================= */
   chkDispositivo.addEventListener("change", () => {
     appState.incluyeDispositivo = chkDispositivo.checked;
     actualizarDispositivo();
   });
 
-  /* =====================
+  /* =============================
      TIPO VEHÍCULO
-  ===================== */
-  selectTipoVehiculo.addEventListener("change", () => {
-    appState.tipoVehiculo = selectTipoVehiculo.value;
-
-    resetSelect(selectMarca, "Seleccione");
-    resetSelect(selectModelo, "Seleccione");
-    resetSelect(selectTasa, "Seleccione una tasa");
-    resetSelect(selectPlazo, "Seleccione un plazo");
-
-    document.getElementById("pvp").textContent = "";
-    ocultarDispositivo();
+  ============================= */
+  selTipo.addEventListener("change", () => {
+    appState.tipoVehiculo = selTipo.value;
+    resetSelect(selMarca);
+    resetSelect(selModelo);
+    resetSelect(selTasa);
+    resetSelect(selPlazo);
+    limpiarResultados();
 
     if (!appState.tipoVehiculo) return;
 
-    const marcas = [
-      ...new Set(
-        vehicles
-          .filter(v => v.TipoVehiculo === appState.tipoVehiculo)
-          .map(v => v.Marca)
-      )
-    ];
+    const marcas = [...new Set(
+      vehicles.filter(v => v.TipoVehiculo === appState.tipoVehiculo)
+              .map(v => v.Marca)
+    )];
 
-    marcas.forEach(m => addOption(selectMarca, m, m));
-    selectMarca.disabled = marcas.length === 0;
+    marcas.forEach(m => addOption(selMarca, m, m));
+    selMarca.disabled = false;
   });
 
-  /* =====================
+  /* =============================
      MARCA
-  ===================== */
-  selectMarca.addEventListener("change", () => {
-    appState.marca = selectMarca.value;
+  ============================= */
+  selMarca.addEventListener("change", () => {
+    appState.marca = selMarca.value;
+    resetSelect(selModelo);
+    resetSelect(selTasa);
+    resetSelect(selPlazo);
+    limpiarResultados();
 
-    resetSelect(selectModelo, "Seleccione");
-    resetSelect(selectTasa, "Seleccione una tasa");
-    resetSelect(selectPlazo, "Seleccione un plazo");
-
-    document.getElementById("pvp").textContent = "";
-    ocultarDispositivo();
-
-    if (!appState.marca) return;
-
-    const modelos = vehicles.filter(
-      v =>
-        v.TipoVehiculo === appState.tipoVehiculo &&
-        v.Marca === appState.marca
+    const modelos = vehicles.filter(v =>
+      v.TipoVehiculo === appState.tipoVehiculo &&
+      v.Marca === appState.marca
     );
 
-    modelos.forEach(m => addOption(selectModelo, m.Modelo, m.Modelo));
-    selectModelo.disabled = modelos.length === 0;
+    modelos.forEach(m => addOption(selModelo, m.Modelo, m.Modelo));
+    selModelo.disabled = false;
   });
 
-  /* =====================
+  /* =============================
      MODELO
-  ===================== */
-  selectModelo.addEventListener("change", () => {
-    appState.modelo = selectModelo.value;
+  ============================= */
+  selModelo.addEventListener("change", () => {
+    appState.modelo = selModelo.value;
+    resetSelect(selTasa);
+    resetSelect(selPlazo);
+    limpiarResultados();
 
-    resetSelect(selectTasa, "Seleccione una tasa");
-    resetSelect(selectPlazo, "Seleccione un plazo");
-
-    document.getElementById("pvp").textContent = "";
-    ocultarDispositivo();
-
-    if (!appState.modelo) return;
-
-    const vehiculo = vehicles.find(
-      v =>
-        v.TipoVehiculo === appState.tipoVehiculo &&
-        v.Marca === appState.marca &&
-        v.Modelo === appState.modelo
+    const veh = vehicles.find(v =>
+      v.TipoVehiculo === appState.tipoVehiculo &&
+      v.Marca === appState.marca &&
+      v.Modelo === appState.modelo
     );
 
-    if (vehiculo) {
-      document.getElementById("pvp").textContent = Number(vehiculo.PVP).toFixed(2);
-      cargarTasas();
-    }
+    if (!veh) return;
+
+    document.getElementById("pvp").textContent =
+      Number(veh.PVP).toFixed(2);
+
+    cargarTasas();
   });
 
-  /* =====================
+  /* =============================
      TASA
-  ===================== */
-  selectTasa.addEventListener("change", () => {
-    appState.tasa = selectTasa.value;
-
-    resetSelect(selectPlazo, "Seleccione un plazo");
-    ocultarDispositivo();
+  ============================= */
+  selTasa.addEventListener("change", () => {
+    appState.tasa = selTasa.value;
+    resetSelect(selPlazo);
+    limpiarResultados();
 
     const tasa = rates.find(r => r.IdTasa === appState.tasa);
-    if (!tasa) return;
-
     tasa.Plazos.forEach(p =>
-      addOption(selectPlazo, p.VPlazo, `${p.VPlazo} meses`)
+      addOption(selPlazo, p.VPlazo, `${p.VPlazo} meses`)
     );
-
-    selectPlazo.disabled = false;
+    selPlazo.disabled = false;
   });
 
-  /* =====================
+  /* =============================
      PLAZO
-  ===================== */
-  selectPlazo.addEventListener("change", () => {
-    appState.plazo = Number(selectPlazo.value);
+  ============================= */
+  selPlazo.addEventListener("change", () => {
+    appState.plazo = Number(selPlazo.value);
     actualizarDispositivo();
   });
+
+  /* =============================
+     BOTÓN CALCULAR
+  ============================= */
+  btnCalcular.addEventListener("click", calcularCotizacion);
 }
 
-/* =====================
-   TASAS
-===================== */
-function cargarTasas() {
-  const selectTasa = document.getElementById("selectTasa");
-
-  resetSelect(selectTasa, "Seleccione una tasa");
-
-  rates.forEach(t =>
-    addOption(selectTasa, t.IdTasa, `${t.TasaAnual}%`)
-  );
-
-  selectTasa.disabled = rates.length === 0;
-}
-
-/* =====================
+/* =============================
    DISPOSITIVO
-===================== */
+============================= */
 function actualizarDispositivo() {
-  const cont = document.getElementById("deviceInfo");
-
   if (!appState.incluyeDispositivo || !appState.plazo) {
-    ocultarDispositivo();
+    appState.dispositivo = null;
     return;
   }
 
-  const tipoCliente = "NORMAL";
   const plazoAnios = appState.plazo / 12;
+  const plan = devicePlans
+    .filter(p => p.activo)
+    .sort((a, b) => a.prioridad - b.prioridad)[0];
 
-  const planes = devicePlans
-    .filter(p => p.activo && p.tipoCliente === tipoCliente)
-    .sort((a, b) => a.prioridad - b.prioridad);
-
-  if (planes.length === 0) return;
-
-  const plan = planes[0];
-  const valor = plan.valoresPorAnio[plazoAnios];
-
+  const valor = plan?.valoresPorAnio[plazoAnios];
   if (!valor) return;
 
-  appState.dispositivo = {
-    proveedor: plan.proveedor,
-    codigo: plan.codigo,
-    valor
+  appState.dispositivo = { valor };
+}
+
+/* =============================
+   CÁLCULO
+============================= */
+function calcularCotizacion() {
+  const pvp = Number(document.getElementById("pvp").textContent || 0);
+  const entrada = Number(document.getElementById("inputEntrada").value || 0);
+  const seguro = appState.incluyeSeguro
+    ? Number(document.getElementById("inputSeguro").value || 0)
+    : 0;
+  const dispositivo = appState.dispositivo?.valor || 0;
+
+  const tasaObj = rates.find(r => r.IdTasa === appState.tasa);
+  if (!pvp || !tasaObj) {
+    alert("Complete la selección antes de calcular");
+    return;
+  }
+
+  const montoTotal = pvp + seguro + dispositivo;
+  const montoFinanciar = montoTotal - entrada;
+
+  renderTablaFinanciamiento({
+    pvp,
+    seguro,
+    dispositivo,
+    montoTotal,
+    entrada,
+    montoFinanciar,
+    tasaAnual: tasaObj.TasaAnual
+  });
+}
+
+/* =============================
+   TABLA
+============================= */
+function renderTablaFinanciamiento(data) {
+  let html = `<table border="1"><tr><th>Concepto</th>`;
+  PLAZOS.forEach(p => html += `<th>${p} meses</th>`);
+  html += `</tr>`;
+
+  const fila = (label, val) => {
+    html += `<tr><td>${label}</td>`;
+    PLAZOS.forEach(() => html += `<td>$${val.toFixed(2)}</td>`);
+    html += `</tr>`;
   };
 
-  document.getElementById("devProveedor").textContent = plan.proveedor;
-  document.getElementById("devPlan").textContent = plan.codigo;
-  document.getElementById("devValor").textContent = valor.toFixed(2);
+  fila("PVP Vehículo", data.pvp);
+  fila("Dispositivo Satelital", data.dispositivo);
+  fila("Seguro", data.seguro);
+  fila("Monto total", data.montoTotal);
+  fila("Cuota de entrada", data.entrada);
+  fila("Monto a financiar", data.montoFinanciar);
 
-  cont.style.display = "block";
+  html += `<tr><td colspan="6"><hr/></td></tr>`;
+
+  let cuotas = [];
+  let cuotasSeguro = [];
+
+  PLAZOS.forEach(p => {
+    const r = calcularFinanciamiento({
+      montoFinanciar: data.montoFinanciar,
+      tasaAnual: data.tasaAnual,
+      plazoMeses: p
+    });
+    cuotas.push(r.cuotaMensual);
+    cuotasSeguro.push(data.seguro / p);
+  });
+
+  html += filaVariable("Cuota mensual", cuotas);
+  html += filaVariable("Cuota seguro", cuotasSeguro);
+
+  html += `<tr><td colspan="6"><hr/></td></tr>`;
+
+  const total = cuotas.map((c, i) => c + cuotasSeguro[i]);
+  html += filaVariable("Cuota total", total);
+
+  html += `</table>`;
+  document.getElementById("tablaFinanciamiento").innerHTML = html;
 }
 
-function ocultarDispositivo() {
-  const cont = document.getElementById("deviceInfo");
-  cont.style.display = "none";
-  appState.dispositivo = null;
+function filaVariable(label, values) {
+  let row = `<tr><td>${label}</td>`;
+  values.forEach(v => row += `<td>$${v.toFixed(2)}</td>`);
+  return row + `</tr>`;
 }
 
-/* =====================
+/* =============================
    UTILS
-===================== */
-function resetSelect(select, placeholder) {
-  select.innerHTML = `<option value="">${placeholder}</option>`;
-  select.disabled = true;
+============================= */
+function resetSelect(sel) {
+  sel.innerHTML = `<option value="">Seleccione</option>`;
+  sel.disabled = true;
 }
 
-function addOption(select, value, text) {
-  const option = document.createElement("option");
-  option.value = value;
-  option.textContent = text;
-  select.appendChild(option);
+function addOption(sel, value, text) {
+  const o = document.createElement("option");
+  o.value = value;
+  o.textContent = text;
+  sel.appendChild(o);
+}
+
+function limpiarResultados() {
+  document.getElementById("tablaFinanciamiento").innerHTML = "";
 }
