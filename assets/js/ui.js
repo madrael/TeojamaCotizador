@@ -1,6 +1,6 @@
 /*************************************************
  * UI PRINCIPAL – COTIZADOR TEOJAMA
- * V 1.0 – Compilación 00004
+ * V 1.0 – Compilación 00003.01
  *************************************************/
 
 let vehicles = [];
@@ -71,10 +71,10 @@ function initUI() {
   selTipo.addEventListener("change", () => {
     appState.tipoVehiculo = selTipo.value;
 
-    resetSelect(selMarca);
-    resetSelect(selModelo);
-    resetSelect(selTasa);
-    resetSelect(selPlazo);
+    resetSelect(selMarca, true);
+    resetSelect(selModelo, true);
+    resetSelect(selTasa, false);
+    resetSelect(selPlazo, false);
     limpiarResultados();
 
     if (!appState.tipoVehiculo) return;
@@ -95,9 +95,9 @@ function initUI() {
   selMarca.addEventListener("change", () => {
     appState.marca = selMarca.value;
 
-    resetSelect(selModelo);
-    resetSelect(selTasa);
-    resetSelect(selPlazo);
+    resetSelect(selModelo, true);
+    resetSelect(selTasa, false);
+    resetSelect(selPlazo, false);
     limpiarResultados();
 
     const modelos = vehicles.filter(v =>
@@ -110,13 +110,13 @@ function initUI() {
   });
 
   /* =============================
-     MODELO  (🔥 FIX CLAVE)
+     MODELO
   ============================= */
   selModelo.addEventListener("change", () => {
     appState.modelo = selModelo.value;
 
-    resetSelect(selTasa);
-    resetSelect(selPlazo);
+    resetSelect(selTasa, false);
+    resetSelect(selPlazo, false);
     limpiarResultados();
 
     const veh = vehicles.find(v =>
@@ -130,20 +130,18 @@ function initUI() {
     document.getElementById("pvp").textContent =
       Number(veh.PVP).toFixed(2);
 
-    // 🔑 CARGAR Y FORZAR HABILITACIÓN DE TASA
     rates.forEach(t =>
       addOption(selTasa, t.IdTasa, `${t.TasaAnual}%`)
     );
-    selTasa.disabled = false;
   });
 
   /* =============================
-     TASA  (🔥 FIX CLAVE)
+     TASA
   ============================= */
   selTasa.addEventListener("change", () => {
     appState.tasa = selTasa.value;
 
-    resetSelect(selPlazo);
+    resetSelect(selPlazo, false);
     limpiarResultados();
 
     const tasaObj = rates.find(r => r.IdTasa === appState.tasa);
@@ -152,9 +150,6 @@ function initUI() {
     tasaObj.Plazos.forEach(p =>
       addOption(selPlazo, p.VPlazo, `${p.VPlazo} meses`)
     );
-
-    // 🔑 FORZAR HABILITACIÓN DE PLAZO
-    selPlazo.disabled = false;
   });
 
   /* =============================
@@ -273,18 +268,12 @@ function renderTablaFinanciamiento(data) {
   document.getElementById("tablaFinanciamiento").innerHTML = html;
 }
 
-function filaVariable(label, values) {
-  let row = `<tr><td>${label}</td>`;
-  values.forEach(v => row += `<td>$${v.toFixed(2)}</td>`);
-  return row + `</tr>`;
-}
-
 /* =============================
    UTILS
 ============================= */
-function resetSelect(sel) {
+function resetSelect(sel, disable = false) {
   sel.innerHTML = `<option value="">Seleccione</option>`;
-  sel.disabled = true;
+  sel.disabled = disable;
 }
 
 function addOption(sel, value, text) {
