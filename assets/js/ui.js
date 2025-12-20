@@ -14,62 +14,94 @@ const appState = {
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
-  vehicles = await loadVehicles();
-  rates = await loadRates();
-  devicePlans = await loadDevicePlans();
+  try {
+    vehicles = await loadVehicles();
+    rates = await loadRates();
+    devicePlans = await loadDevicePlans();
+    console.log(
+      "Datos cargados:",
+      vehicles.length,
+      "vehículos,",
+      rates.length,
+      "tasas,",
+      devicePlans.length,
+      "planes dispositivo"
+    );
+  } catch (e) {
+    console.error("Error cargando datos", e);
+    vehicles = [];
+    rates = [];
+    devicePlans = [];
+  }
+
   initUI();
 });
 
 function initUI() {
-  const chkDispositivo = document.getElementById("chkDispositivo");
+  const selectTipoVehiculo = document.getElementById("selectTipoVehiculo");
+  const selectMarca = document.getElementById("selectMarca");
+  const selectModelo = document.getElementById("selectModelo");
+  const selectTasa = document.getElementById("selectTasa");
   const selectPlazo = document.getElementById("selectPlazo");
+
+  const chkSeguro = document.getElementById("chkSeguro");
+  const chkDispositivo = document.getElementById("chkDispositivo");
+
+  /* =====================
+     CHECKBOXES
+  ===================== */
+  chkSeguro.addEventListener("change", () => {
+    appState.incluyeSeguro = chkSeguro.checked;
+  });
 
   chkDispositivo.addEventListener("change", () => {
     appState.incluyeDispositivo = chkDispositivo.checked;
     actualizarDispositivo();
   });
 
-  selectPlazo.addEventListener("change", () => {
-    appState.plazo = Number(selectPlazo.value);
-    actualizarDispositivo();
+  /* =====================
+     TIPO VEHÍCULO
+  ===================== */
+  selectTipoVehiculo.addEventListener("change", () => {
+    appState.tipoVehiculo = selectTipoVehiculo.value;
+
+    resetSelect(selectMarca, "Seleccione");
+    resetSelect(selectModelo, "Seleccione");
+    resetSelect(selectTasa, "Seleccione una tasa");
+    resetSelect(selectPlazo, "Seleccione un plazo");
+
+    document.getElementById("pvp").textContent = "";
+    ocultarDispositivo();
+
+    if (!appState.tipoVehiculo) return;
+
+    const marcas = [
+      ...new Set(
+        vehicles
+          .filter(v => v.TipoVehiculo === appState.tipoVehiculo)
+          .map(v => v.Marca)
+      )
+    ];
+
+    marcas.forEach(m => addOption(selectMarca, m, m));
+    selectMarca.disabled = marcas.length === 0;
   });
-}
 
-/* =========================
-   DISPOSITIVO
-========================= */
-function actualizarDispositivo() {
-  const cont = document.getElementById("deviceInfo");
+  /* =====================
+     MARCA
+  ===================== */
+  selectMarca.addEventListener("change", () => {
+    appState.marca = selectMarca.value;
 
-  if (!appState.incluyeDispositivo || !appState.plazo) {
-    cont.style.display = "none";
-    appState.dispositivo = null;
-    return;
-  }
+    resetSelect(selectModelo, "Seleccione");
+    resetSelect(selectTasa, "Seleccione una tasa");
+    resetSelect(selectPlazo, "Seleccione un plazo");
 
-  const tipoCliente = "NORMAL";
-  const plazoAnios = appState.plazo / 12;
+    document.getElementById("pvp").textContent = "";
+    ocultarDispositivo();
 
-  const planes = devicePlans
-    .filter(p => p.activo && p.tipoCliente === tipoCliente)
-    .sort((a, b) => a.prioridad - b.prioridad);
+    if (!appState.marca) return;
 
-  if (planes.length === 0) return;
-
-  const plan = planes[0];
-  const valor = plan.valoresPorAnio[plazoAnios];
-
-  if (!valor) return;
-
-  appState.dispositivo = {
-    proveedor: plan.proveedor,
-    codigo: plan.codigo,
-    valor
-  };
-
-  document.getElementById("devProveedor").textContent = plan.proveedor;
-  document.getElementById("devPlan").textContent = plan.codigo;
-  document.getElementById("devValor").textContent = valor.toFixed(2);
-
-  cont.style.display = "block";
-}
+    const modelos = vehicles.filter(
+      v =>
+        v.TipoVehiculo === appState.tipoVeh
