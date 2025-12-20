@@ -33,6 +33,11 @@
     <h2>Cotizador de Vehículos</h2>
     <small><span class="app-version"></span></small>
 
+    <!-- PVP (🔑 CLAVE) -->
+    <div style="margin-top:10px;">
+      <strong>PVP: $<span id="pvp">0.00</span></strong>
+    </div>
+
     <!-- Selección -->
     <div>
       <label>Tipo de Vehículo</label><br />
@@ -55,13 +60,11 @@
 
     <div>
       <label>Tasa de Interés</label><br />
-      <!-- 🔑 SIN disabled -->
       <select id="selectTasa"></select>
     </div>
 
     <div>
       <label>Plazo (meses)</label><br />
-      <!-- 🔑 SIN disabled -->
       <select id="selectPlazo"></select>
     </div>
 
@@ -118,7 +121,7 @@
        VERSION APP
   ========================== -->
   <script>
-    const APP_VERSION = "V 1.0 · Compilación 3.04";
+    const APP_VERSION = "V 1.0 · Compilación 3.05";
   </script>
 
   <!-- =========================
@@ -137,4 +140,3 @@
 
 </body>
 </html>
-
