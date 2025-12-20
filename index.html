@@ -33,11 +33,6 @@
     <h2>Cotizador de Vehículos</h2>
     <small><span class="app-version"></span></small>
 
-    <!-- PVP (🔑 CLAVE) -->
-    <div style="margin-top:10px;">
-      <strong>PVP: $<span id="pvp">0.00</span></strong>
-    </div>
-
     <!-- Selección -->
     <div>
       <label>Tipo de Vehículo</label><br />
@@ -58,6 +53,11 @@
       <select id="selectModelo"></select>
     </div>
 
+    <!-- PVP debajo de Modelo -->
+    <div style="margin-top:6px;">
+      <strong>PVP: $<span id="pvp">0.00</span></strong>
+    </div>
+
     <div>
       <label>Tasa de Interés</label><br />
       <select id="selectTasa"></select>
@@ -68,13 +68,12 @@
       <select id="selectPlazo"></select>
     </div>
 
-    <!-- Opciones -->
+    <!-- Seguro -->
     <div style="margin-top:10px;">
       <label>
         <input type="checkbox" id="chkSeguro" />
         Incluir seguro
-      </label>
-      <br />
+      </label><br />
       <input
         type="number"
         id="inputSeguro"
@@ -83,6 +82,7 @@
       />
     </div>
 
+    <!-- Dispositivo -->
     <div style="margin-top:10px;">
       <label>
         <input type="checkbox" id="chkDispositivo" />
@@ -90,6 +90,18 @@
       </label>
     </div>
 
+    <div id="deviceContainer" style="display:none; margin-top:6px;">
+      <label>Plan de dispositivo</label><br />
+      <select id="selectDevicePlan"></select>
+      <div style="margin-top:4px;">
+        <small>
+          Proveedor: <span id="deviceProvider"></span><br />
+          Valor: $<span id="deviceValue">0.00</span>
+        </small>
+      </div>
+    </div>
+
+    <!-- Entrada -->
     <div style="margin-top:10px;">
       <label>Cuota de entrada</label><br />
       <input
@@ -121,7 +133,7 @@
        VERSION APP
   ========================== -->
   <script>
-    const APP_VERSION = "V 1.0 · Compilación 3.05";
+    const APP_VERSION = "V 1.0 · Compilación 3.06";
   </script>
 
   <!-- =========================
