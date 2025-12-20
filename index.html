@@ -12,7 +12,7 @@
   <section id="login-section">
     <h2>Acceso Cotizador</h2>
     <small style="display:block; margin-bottom:10px; color:#555;">
-      V 1.0 · Compilación 00001
+      <span class="app-version"></span>
     </small>
 
     <input type="text" id="username" placeholder="Usuario" />
@@ -27,7 +27,7 @@
 
     <h2>Cotizador de Vehículos</h2>
     <small style="display:block; margin-bottom:10px; color:#555;">
-      V 1.0 · Compilación 00001
+      <span class="app-version"></span>
     </small>
 
     <div class="form-group">
@@ -87,8 +87,24 @@
     <button id="logout-btn" type="button">Cerrar Sesión</button>
   </section>
 
+  <!-- VERSION APP (FUENTE ÚNICA) -->
+  <script>
+    const APP_VERSION = "V 1.0 · Compilación 00001";
+  </script>
+
   <script src="./assets/js/auth.js"></script>
   <script src="./assets/js/dataLoader.js"></script>
   <script src="./assets/js/ui.js"></script>
+
+  <!-- INYECTA VERSION -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".app-version").forEach(el => {
+        el.textContent = APP_VERSION;
+      });
+    });
+  </script>
+
 </body>
 </html>
+
