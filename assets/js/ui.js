@@ -1,6 +1,11 @@
 /*************************************************
- * UI PRINCIPAL – COTIZADOR TEOJAMA
- * V 1.0 – Compilación 3.03
+ * Archivo: ui.js
+ * Proyecto: Cotizador Vehículos Teojama
+ * Versión: V 1.0 · Compilación 3.06
+ * Cambios:
+ * - Selección de plan de dispositivo
+ * - Botón calcular funcional
+ * - Render Detalle Financiamiento
  *************************************************/
 
 let vehicles = [];
@@ -21,25 +26,13 @@ const appState = {
 const PLAZOS = [12, 24, 36, 48, 60];
 
 /* =============================
-   INIT (CLAVE)
+   INIT
 ============================= */
 document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    vehicles = await loadVehicles();
-    rates = await loadRates();
-    devicePlans = await loadDevicePlans();
-
-    console.log("Datos cargados:", {
-      vehicles: vehicles.length,
-      rates: rates.length,
-      devicePlans: devicePlans.length
-    });
-
-    initUI();
-  } catch (e) {
-    console.error("Error cargando datos", e);
-    alert("Error cargando datos base del cotizador");
-  }
+  vehicles = await loadVehicles();
+  rates = await loadRates();
+  devicePlans = await loadDevicePlans();
+  initUI();
 });
 
 /* =============================
@@ -54,62 +47,54 @@ function initUI() {
 
   const chkSeguro = document.getElementById("chkSeguro");
   const inpSeguro = document.getElementById("inputSeguro");
+
   const chkDispositivo = document.getElementById("chkDispositivo");
+  const deviceContainer = document.getElementById("deviceContainer");
+  const selDevicePlan = document.getElementById("selectDevicePlan");
+  const lblDeviceProvider = document.getElementById("deviceProvider");
+  const lblDeviceValue = document.getElementById("deviceValue");
 
   const btnCalcular = document.getElementById("btnCalcular");
 
-  /* =============================
-     SEGURO
-  ============================= */
+  /* ===== Seguro ===== */
   chkSeguro.addEventListener("change", () => {
     appState.incluyeSeguro = chkSeguro.checked;
     inpSeguro.disabled = !chkSeguro.checked;
     if (!chkSeguro.checked) inpSeguro.value = "";
-    limpiarResultados();
   });
 
-  /* =============================
-     DISPOSITIVO
-  ============================= */
+  /* ===== Dispositivo ===== */
   chkDispositivo.addEventListener("change", () => {
     appState.incluyeDispositivo = chkDispositivo.checked;
-    actualizarDispositivo();
-    limpiarResultados();
+    deviceContainer.style.display = chkDispositivo.checked ? "block" : "none";
+    cargarPlanesDispositivo();
   });
 
-  /* =============================
-     TIPO VEHÍCULO
-  ============================= */
+  selDevicePlan.addEventListener("change", () => {
+    const plan = devicePlans.find(p => p.id === selDevicePlan.value);
+    if (!plan) return;
+    appState.dispositivo = plan;
+    lblDeviceProvider.textContent = plan.proveedor;
+    lblDeviceValue.textContent = plan.valor.toFixed(2);
+  });
+
+  /* ===== Tipo ===== */
   selTipo.addEventListener("change", () => {
+    resetAll();
     appState.tipoVehiculo = selTipo.value;
 
-    resetSelect(selMarca);
-    resetSelect(selModelo);
-    resetSelect(selTasa);
-    resetSelect(selPlazo);
-    limpiarResultados();
-
-    if (!appState.tipoVehiculo) return;
-
     const marcas = [...new Set(
-      vehicles
-        .filter(v => v.TipoVehiculo === appState.tipoVehiculo)
-        .map(v => v.Marca)
+      vehicles.filter(v => v.TipoVehiculo === appState.tipoVehiculo)
+              .map(v => v.Marca)
     )];
 
     marcas.forEach(m => addOption(selMarca, m, m));
   });
 
-  /* =============================
-     MARCA
-  ============================= */
+  /* ===== Marca ===== */
   selMarca.addEventListener("change", () => {
-    appState.marca = selMarca.value;
-
     resetSelect(selModelo);
-    resetSelect(selTasa);
-    resetSelect(selPlazo);
-    limpiarResultados();
+    appState.marca = selMarca.value;
 
     const modelos = vehicles.filter(v =>
       v.TipoVehiculo === appState.tipoVehiculo &&
@@ -119,15 +104,12 @@ function initUI() {
     modelos.forEach(m => addOption(selModelo, m.Modelo, m.Modelo));
   });
 
-  /* =============================
-     MODELO
-  ============================= */
+  /* ===== Modelo ===== */
   selModelo.addEventListener("change", () => {
-    appState.modelo = selModelo.value;
-
     resetSelect(selTasa);
     resetSelect(selPlazo);
-    limpiarResultados();
+
+    appState.modelo = selModelo.value;
 
     const veh = vehicles.find(v =>
       v.TipoVehiculo === appState.tipoVehiculo &&
@@ -135,77 +117,55 @@ function initUI() {
       v.Modelo === appState.modelo
     );
 
-    if (!veh) return;
-
     document.getElementById("pvp").textContent =
-      Number(veh.PVP).toFixed(2);
+      veh ? Number(veh.PVP).toFixed(2) : "0.00";
 
-    // 🔑 Cargar tasas SOLO si existen
-    if (!rates || rates.length === 0) {
-      console.warn("Rates vacío");
-      return;
-    }
-
-    rates.forEach(t =>
-      addOption(selTasa, t.IdTasa, `${t.TasaAnual}%`)
+    rates.forEach(r =>
+      addOption(selTasa, r.IdTasa, `${r.TasaAnual}%`)
     );
   });
 
-  /* =============================
-     TASA
-  ============================= */
+  /* ===== Tasa ===== */
   selTasa.addEventListener("change", () => {
+    resetSelect(selPlazo);
     appState.tasa = selTasa.value;
 
-    resetSelect(selPlazo);
-    limpiarResultados();
-
     const tasaObj = rates.find(r => r.IdTasa === appState.tasa);
-    if (!tasaObj || !tasaObj.Plazos) return;
-
-    tasaObj.Plazos.forEach(p =>
+    tasaObj?.Plazos.forEach(p =>
       addOption(selPlazo, p.VPlazo, `${p.VPlazo} meses`)
     );
   });
 
-  /* =============================
-     PLAZO
-  ============================= */
+  /* ===== Plazo ===== */
   selPlazo.addEventListener("change", () => {
     appState.plazo = Number(selPlazo.value);
-    actualizarDispositivo();
-    limpiarResultados();
   });
 
-  /* =============================
-     CALCULAR
-  ============================= */
+  /* ===== Calcular ===== */
   btnCalcular.addEventListener("click", calcularCotizacion);
 }
 
 /* =============================
    DISPOSITIVO
 ============================= */
-function actualizarDispositivo() {
-  if (!appState.incluyeDispositivo || !appState.plazo) {
-    appState.dispositivo = null;
-    return;
-  }
+function cargarPlanesDispositivo() {
+  const sel = document.getElementById("selectDevicePlan");
+  sel.innerHTML = "";
 
-  const plazoAnios = appState.plazo / 12;
-
-  const plan = devicePlans
+  devicePlans
     .filter(p => p.activo)
-    .sort((a, b) => a.prioridad - b.prioridad)[0];
+    .forEach(p =>
+      addOption(sel, p.id, p.plan)
+    );
 
-  const valor = plan?.valoresPorAnio[plazoAnios];
-  if (!valor) return;
-
-  appState.dispositivo = { valor };
+  if (devicePlans.length === 1) {
+    sel.value = devicePlans[0].id;
+    sel.dispatchEvent(new Event("change"));
+  }
 }
 
 /* =============================
-   CÁLCULO
+   CÁLCULO + RENDER
 ============================= */
 function calcularCotizacion() {
   const pvp = Number(document.getElementById("pvp").textContent || 0);
@@ -237,8 +197,37 @@ function calcularCotizacion() {
 }
 
 /* =============================
+   TABLA
+============================= */
+function renderTablaFinanciamiento(data) {
+  let html = `<table border="1"><tr><th>Concepto</th>`;
+  PLAZOS.forEach(p => html += `<th>${p} meses</th>`);
+  html += `</tr>`;
+
+  fila(html, "PVP Vehículo", data.pvp);
+  fila(html, "Dispositivo", data.dispositivo);
+  fila(html, "Seguro", data.seguro);
+  fila(html, "Monto total", data.montoTotal);
+  fila(html, "Cuota de entrada", data.entrada);
+  fila(html, "Monto a financiar", data.montoFinanciar);
+
+  document.getElementById("tablaFinanciamiento").innerHTML = html + "</table>";
+}
+
+function fila(html, label, value) {
+  html += `<tr><td>${label}</td>`;
+  PLAZOS.forEach(() => html += `<td>$${value.toFixed(2)}</td>`);
+  html += `</tr>`;
+}
+
+/* =============================
    UTILS
 ============================= */
+function resetAll() {
+  ["selectMarca", "selectModelo", "selectTasa", "selectPlazo"]
+    .forEach(id => resetSelect(document.getElementById(id)));
+}
+
 function resetSelect(sel) {
   sel.innerHTML = `<option value="">Seleccione</option>`;
 }
@@ -248,8 +237,4 @@ function addOption(sel, value, text) {
   o.value = value;
   o.textContent = text;
   sel.appendChild(o);
-}
-
-function limpiarResultados() {
-  document.getElementById("tablaFinanciamiento").innerHTML = "";
 }
