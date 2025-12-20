@@ -1,6 +1,6 @@
 /*************************************************
  * UI PRINCIPAL – COTIZADOR TEOJAMA
- * V 1.0 – Compilación 00003
+ * V 1.0 – Compilación 00004
  *************************************************/
 
 let vehicles = [];
@@ -47,7 +47,7 @@ function initUI() {
   const btnCalcular = document.getElementById("btnCalcular");
 
   /* =============================
-     CHECKBOX SEGURO
+     SEGURO
   ============================= */
   chkSeguro.addEventListener("change", () => {
     appState.incluyeSeguro = chkSeguro.checked;
@@ -57,7 +57,7 @@ function initUI() {
   });
 
   /* =============================
-     CHECKBOX DISPOSITIVO
+     DISPOSITIVO
   ============================= */
   chkDispositivo.addEventListener("change", () => {
     appState.incluyeDispositivo = chkDispositivo.checked;
@@ -110,7 +110,7 @@ function initUI() {
   });
 
   /* =============================
-     MODELO
+     MODELO  (🔥 FIX CLAVE)
   ============================= */
   selModelo.addEventListener("change", () => {
     appState.modelo = selModelo.value;
@@ -130,11 +130,15 @@ function initUI() {
     document.getElementById("pvp").textContent =
       Number(veh.PVP).toFixed(2);
 
-    cargarTasas(); // 🔑 aquí se habilita tasa
+    // 🔑 CARGAR Y FORZAR HABILITACIÓN DE TASA
+    rates.forEach(t =>
+      addOption(selTasa, t.IdTasa, `${t.TasaAnual}%`)
+    );
+    selTasa.disabled = false;
   });
 
   /* =============================
-     TASA
+     TASA  (🔥 FIX CLAVE)
   ============================= */
   selTasa.addEventListener("change", () => {
     appState.tasa = selTasa.value;
@@ -149,7 +153,8 @@ function initUI() {
       addOption(selPlazo, p.VPlazo, `${p.VPlazo} meses`)
     );
 
-    selPlazo.disabled = false; // 🔑 habilitar plazo
+    // 🔑 FORZAR HABILITACIÓN DE PLAZO
+    selPlazo.disabled = false;
   });
 
   /* =============================
@@ -162,24 +167,9 @@ function initUI() {
   });
 
   /* =============================
-     BOTÓN CALCULAR
+     CALCULAR
   ============================= */
   btnCalcular.addEventListener("click", calcularCotizacion);
-}
-
-/* =============================
-   CARGAR TASAS
-============================= */
-function cargarTasas() {
-  const selTasa = document.getElementById("selectTasa");
-
-  resetSelect(selTasa);
-
-  rates.forEach(t =>
-    addOption(selTasa, t.IdTasa, `${t.TasaAnual}%`)
-  );
-
-  selTasa.disabled = false; // ✅ FIX PRINCIPAL
 }
 
 /* =============================
@@ -236,7 +226,7 @@ function calcularCotizacion() {
 }
 
 /* =============================
-   TABLA FINANCIERA
+   TABLA
 ============================= */
 function renderTablaFinanciamiento(data) {
   let html = `<table border="1"><tr><th>Concepto</th>`;
@@ -280,7 +270,6 @@ function renderTablaFinanciamiento(data) {
   html += filaVariable("Cuota total", total);
 
   html += `</table>`;
-
   document.getElementById("tablaFinanciamiento").innerHTML = html;
 }
 
