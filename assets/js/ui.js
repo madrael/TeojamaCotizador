@@ -3,8 +3,7 @@
  * Proyecto: Cotizador Vehículos Teojama
  * Versión: V 1.0 · Compilación 3.06
  * Fix:
- * - Restaurar planes de dispositivo
- * - Corregir renderTablaFinanciamiento
+ * - Corrección mapeo DevicePlans.json
  *************************************************/
 
 let vehicles = [];
@@ -29,6 +28,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   vehicles = await loadVehicles();
   rates = await loadRates();
   devicePlans = await loadDevicePlans();
+
+  console.log("DevicePlans cargados:", devicePlans);
+
   initUI();
 });
 
@@ -64,17 +66,23 @@ function initUI() {
   chkDispositivo.addEventListener("change", () => {
     appState.incluyeDispositivo = chkDispositivo.checked;
     deviceContainer.style.display = chkDispositivo.checked ? "block" : "none";
-    if (chkDispositivo.checked) cargarPlanesDispositivo();
-    else appState.dispositivo = null;
+
+    if (chkDispositivo.checked) {
+      cargarPlanesDispositivo();
+    } else {
+      appState.dispositivo = null;
+      lblDeviceProvider.textContent = "";
+      lblDeviceValue.textContent = "0.00";
+    }
   });
 
   selDevicePlan.addEventListener("change", () => {
-    const plan = devicePlans.find(p => p.Plan === selDevicePlan.value);
+    const plan = devicePlans.find(p => p.plan === selDevicePlan.value);
     if (!plan) return;
 
     appState.dispositivo = plan;
-    lblDeviceProvider.textContent = plan.Proveedor;
-    lblDeviceValue.textContent = Number(plan.Valor).toFixed(2);
+    lblDeviceProvider.textContent = plan.provider;
+    lblDeviceValue.textContent = Number(plan.price).toFixed(2);
   });
 
   /* ===== Tipo ===== */
@@ -83,8 +91,9 @@ function initUI() {
     appState.tipoVehiculo = selTipo.value;
 
     const marcas = [...new Set(
-      vehicles.filter(v => v.TipoVehiculo === appState.tipoVehiculo)
-              .map(v => v.Marca)
+      vehicles
+        .filter(v => v.TipoVehiculo === appState.tipoVehiculo)
+        .map(v => v.Marca)
     )];
 
     marcas.forEach(m => addOption(selMarca, m, m));
@@ -95,12 +104,12 @@ function initUI() {
     resetSelect(selModelo);
     appState.marca = selMarca.value;
 
-    const modelos = vehicles.filter(v =>
-      v.TipoVehiculo === appState.tipoVehiculo &&
-      v.Marca === appState.marca
-    );
-
-    modelos.forEach(m => addOption(selModelo, m.Modelo, m.Modelo));
+    vehicles
+      .filter(v =>
+        v.TipoVehiculo === appState.tipoVehiculo &&
+        v.Marca === appState.marca
+      )
+      .forEach(v => addOption(selModelo, v.Modelo, v.Modelo));
   });
 
   /* ===== Modelo ===== */
@@ -149,22 +158,22 @@ function initUI() {
 ============================= */
 function cargarPlanesDispositivo() {
   const sel = document.getElementById("selectDevicePlan");
-  sel.innerHTML = "";
+  sel.innerHTML = `<option value="">Seleccione</option>`;
 
-  const activos = devicePlans.filter(p => p.Activo === true);
+  const activos = devicePlans.filter(p => p.active === true);
 
   activos.forEach(p =>
-    addOption(sel, p.Plan, p.Plan)
+    addOption(sel, p.plan, p.plan)
   );
 
   if (activos.length === 1) {
-    sel.value = activos[0].Plan;
+    sel.value = activos[0].plan;
     sel.dispatchEvent(new Event("change"));
   }
 }
 
 /* =============================
-   CÁLCULO + RENDER
+   CÁLCULO (BÁSICO)
 ============================= */
 function calcularCotizacion() {
   const pvp = Number(document.getElementById("pvp").textContent || 0);
@@ -173,13 +182,8 @@ function calcularCotizacion() {
     ? Number(document.getElementById("inputSeguro").value || 0)
     : 0;
   const dispositivo = appState.incluyeDispositivo
-    ? Number(appState.dispositivo?.Valor || 0)
+    ? Number(appState.dispositivo?.price || 0)
     : 0;
-
-  if (!pvp || !appState.plazo) {
-    alert("Complete la selección antes de calcular");
-    return;
-  }
 
   renderTablaFinanciamiento({
     pvp,
@@ -190,20 +194,17 @@ function calcularCotizacion() {
 }
 
 /* =============================
-   TABLA
+   TABLA (TEMPORAL)
 ============================= */
 function renderTablaFinanciamiento(data) {
-  const html = `
+  document.getElementById("tablaFinanciamiento").innerHTML = `
     <table border="1">
-      <tr><th>Concepto</th><th>Valor</th></tr>
       <tr><td>PVP Vehículo</td><td>$${data.pvp.toFixed(2)}</td></tr>
       <tr><td>Dispositivo</td><td>$${data.dispositivo.toFixed(2)}</td></tr>
       <tr><td>Seguro</td><td>$${data.seguro.toFixed(2)}</td></tr>
-      <tr><td>Cuota de entrada</td><td>$${data.entrada.toFixed(2)}</td></tr>
+      <tr><td>Cuota entrada</td><td>$${data.entrada.toFixed(2)}</td></tr>
     </table>
   `;
-
-  document.getElementById("tablaFinanciamiento").innerHTML = html;
 }
 
 /* =============================
