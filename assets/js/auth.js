@@ -1,59 +1,90 @@
-// auth.js - Login conceptual (MVP, robusto para GitHub Pages)
+/*************************************************
+ * Archivo: auth.js
+ * Proyecto: Cotizador Vehículos Teojama
+ * Versión: V 1.0 · Compilación 3.11
+ *************************************************/
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const loginSection = document.getElementById("login-section");
-  const quoteSection = document.getElementById("quote-section");
   const loginBtn = document.getElementById("login-btn");
-  const loginError = document.getElementById("login-error");
   const logoutBtn = document.getElementById("logout-btn");
-  const welcomeUser = document.getElementById("welcome-user");
+  const loginError = document.getElementById("login-error");
 
-  async function loadUsers() {
-    const response = await fetch("data/Users.json");
-    return await response.json();
-  }
+  /* =========================
+     LOGIN
+  ========================== */
+  loginBtn?.addEventListener("click", async () => {
 
-  loginBtn.addEventListener("click", async () => {
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
 
     if (!username || !password) {
-      loginError.textContent = "Ingrese usuario y contraseña";
-      loginError.style.display = "block";
+      mostrarError("Ingrese usuario y contraseña");
       return;
     }
 
-    const users = await loadUsers();
+    try {
+      const response = await fetch("./assets/data/Users.json");
+      const users = await response.json();
 
-    const user = users.find(u =>
-      u.username === username &&
-      u.password === password &&
-      u.activo === true
-    );
+      const user = users.find(
+        u =>
+          u.username === username &&
+          u.password === password &&
+          u.activo === true
+      );
 
-    if (!user) {
-      loginError.textContent = "Usuario o contraseña incorrectos";
-      loginError.style.display = "block";
-      return;
+      if (!user) {
+        mostrarError("Credenciales inválidas");
+        return;
+      }
+
+      // Login exitoso
+      iniciarSesion(user);
+
+    } catch (err) {
+      mostrarError("Error al validar usuario");
+      console.error(err);
+    }
+  });
+
+  /* =========================
+     LOGOUT
+  ========================== */
+  logoutBtn?.addEventListener("click", cerrarSesion);
+
+  /* =========================
+     FUNCIONES
+  ========================== */
+
+  function iniciarSesion(user) {
+    // Ocultar login
+    document.getElementById("login-section").style.display = "none";
+    document.getElementById("quote-section").style.display = "block";
+
+    // Mostrar nombre del usuario en header
+    const lblUser = document.getElementById("loggedUserName");
+    if (lblUser) {
+      lblUser.textContent = user.nombre;
     }
 
-    // LOGIN OK
-    sessionStorage.setItem("user", JSON.stringify(user));
-
+    // Limpiar error
     loginError.style.display = "none";
-    loginSection.style.display = "none";
-    quoteSection.style.display = "block";
+  }
 
-    if (welcomeUser) {
-      welcomeUser.textContent = `Bienvenido/a ${user.nombre} (${user.rol})`;
-    }
-  });
+  function cerrarSesion() {
+    // Limpiar campos
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
 
-  logoutBtn.addEventListener("click", () => {
-    sessionStorage.removeItem("user");
-    quoteSection.style.display = "none";
-    loginSection.style.display = "block";
-  });
+    // Volver al login
+    document.getElementById("quote-section").style.display = "none";
+    document.getElementById("login-section").style.display = "flex";
+  }
+
+  function mostrarError(msg) {
+    loginError.textContent = msg;
+    loginError.style.display = "block";
+  }
 
 });
