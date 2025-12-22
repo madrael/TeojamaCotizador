@@ -1,53 +1,86 @@
 /*************************************************
- * FINANCE.JS
- * Motor de cálculo financiero
- * Sistema francés – cuota fija
- * V 1.0 – Compilación 00002
+ * Archivo: finance.js
+ * Proyecto: Cotizador Vehículos Teojama
+ * Versión: V 1.0 · Compilación 3.11
+ * Motor financiero real (base)
  *************************************************/
 
 /**
- * Calcula financiamiento bajo sistema francés
- * @param {Object} params
- * @param {number} params.montoFinanciar  Monto total a financiar
- * @param {number} params.tasaAnual       Tasa anual en porcentaje (ej: 12.5)
- * @param {number} params.plazoMeses      Plazo en meses
- * @returns {Object}
+ * Calcula la cuota mensual usando amortización francesa
  */
-function calcularFinanciamiento({ montoFinanciar, tasaAnual, plazoMeses }) {
-  montoFinanciar = Number(montoFinanciar);
-  tasaAnual = Number(tasaAnual);
-  plazoMeses = Number(plazoMeses);
-
-  if (montoFinanciar <= 0 || plazoMeses <= 0) {
-    return {
-      cuotaMensual: 0,
-      totalPagado: 0,
-      intereses: 0
-    };
-  }
-
-  // Caso especial: tasa 0%
-  if (tasaAnual === 0) {
-    const cuota = montoFinanciar / plazoMeses;
-    return {
-      cuotaMensual: cuota,
-      totalPagado: montoFinanciar,
-      intereses: 0
-    };
-  }
-
+function calcularCuotaMensual(monto, tasaAnual, plazoMeses) {
   const tasaMensual = (tasaAnual / 100) / 12;
 
-  const cuotaMensual =
-    (montoFinanciar * tasaMensual) /
-    (1 - Math.pow(1 + tasaMensual, -plazoMeses));
+  if (tasaMensual === 0) {
+    return monto / plazoMeses;
+  }
 
-  const totalPagado = cuotaMensual * plazoMeses;
-  const intereses = totalPagado - montoFinanciar;
+  return monto *
+    (tasaMensual * Math.pow(1 + tasaMensual, plazoMeses)) /
+    (Math.pow(1 + tasaMensual, plazoMeses) - 1);
+}
+
+/**
+ * Ejecuta la cotización completa
+ */
+function calcularCotizacion(appState) {
+  const pvp = Number(document.getElementById("pvp").textContent) || 0;
+  const entrada = Number(document.getElementById("inputEntrada").value) || 0;
+  const seguro = appState.incluyeSeguro
+    ? Number(document.getElementById("inputSeguro").value) || 0
+    : 0;
+
+  const dispositivo = appState.incluyeDispositivo && appState.dispositivo
+    ? Number(document.getElementById("deviceValueDisplay").textContent) || 0
+    : 0;
+
+  const tasaCredito = appState.tasa
+    ? Number(
+        document.querySelector(
+          `#selectTasa option[value="${appState.tasa}"]`
+        ).textContent.replace("%", "")
+      )
+    : 0;
+
+  const plazo = appState.plazo;
+
+  const montoFinanciado = Math.max(pvp - entrada, 0);
+  const cuota = calcularCuotaMensual(montoFinanciado, tasaCredito, plazo);
+  const totalCredito = cuota * plazo;
 
   return {
-    cuotaMensual,
-    totalPagado,
-    intereses
+    pvp,
+    entrada,
+    montoFinanciado,
+    tasaCredito,
+    plazo,
+    cuota,
+    totalCredito,
+    seguro,
+    dispositivo,
+    totalOperacion:
+      totalCredito + seguro + dispositivo
   };
+}
+
+/**
+ * Renderiza resultados en pantalla
+ */
+function mostrarResultado(resultado) {
+  const div = document.getElementById("tablaFinanciamiento");
+
+  div.innerHTML = `
+    <div class="fin-row"><span>PVP</span><strong>$${resultado.pvp.toFixed(2)}</strong></div>
+    <div class="fin-row"><span>Entrada</span><strong>$${resultado.entrada.toFixed(2)}</strong></div>
+    <div class="fin-row"><span>Monto financiado</span><strong>$${resultado.montoFinanciado.toFixed(2)}</strong></div>
+    <div class="fin-row"><span>Tasa anual</span><strong>${resultado.tasaCredito}%</strong></div>
+    <div class="fin-row"><span>Plazo</span><strong>${resultado.plazo} meses</strong></div>
+    <hr />
+    <div class="fin-row"><span>Cuota mensual</span><strong>$${resultado.cuota.toFixed(2)}</strong></div>
+    <div class="fin-row"><span>Total crédito</span><strong>$${resultado.totalCredito.toFixed(2)}</strong></div>
+    <div class="fin-row"><span>Seguro</span><strong>$${resultado.seguro.toFixed(2)}</strong></div>
+    <div class="fin-row"><span>Dispositivo</span><strong>$${resultado.dispositivo.toFixed(2)}</strong></div>
+    <hr />
+    <div class="fin-row"><span>Total operación</span><strong>$${resultado.totalOperacion.toFixed(2)}</strong></div>
+  `;
 }
