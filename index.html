@@ -41,126 +41,80 @@
     </header>
 
     <!-- CONTENIDO -->
-    <main class="app-content">
+    <div class="app-content">
 
-      <!-- =========================
-           IZQUIERDA: PARÁMETROS
-      ========================== -->
-      <section class="app-left">
-
+      <!-- IZQUIERDA -->
+      <div class="app-left">
         <small><span class="app-version"></span></small>
 
-        <!-- Tipo de cliente -->
-        <label for="clientType">Tipo de cliente</label>
-        <select id="clientType"></select>
+        <label>Tipo de Cliente</label>
+        <select id="selectTipoCliente">
+          <option value="NORMAL">Cliente Estándar</option>
+          <option value="COLABORADOR">Colaborador</option>
+          <option value="REFINANCIADO">Refinanciamiento</option>
+        </select>
 
-        <!-- Tipo de vehículo -->
-        <label for="vehicleType">Tipo de vehículo</label>
-        <select id="vehicleType"></select>
+        <label>Tipo de Vehículo</label>
+        <select id="selectTipoVehiculo">
+          <option value="">Seleccione</option>
+          <option value="Liviano">Liviano</option>
+          <option value="Pesado">Pesado</option>
+        </select>
 
-        <!-- Marca -->
-        <label for="brand">Marca</label>
-        <select id="brand"></select>
+        <label>Marca</label>
+        <select id="selectMarca"></select>
 
-        <!-- Modelo -->
-        <label for="model">Modelo</label>
-        <select id="model"></select>
+        <label>Modelo</label>
+        <select id="selectModelo"></select>
 
-        <!-- Precio -->
-        <label for="price">Precio del vehículo</label>
-        <input type="number" id="price" readonly />
+        <strong>PVP: $<span id="pvp">0.00</span></strong>
 
-        <!-- Tasa -->
-        <label for="rate">Tasa anual</label>
-        <input type="text" id="rate" readonly />
+        <label>Tasa de Interés</label>
+        <select id="selectTasa"></select>
 
-        <!-- Plazo -->
-        <label for="term">Plazo</label>
-        <select id="term"></select>
+        <label>Plazo (meses)</label>
+        <select id="selectPlazo"></select>
 
-        <!-- Entrada -->
-        <label for="downPayment">Entrada</label>
-        <input type="number" id="downPayment" value="0" />
+        <label>
+          <input type="checkbox" id="chkSeguro" />
+          Incluir seguro
+        </label>
+        <input type="number" id="inputSeguro" placeholder="Valor póliza" disabled />
 
-        <!-- Seguro -->
-        <div class="checkbox-group">
-          <input type="checkbox" id="includeInsurance" />
-          <label for="includeInsurance">Incluir seguro</label>
+        <label>
+          <input type="checkbox" id="chkDispositivo" />
+          Incluir dispositivo
+        </label>
+
+        <div id="deviceContainer" style="display:none;">
+          <label>Plan de dispositivo</label>
+          <select id="selectDevicePlan"></select>
+          <small>
+            Proveedor: <span id="deviceProvider"></span><br />
+            Valor: $<span id="deviceValueDisplay">-</span>
+          </small>
         </div>
 
-        <div id="insuranceContainer">
-          <label for="insuranceValue">Valor del seguro</label>
-          <input type="number" id="insuranceValue" value="0" />
-        </div>
+        <label>Cuota de entrada</label>
+        <input type="number" id="inputEntrada" placeholder="Valor entrada" />
 
-        <!-- Dispositivo -->
-        <div class="checkbox-group">
-          <input type="checkbox" id="includeDevice" />
-          <label for="includeDevice">Incluir dispositivo</label>
-        </div>
-
-        <div id="deviceContainer">
-          <label for="devicePlan">Plan de dispositivo</label>
-          <select id="devicePlan"></select>
-
-          <div class="device-info">
-            <div>Proveedor: <strong id="deviceProvider">-</strong></div>
-            <div>Valor: <strong id="deviceValueDisplay">$ -</strong></div>
-          </div>
-        </div>
-
-        <!-- Botón -->
-        <button id="calculateBtn" type="button">
+        <button id="btnCalcular" type="button">
           Calcular cotización
         </button>
+      </div>
 
-      </section>
+      <!-- DERECHA -->
+      <div class="app-right">
+        <h3>Resultado de la Cotización</h3>
+        <div id="tablaFinanciamiento"></div>
+      </div>
 
-      <!-- =========================
-           DERECHA: RESULTADO
-      ========================== -->
-      <section class="app-right">
-
-        <h2>Resultado de la Cotización</h2>
-
-        <!-- Cuota destacada -->
-        <div class="result-highlight">
-          <div class="highlight-label">Cuota mensual estimada</div>
-          <div class="highlight-value">$ 0.00</div>
-          <div class="highlight-sub">Plazo: 0 meses</div>
-        </div>
-
-        <!-- Detalle -->
-        <div class="result-card">
-          <h3>Detalle del Financiamiento</h3>
-          <div class="result-row"><span>Precio vehículo</span><strong>$ 0.00</strong></div>
-          <div class="result-row"><span>Entrada</span><strong>$ 0.00</strong></div>
-          <div class="result-row"><span>Monto financiado</span><strong>$ 0.00</strong></div>
-          <div class="result-row"><span>Tasa</span><strong>0%</strong></div>
-          <div class="result-row"><span>Plazo</span><strong>0 meses</strong></div>
-        </div>
-
-        <!-- Adicionales -->
-        <div class="result-card">
-          <h3>Adicionales</h3>
-          <div class="result-row"><span>Seguro</span><strong>$ 0.00</strong></div>
-          <div class="result-row"><span>Dispositivo</span><strong>$ 0.00</strong></div>
-        </div>
-
-        <!-- Total -->
-        <div class="result-total">
-          <span>Total estimado</span>
-          <strong>$ 0.00</strong>
-        </div>
-
-      </section>
-
-    </main>
+    </div>
   </section>
 
   <!-- VERSION -->
   <script>
-    const APP_VERSION = "V 1.0 · Compilación 3.17";
+    const APP_VERSION = "V 1.0 · Compilación 3.18";
     document.querySelectorAll(".app-version")
       .forEach(el => el.textContent = APP_VERSION);
   </script>
@@ -173,4 +127,3 @@
 
 </body>
 </html>
-
