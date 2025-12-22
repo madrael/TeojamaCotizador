@@ -8,9 +8,7 @@
 </head>
 <body>
 
-  <!-- =========================
-       LOGIN
-  ========================== -->
+  <!-- LOGIN -->
   <section id="login-section" class="login-container">
     <div class="login-box">
       <h2>Acceso Cotizador</h2>
@@ -26,12 +24,9 @@
     </div>
   </section>
 
-  <!-- =========================
-       APLICACIÓN
-  ========================== -->
+  <!-- APP -->
   <section id="quote-section" style="display:none;">
 
-    <!-- HEADER -->
     <header class="app-header">
       <div class="app-title">Cotizador de Vehículos</div>
       <div class="app-user">
@@ -40,26 +35,16 @@
       </div>
     </header>
 
-    <!-- CONTENIDO -->
     <div class="app-content">
 
-      <!-- IZQUIERDA -->
       <div class="app-left">
         <small><span class="app-version"></span></small>
 
         <label>Tipo de Cliente</label>
-        <select id="selectTipoCliente">
-          <option value="NORMAL">Cliente Estándar</option>
-          <option value="COLABORADOR">Colaborador</option>
-          <option value="REFINANCIADO">Refinanciamiento</option>
-        </select>
+        <select id="selectTipoCliente"></select>
 
         <label>Tipo de Vehículo</label>
-        <select id="selectTipoVehiculo">
-          <option value="">Seleccione</option>
-          <option value="Liviano">Liviano</option>
-          <option value="Pesado">Pesado</option>
-        </select>
+        <select id="selectTipoVehiculo"></select>
 
         <label>Marca</label>
         <select id="selectMarca"></select>
@@ -69,21 +54,19 @@
 
         <strong>PVP: $<span id="pvp">0.00</span></strong>
 
-        <label>Tasa de Interés</label>
+        <label>Tasa</label>
         <select id="selectTasa"></select>
 
-        <label>Plazo (meses)</label>
+        <label>Plazo</label>
         <select id="selectPlazo"></select>
 
         <label>
-          <input type="checkbox" id="chkSeguro" />
-          Incluir seguro
+          <input type="checkbox" id="chkSeguro" /> Incluir seguro
         </label>
-        <input type="number" id="inputSeguro" placeholder="Valor póliza" disabled />
+        <input type="number" id="inputSeguro" disabled />
 
         <label>
-          <input type="checkbox" id="chkDispositivo" />
-          Incluir dispositivo
+          <input type="checkbox" id="chkDispositivo" /> Incluir dispositivo
         </label>
 
         <div id="deviceContainer" style="display:none;">
@@ -95,31 +78,24 @@
           </small>
         </div>
 
-        <label>Cuota de entrada</label>
-        <input type="number" id="inputEntrada" placeholder="Valor entrada" />
+        <label>Entrada</label>
+        <input type="number" id="inputEntrada" />
 
         <button id="btnCalcular" type="button">
           Calcular cotización
         </button>
       </div>
 
-      <!-- DERECHA -->
       <div class="app-right">
-        <h3>Resultado de la Cotización</h3>
+        <h3>Resultado</h3>
         <div id="tablaFinanciamiento"></div>
       </div>
 
     </div>
   </section>
 
-  <!-- VERSION -->
-  <script>
-    const APP_VERSION = "V 1.0 · Compilación 3.20";
-    document.querySelectorAll(".app-version")
-      .forEach(el => el.textContent = APP_VERSION);
-  </script>
-
   <!-- SCRIPTS -->
+  <script src="./assets/js/version.js"></script>
   <script src="./assets/js/auth.js"></script>
   <script src="./assets/js/dataLoader.js"></script>
   <script src="./assets/js/finance.js"></script>
