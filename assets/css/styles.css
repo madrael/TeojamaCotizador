@@ -1,8 +1,12 @@
 /* =====================================
    Proyecto: Cotizador Vehículos Teojama
    Versión: V 1.0 · Compilación 3.11
+   FIX: No romper diseño de login
 ===================================== */
 
+/* =========================
+   BASE
+========================= */
 body {
   font-family: Arial, Helvetica, sans-serif;
   background: #f4f6f8;
@@ -24,17 +28,18 @@ label {
   color: #333;
 }
 
-select,
-input[type="text"],
-input[type="password"],
-input[type="number"] {
+/* Inputs generales (NO login) */
+#quote-section select,
+#quote-section input[type="text"],
+#quote-section input[type="password"],
+#quote-section input[type="number"] {
   width: 100%;
   padding: 6px 8px;
   margin-top: 4px;
   box-sizing: border-box;
 }
 
-button {
+#quote-section button {
   padding: 8px 14px;
   background-color: #2c7be5;
   color: #fff;
@@ -43,7 +48,7 @@ button {
   font-weight: 600;
 }
 
-button:hover {
+#quote-section button:hover {
   background-color: #1a68d1;
 }
 
@@ -54,30 +59,55 @@ hr {
 }
 
 /* =========================
-   LOGIN
+   LOGIN (AISLADO – NO TOCAR)
 ========================= */
 .login-container {
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #f4f6f8;
 }
 
 .login-box {
-  background: #fff;
-  padding: 20px;
-  width: 280px;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  background: #ffffff;
+  padding: 24px;
+  width: 300px;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 .login-box h2 {
   text-align: center;
+  margin-bottom: 10px;
 }
 
 .login-version {
   text-align: center;
+  font-size: 13px;
+  margin-bottom: 15px;
+  color: #666;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 8px;
   margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 8px;
+  background-color: #2c7be5;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.login-box button:hover {
+  background-color: #1a68d1;
 }
 
 .error {
@@ -92,9 +122,10 @@ hr {
 #quote-section {
   max-width: 520px;
   margin: 20px auto;
-  background: #fff;
+  background: #ffffff;
   padding: 20px;
-  border-radius: 4px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 #quote-section > div {
@@ -107,7 +138,7 @@ hr {
 #deviceContainer {
   background: #f9fafb;
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 10px;
   border-radius: 4px;
 }
 
@@ -117,7 +148,7 @@ hr {
 #tablaFinanciamiento {
   background: #f9fafb;
   border: 1px solid #ddd;
-  padding: 10px;
+  padding: 12px;
   border-radius: 4px;
   font-size: 14px;
 }
