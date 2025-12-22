@@ -2,7 +2,7 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : version.js
  Versión       : V 1.0
- Compilación   : 3.21
+ Compilación   : 3.23
  Estado        : ESTABLE
  Descripción   : Control centralizado de versión de la app
 ========================================================= */
