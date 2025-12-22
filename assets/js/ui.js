@@ -1,9 +1,11 @@
 /*************************************************
  * Archivo: ui.js
  * Proyecto: Cotizador Vehículos Teojama
- * Versión: V 1.0 · Compilación 3.10
- * Fix:
- * - Mostrar correctamente el valor del dispositivo
+ * Versión: V 1.0 · Compilación 3.11
+ * Cambios:
+ * - Reglas de negocio para planes de dispositivo
+ * - Filtro por tipoCliente
+ * - Prioridad por coincidencia de tasa
  *************************************************/
 
 let vehicles = [];
@@ -16,6 +18,9 @@ const appState = {
   modelo: null,
   tasa: null,
   plazo: null,
+
+  tipoCliente: "NORMAL", // preparado para UI (NORMAL | COLABORADOR | REFINANCIADO)
+
   incluyeSeguro: false,
   incluyeDispositivo: false,
   dispositivo: null
@@ -57,8 +62,9 @@ function initUI() {
     appState.tipoVehiculo = selTipo.value;
 
     [...new Set(
-      vehicles.filter(v => v.TipoVehiculo === appState.tipoVehiculo)
-              .map(v => v.Marca)
+      vehicles
+        .filter(v => v.TipoVehiculo === appState.tipoVehiculo)
+        .map(v => v.Marca)
     )].forEach(m => addOption(selMarca, m, m));
   });
 
@@ -66,10 +72,12 @@ function initUI() {
     resetSelect(selModelo);
     appState.marca = selMarca.value;
 
-    vehicles.filter(v =>
-      v.TipoVehiculo === appState.tipoVehiculo &&
-      v.Marca === appState.marca
-    ).forEach(v => addOption(selModelo, v.Modelo, v.Modelo));
+    vehicles
+      .filter(v =>
+        v.TipoVehiculo === appState.tipoVehiculo &&
+        v.Marca === appState.marca
+      )
+      .forEach(v => addOption(selModelo, v.Modelo, v.Modelo));
   });
 
   selModelo.addEventListener("change", () => {
@@ -100,6 +108,10 @@ function initUI() {
     tasaObj?.Plazos.forEach(p =>
       addOption(selPlazo, p.VPlazo, `${p.VPlazo} meses`)
     );
+
+    if (appState.incluyeDispositivo) {
+      cargarPlanesDispositivo();
+    }
   });
 
   /* ===== Plazo ===== */
@@ -119,12 +131,19 @@ function initUI() {
   chkDispositivo.addEventListener("change", () => {
     appState.incluyeDispositivo = chkDispositivo.checked;
     deviceContainer.style.display = chkDispositivo.checked ? "block" : "none";
-    chkDispositivo.checked ? cargarPlanesDispositivo() : limpiarDispositivo();
+
+    chkDispositivo.checked
+      ? cargarPlanesDispositivo()
+      : limpiarDispositivo();
   });
 
   selDevicePlan.addEventListener("change", () => {
-    appState.dispositivo = devicePlans.find(p => p.codigo === selDevicePlan.value);
-    lblDeviceProvider.textContent = appState.dispositivo?.proveedor || "";
+    appState.dispositivo =
+      devicePlans.find(p => p.codigo === selDevicePlan.value) || null;
+
+    lblDeviceProvider.textContent =
+      appState.dispositivo?.proveedor || "";
+
     actualizarValorDispositivo();
   });
 
@@ -134,8 +153,50 @@ function initUI() {
 }
 
 /* =============================
-   DISPOSITIVO
+   DISPOSITIVO – REGLAS DE NEGOCIO
 ============================= */
+function cargarPlanesDispositivo() {
+  const sel = document.getElementById("selectDevicePlan");
+  sel.options.length = 0;
+  addOption(sel, "", "Seleccione plan");
+
+  if (!appState.tasa) return;
+
+  const tasaCredito = rates.find(r => r.IdTasa === appState.tasa)?.TasaAnual;
+
+  let planes = devicePlans
+    .filter(p =>
+      p.activo === true &&
+      p.tipoCliente === appState.tipoCliente
+    )
+    .map(p => ({
+      ...p,
+      coincideTasa: p.tasaDispositivo === tasaCredito
+    }))
+    .sort((a, b) => {
+      if (a.coincideTasa !== b.coincideTasa) {
+        return a.coincideTasa ? -1 : 1;
+      }
+      return a.prioridad - b.prioridad;
+    });
+
+  planes.forEach(p => {
+    addOption(
+      sel,
+      p.codigo,
+      `${p.proveedor} – ${p.tipoPlan} – ${p.tasaDispositivo}%`
+    );
+  });
+
+  const auto = planes.find(p => p.coincideTasa);
+  if (auto) {
+    sel.value = auto.codigo;
+    appState.dispositivo = auto;
+    document.getElementById("deviceProvider").textContent = auto.proveedor;
+    actualizarValorDispositivo();
+  }
+}
+
 function actualizarValorDispositivo() {
   const lbl = document.getElementById("deviceValueDisplay");
 
@@ -150,16 +211,6 @@ function actualizarValorDispositivo() {
   lbl.textContent = valor
     ? Number(valor).toFixed(2)
     : "-";
-}
-
-function cargarPlanesDispositivo() {
-  const sel = document.getElementById("selectDevicePlan");
-  sel.options.length = 0;
-  addOption(sel, "", "Seleccione plan");
-
-  devicePlans
-    .filter(p => p.activo === true && p.codigo)
-    .forEach(p => addOption(sel, p.codigo, p.codigo));
 }
 
 function limpiarDispositivo() {
@@ -189,4 +240,3 @@ function addOption(sel, value, text) {
   o.textContent = text;
   sel.appendChild(o);
 }
-
