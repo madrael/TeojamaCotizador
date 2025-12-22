@@ -33,8 +33,18 @@
     <h2>Cotizador de Vehículos</h2>
     <small><span class="app-version"></span></small>
 
-    <!-- Selección -->
-    <div>
+    <!-- Tipo Cliente -->
+    <div style="margin-top:10px;">
+      <label>Tipo de Cliente</label><br />
+      <select id="selectTipoCliente">
+        <option value="NORMAL">Cliente Estándar</option>
+        <option value="COLABORADOR">Colaborador</option>
+        <option value="REFINANCIADO">Refinanciamiento</option>
+      </select>
+    </div>
+
+    <!-- Selección Vehículo -->
+    <div style="margin-top:10px;">
       <label>Tipo de Vehículo</label><br />
       <select id="selectTipoVehiculo">
         <option value="">Seleccione</option>
@@ -53,7 +63,7 @@
       <select id="selectModelo"></select>
     </div>
 
-    <!-- PVP debajo de Modelo -->
+    <!-- PVP -->
     <div style="margin-top:6px;">
       <strong>PVP: $<span id="pvp">0.00</span></strong>
     </div>
@@ -96,7 +106,7 @@
       <div style="margin-top:4px;">
         <small>
           Proveedor: <span id="deviceProvider"></span><br />
-          Valor: $<span id="deviceValue">0.00</span>
+          Valor: $<span id="deviceValueDisplay">-</span>
         </small>
       </div>
     </div>
@@ -133,7 +143,7 @@
        VERSION APP
   ========================== -->
   <script>
-    const APP_VERSION = "V 1.0 · Compilación 3.09";
+    const APP_VERSION = "V 1.0 · Compilación 3.11";
   </script>
 
   <!-- =========================
