@@ -1,6 +1,6 @@
-/* =========================
-   LOGIN – CSS ORIGINAL (CONGELADO)
-========================= */
+/* =================================================
+   RESET BÁSICO + TIPOGRAFÍA (LOGIN ORIGINAL)
+================================================= */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -9,6 +9,9 @@ body {
   color: #24292f;
 }
 
+/* =================================================
+   LOGIN (DISEÑO ORIGINAL – CONGELADO)
+================================================= */
 .login-container {
   min-height: 100vh;
   display: flex;
@@ -74,17 +77,79 @@ body {
   font-size: 12px;
 }
 
-/* =========================
-   COTIZADOR – ESTILOS NUEVOS
-   (AISLADOS, NO AFECTAN LOGIN)
-========================= */
-#quote-section {
-  max-width: 520px;
-  margin: 20px auto;
-  background: #ffffff;
+/* =================================================
+   APLICACIÓN (POST LOGIN)
+================================================= */
+
+/* ---------- Header superior ---------- */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background-color: #f6f8fa;
+  border-bottom: 1px solid #d0d7de;
+}
+
+.app-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.app-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #57606a;
+}
+
+.app-user button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #57606a;
+}
+
+.app-user button:hover {
+  color: #24292f;
+}
+
+/* ---------- Layout principal ---------- */
+.app-content {
+  display: flex;
+  gap: 20px;
   padding: 20px;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(27,31,36,0.12);
+}
+
+/* Columna izquierda: parámetros */
+.app-left {
+  width: 45%;
+  padding-right: 20px;
+  border-right: 1px solid #d0d7de;
+}
+
+/* Columna derecha: resultados */
+.app-right {
+  width: 55%;
+}
+
+/* =================================================
+   FORMULARIOS DEL COTIZADOR
+================================================= */
+#quote-section {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#quote-section h2,
+#quote-section h3 {
+  margin-top: 0;
+}
+
+#quote-section small {
+  color: #6e7781;
 }
 
 #quote-section label {
@@ -103,14 +168,61 @@ body {
   font-size: 13px;
 }
 
+#quote-section select:focus,
+#quote-section input[type="number"]:focus {
+  outline: none;
+  border-color: #0969da;
+}
+
+/* Botón principal del cotizador */
 #quote-section button {
   padding: 8px 14px;
   background-color: #0969da;
   border: none;
   border-radius: 6px;
-  color: white;
+  color: #ffffff;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
 }
 
+#quote-section button:hover {
+  background-color: #0550ae;
+}
+
+/* =================================================
+   DISPOSITIVO
+================================================= */
+#deviceContainer {
+  background: #f6f8fa;
+  border: 1px solid #d0d7de;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+/* =================================================
+   RESULTADOS / FINANCIAMIENTO
+================================================= */
+#tablaFinanciamiento {
+  background: #ffffff;
+  border: 1px solid #d0d7de;
+  padding: 16px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.fin-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+.fin-row strong {
+  font-weight: 600;
+}
+
+#tablaFinanciamiento hr {
+  border: none;
+  border-top: 1px solid #d0d7de;
+  margin: 10px 0;
+}
