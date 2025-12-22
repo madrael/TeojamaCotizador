@@ -1,5 +1,5 @@
 /* =================================================
-   RESET BÁSICO + TIPOGRAFÍA (LOGIN ORIGINAL)
+   RESET + LOGIN (CONGELADO)
 ================================================= */
 body {
   margin: 0;
@@ -9,9 +9,6 @@ body {
   color: #24292f;
 }
 
-/* =================================================
-   LOGIN (DISEÑO ORIGINAL – CONGELADO)
-================================================= */
 .login-container {
   min-height: 100vh;
   display: flex;
@@ -78,15 +75,22 @@ body {
 }
 
 /* =================================================
-   APLICACIÓN (POST LOGIN)
+   APP POST-LOGIN
 ================================================= */
 
-/* ---------- Header superior ---------- */
+/* Contenedor general de la app */
+#quote-section {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header superior */
 .app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px;
+  padding: 12px 24px;
   background-color: #f6f8fa;
   border-bottom: 1px solid #d0d7de;
 }
@@ -116,42 +120,35 @@ body {
   color: #24292f;
 }
 
-/* ---------- Layout principal ---------- */
+/* Layout principal: 2 columnas */
 .app-content {
   display: flex;
-  gap: 20px;
-  padding: 20px;
-}
-
-/* Columna izquierda: parámetros */
-.app-left {
-  width: 45%;
-  padding-right: 20px;
-  border-right: 1px solid #d0d7de;
-}
-
-/* Columna derecha: resultados */
-.app-right {
-  width: 55%;
-}
-
-/* =================================================
-   FORMULARIOS DEL COTIZADOR
-================================================= */
-#quote-section {
+  gap: 24px;
+  padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
 }
 
-#quote-section h2,
-#quote-section h3 {
-  margin-top: 0;
+/* Columna izquierda */
+.app-left {
+  flex: 1;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(27,31,36,0.12);
 }
 
-#quote-section small {
-  color: #6e7781;
+/* Columna derecha */
+.app-right {
+  flex: 1;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(27,31,36,0.12);
 }
 
+/* Formularios */
 #quote-section label {
   font-weight: 600;
   font-size: 13px;
@@ -162,19 +159,12 @@ body {
   width: 100%;
   padding: 6px 8px;
   margin-top: 4px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   border: 1px solid #d0d7de;
   border-radius: 6px;
   font-size: 13px;
 }
 
-#quote-section select:focus,
-#quote-section input[type="number"]:focus {
-  outline: none;
-  border-color: #0969da;
-}
-
-/* Botón principal del cotizador */
 #quote-section button {
   padding: 8px 14px;
   background-color: #0969da;
@@ -190,9 +180,7 @@ body {
   background-color: #0550ae;
 }
 
-/* =================================================
-   DISPOSITIVO
-================================================= */
+/* Dispositivo */
 #deviceContainer {
   background: #f6f8fa;
   border: 1px solid #d0d7de;
@@ -200,29 +188,8 @@ body {
   border-radius: 6px;
 }
 
-/* =================================================
-   RESULTADOS / FINANCIAMIENTO
-================================================= */
+/* Resultado */
 #tablaFinanciamiento {
-  background: #ffffff;
-  border: 1px solid #d0d7de;
-  padding: 16px;
-  border-radius: 6px;
-  font-size: 13px;
+  margin-top: 10px;
 }
 
-.fin-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-}
-
-.fin-row strong {
-  font-weight: 600;
-}
-
-#tablaFinanciamiento hr {
-  border: none;
-  border-top: 1px solid #d0d7de;
-  margin: 10px 0;
-}
