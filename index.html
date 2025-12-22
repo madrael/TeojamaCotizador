@@ -8,7 +8,9 @@
 </head>
 <body>
 
-  <!-- ===================== LOGIN ===================== -->
+  <!-- =========================
+       LOGIN
+  ========================== -->
   <section id="login-section" class="login-container">
     <div class="login-box">
       <h2>Acceso Cotizador</h2>
@@ -24,56 +26,106 @@
     </div>
   </section>
 
-  <!-- ===================== APP ===================== -->
+  <!-- =========================
+       APLICACIÓN
+  ========================== -->
   <section id="quote-section" style="display:none;">
-    
+
     <!-- HEADER -->
     <header class="app-header">
-      <div class="app-title">
-        <strong>Cotizador de Vehículos</strong>
-      </div>
+      <div class="app-title">Cotizador de Vehículos</div>
       <div class="app-user">
-        <span id="logged-user"></span>
+        <span id="loggedUserName"></span>
         <button id="logout-btn" title="Cerrar sesión">⎋</button>
       </div>
     </header>
 
     <!-- CONTENIDO -->
-    <div class="app-container">
-      
-      <!-- FORMULARIO -->
-      <div class="form-panel">
-        <div class="app-version-box">
-          <span class="app-version"></span>
+    <div class="app-content">
+
+      <!-- IZQUIERDA -->
+      <div class="app-left">
+        <small><span class="app-version"></span></small>
+
+        <label>Tipo de Cliente</label>
+        <select id="selectTipoCliente">
+          <option value="NORMAL">Cliente Estándar</option>
+          <option value="COLABORADOR">Colaborador</option>
+          <option value="REFINANCIADO">Refinanciamiento</option>
+        </select>
+
+        <label>Tipo de Vehículo</label>
+        <select id="selectTipoVehiculo">
+          <option value="">Seleccione</option>
+          <option value="Liviano">Liviano</option>
+          <option value="Pesado">Pesado</option>
+        </select>
+
+        <label>Marca</label>
+        <select id="selectMarca"></select>
+
+        <label>Modelo</label>
+        <select id="selectModelo"></select>
+
+        <strong>PVP: $<span id="pvp">0.00</span></strong>
+
+        <label>Tasa de Interés</label>
+        <select id="selectTasa"></select>
+
+        <label>Plazo (meses)</label>
+        <select id="selectPlazo"></select>
+
+        <label>
+          <input type="checkbox" id="chkSeguro" />
+          Incluir seguro
+        </label>
+        <input type="number" id="inputSeguro" placeholder="Valor póliza" disabled />
+
+        <label>
+          <input type="checkbox" id="chkDispositivo" />
+          Incluir dispositivo
+        </label>
+
+        <div id="deviceContainer" style="display:none;">
+          <label>Plan de dispositivo</label>
+          <select id="selectDevicePlan"></select>
+          <small>
+            Proveedor: <span id="deviceProvider"></span><br />
+            Valor: $<span id="deviceValueDisplay">-</span>
+          </small>
         </div>
 
-        <!-- ⚠️ Todo el formulario se mantiene igual -->
-        <!-- Los IDs NO se tocan -->
+        <label>Cuota de entrada</label>
+        <input type="number" id="inputEntrada" placeholder="Valor entrada" />
 
-        <!-- Aquí continúa exactamente el formulario que ya tenías -->
+        <button id="btnCalcular" type="button">
+          Calcular cotización
+        </button>
       </div>
 
-      <!-- RESULTADO -->
-      <div class="result-panel">
+      <!-- DERECHA -->
+      <div class="app-right">
         <h3>Resultado de la Cotización</h3>
-        <div id="quote-result"></div>
+        <div id="tablaFinanciamiento"></div>
       </div>
 
     </div>
   </section>
 
-  <!-- ===================== SCRIPTS ===================== -->
+  <!-- =========================
+       VERSION (EXTERNA)
+  ========================== -->
   <script src="./assets/js/version.js"></script>
-  <script src="./assets/js/auth.js"></script>
-  <script src="./assets/js/dataLoader.js"></script>
-  <script src="./assets/js/finance.js"></script>
-  <script src="./assets/js/ui.js"></script>
-
   <script>
     document.querySelectorAll(".app-version")
       .forEach(el => el.textContent = APP_VERSION);
   </script>
 
+  <!-- SCRIPTS -->
+  <script src="./assets/js/auth.js"></script>
+  <script src="./assets/js/dataLoader.js"></script>
+  <script src="./assets/js/finance.js"></script>
+  <script src="./assets/js/ui.js"></script>
+
 </body>
 </html>
-
