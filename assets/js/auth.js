@@ -1,7 +1,8 @@
 /*************************************************
  * Archivo: auth.js
  * Proyecto: Cotizador Vehículos Teojama
- * Versión: V 1.0 · Compilación 3.11
+ * Versión: V 1.0 · Compilación 3.12
+ * FIX: Ruta correcta de Users.json
  *************************************************/
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -24,7 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch("./assets/data/Users.json");
+      // 🔴 RUTA CORRECTA
+      const response = await fetch("./Users.json");
+
+      if (!response.ok) {
+        throw new Error("No se pudo cargar Users.json");
+      }
+
       const users = await response.json();
 
       const user = users.find(
@@ -39,12 +46,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Login exitoso
       iniciarSesion(user);
 
     } catch (err) {
-      mostrarError("Error al validar usuario");
       console.error(err);
+      mostrarError("Error al validar usuario");
     }
   });
 
@@ -58,26 +64,22 @@ document.addEventListener("DOMContentLoaded", () => {
   ========================== */
 
   function iniciarSesion(user) {
-    // Ocultar login
     document.getElementById("login-section").style.display = "none";
     document.getElementById("quote-section").style.display = "block";
 
-    // Mostrar nombre del usuario en header
+    // Mostrar nombre de usuario en header
     const lblUser = document.getElementById("loggedUserName");
     if (lblUser) {
       lblUser.textContent = user.nombre;
     }
 
-    // Limpiar error
     loginError.style.display = "none";
   }
 
   function cerrarSesion() {
-    // Limpiar campos
     document.getElementById("username").value = "";
     document.getElementById("password").value = "";
 
-    // Volver al login
     document.getElementById("quote-section").style.display = "none";
     document.getElementById("login-section").style.display = "flex";
   }
