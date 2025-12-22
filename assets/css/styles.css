@@ -1,5 +1,5 @@
 /* =====================================
-   RESET BÁSICO (LOGIN ORIGINAL)
+   RESET GENERAL
 ===================================== */
 body {
   margin: 0;
@@ -9,9 +9,9 @@ body {
   color: #24292f;
 }
 
-/* =========================
-   LOGIN (NO TOCAR DISEÑO)
-========================= */
+/* =====================================
+   LOGIN – DISEÑO BLOQUEADO (GITHUB STYLE)
+===================================== */
 .login-container {
   min-height: 100vh;
   display: flex;
@@ -22,9 +22,9 @@ body {
 .login-box {
   background: #ffffff;
   padding: 32px;
-  width: 320px;
+  width: 360px;
   border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(27,31,36,0.12);
+  box-shadow: 0 4px 12px rgba(27,31,36,0.12);
   text-align: center;
 }
 
@@ -35,12 +35,13 @@ body {
 }
 
 .login-version {
-  margin-top: 4px;
+  margin-top: 6px;
   margin-bottom: 20px;
-  font-size: 11px;
+  font-size: 12px;
   color: #6e7781;
 }
 
+/* Inputs LOGIN */
 .login-box input {
   width: 100%;
   padding: 8px 10px;
@@ -48,6 +49,7 @@ body {
   border: 1px solid #d0d7de;
   border-radius: 6px;
   font-size: 14px;
+  box-sizing: border-box;
 }
 
 .login-box input:focus {
@@ -55,13 +57,14 @@ body {
   border-color: #0969da;
 }
 
+/* Botón LOGIN – VERDE */
 .login-box button {
   width: 100%;
   padding: 8px;
   background-color: #2da44e;
   border: none;
   border-radius: 6px;
-  color: white;
+  color: #ffffff;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -77,9 +80,9 @@ body {
   font-size: 12px;
 }
 
-/* =========================
-   COTIZADOR (EXTENSIÓN)
-========================= */
+/* =====================================
+   COTIZADOR (AISLADO)
+===================================== */
 #quote-section {
   max-width: 520px;
   margin: 20px auto;
@@ -89,17 +92,7 @@ body {
   box-shadow: 0 1px 3px rgba(27,31,36,0.12);
 }
 
-/* Tipografía */
-#quote-section h2,
-#quote-section h3 {
-  margin-top: 0;
-}
-
-#quote-section small {
-  color: #6e7781;
-}
-
-/* Formularios */
+/* Formularios cotizador */
 #quote-section label {
   font-weight: 600;
   font-size: 13px;
@@ -122,7 +115,7 @@ body {
   border-color: #0969da;
 }
 
-/* Botones del cotizador */
+/* Botones cotizador */
 #quote-section button {
   padding: 8px 14px;
   background-color: #0969da;
@@ -138,9 +131,7 @@ body {
   background-color: #0550ae;
 }
 
-/* =========================
-   DISPOSITIVO
-========================= */
+/* Dispositivo */
 #deviceContainer {
   background: #f6f8fa;
   border: 1px solid #d0d7de;
@@ -148,9 +139,7 @@ body {
   border-radius: 6px;
 }
 
-/* =========================
-   RESULTADOS FINANCIEROS
-========================= */
+/* Resultados */
 #tablaFinanciamiento {
   background: #f6f8fa;
   border: 1px solid #d0d7de;
@@ -163,8 +152,4 @@ body {
   display: flex;
   justify-content: space-between;
   padding: 4px 0;
-}
-
-.fin-row strong {
-  font-weight: 600;
 }
