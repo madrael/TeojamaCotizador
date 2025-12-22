@@ -2,7 +2,7 @@
  * Archivo: auth.js
  * Proyecto: Cotizador Vehículos Teojama
  * Versión: V 1.0 · Compilación 3.12
- * FIX: Ruta correcta de Users.json
+ * FIX: Ruta correcta para Users.json (/data/Users.json)
  *************************************************/
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
   ========================== */
   loginBtn?.addEventListener("click", async () => {
 
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
+    const username = (document.getElementById("username")?.value || "").trim();
+    const password = (document.getElementById("password")?.value || "").trim();
 
     if (!username || !password) {
       mostrarError("Ingrese usuario y contraseña");
@@ -25,20 +25,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      // 🔴 RUTA CORRECTA
-      const response = await fetch("./Users.json");
+      // ✅ RUTA REAL SEGÚN TU REPO: /data/Users.json
+      const response = await fetch("./data/Users.json", { cache: "no-store" });
 
       if (!response.ok) {
-        throw new Error("No se pudo cargar Users.json");
+        console.error("No se pudo cargar Users.json. Status:", response.status);
+        mostrarError("Error al validar usuario");
+        return;
       }
 
       const users = await response.json();
 
-      const user = users.find(
-        u =>
-          u.username === username &&
-          u.password === password &&
-          u.activo === true
+      const user = users.find(u =>
+        u.username === username &&
+        u.password === password &&
+        u.activo === true
       );
 
       if (!user) {
@@ -49,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
       iniciarSesion(user);
 
     } catch (err) {
-      console.error(err);
+      console.error("Error en login:", err);
       mostrarError("Error al validar usuario");
     }
   });
@@ -64,27 +65,43 @@ document.addEventListener("DOMContentLoaded", () => {
   ========================== */
 
   function iniciarSesion(user) {
-    document.getElementById("login-section").style.display = "none";
-    document.getElementById("quote-section").style.display = "block";
+    const loginSection = document.getElementById("login-section");
+    const quoteSection = document.getElementById("quote-section");
 
-    // Mostrar nombre de usuario en header
+    if (loginSection) loginSection.style.display = "none";
+    if (quoteSection) quoteSection.style.display = "block";
+
+    // ✅ Mostrar nombre del usuario en el header (si existe el span)
     const lblUser = document.getElementById("loggedUserName");
     if (lblUser) {
-      lblUser.textContent = user.nombre;
+      // usa "nombre" si existe, si no, muestra username
+      lblUser.textContent = user.nombre || user.username || "";
     }
 
-    loginError.style.display = "none";
+    // limpiar error
+    if (loginError) loginError.style.display = "none";
   }
 
   function cerrarSesion() {
-    document.getElementById("username").value = "";
-    document.getElementById("password").value = "";
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
 
-    document.getElementById("quote-section").style.display = "none";
-    document.getElementById("login-section").style.display = "flex";
+    if (usernameInput) usernameInput.value = "";
+    if (passwordInput) passwordInput.value = "";
+
+    const quoteSection = document.getElementById("quote-section");
+    const loginSection = document.getElementById("login-section");
+
+    if (quoteSection) quoteSection.style.display = "none";
+    if (loginSection) loginSection.style.display = "flex";
+
+    // limpiar nombre del usuario si existe
+    const lblUser = document.getElementById("loggedUserName");
+    if (lblUser) lblUser.textContent = "";
   }
 
   function mostrarError(msg) {
+    if (!loginError) return;
     loginError.textContent = msg;
     loginError.style.display = "block";
   }
