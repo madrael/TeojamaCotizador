@@ -42,79 +42,133 @@
   ========================== -->
   <section id="quote-section" style="display:none;">
 
-    <!-- HEADER -->
+    <!-- HEADER SUPERIOR -->
     <header class="app-header">
-      <div class="app-title">Cotizador de Vehículos</div>
+      <div class="app-title">
+        Cotizador de Vehículos
+      </div>
       <div class="app-user">
         <span id="loggedUserName"></span>
         <button id="logout-btn" title="Cerrar sesión">⎋</button>
       </div>
     </header>
 
-    <!-- CONTENIDO -->
+    <!-- CONTENIDO PRINCIPAL -->
     <div class="app-content">
 
-      <!-- IZQUIERDA -->
+      <!-- =====================
+           COLUMNA IZQUIERDA
+           PARÁMETROS
+      ====================== -->
       <div class="app-left">
+
         <small><span class="app-version"></span></small>
 
-        <label>Tipo de Cliente</label>
-        <select id="selectTipoCliente">
-          <option value="NORMAL">Cliente Estándar</option>
-          <option value="COLABORADOR">Colaborador</option>
-          <option value="REFINANCIADO">Refinanciamiento</option>
-        </select>
-
-        <label>Tipo de Vehículo</label>
-        <select id="selectTipoVehiculo">
-          <option value="">Seleccione</option>
-          <option value="Liviano">Liviano</option>
-          <option value="Pesado">Pesado</option>
-        </select>
-
-        <label>Marca</label>
-        <select id="selectMarca"></select>
-
-        <label>Modelo</label>
-        <select id="selectModelo"></select>
-
-        <strong>PVP: $<span id="pvp">0.00</span></strong>
-
-        <label>Tasa de Interés</label>
-        <select id="selectTasa"></select>
-
-        <label>Plazo (meses)</label>
-        <select id="selectPlazo"></select>
-
-        <label>
-          <input type="checkbox" id="chkSeguro" />
-          Incluir seguro
-        </label>
-        <input type="number" id="inputSeguro" placeholder="Valor póliza" disabled />
-
-        <label>
-          <input type="checkbox" id="chkDispositivo" />
-          Incluir dispositivo
-        </label>
-
-        <div id="deviceContainer" style="display:none;">
-          <label>Plan de dispositivo</label>
-          <select id="selectDevicePlan"></select>
-          <small>
-            Proveedor: <span id="deviceProvider"></span><br />
-            Valor: $<span id="deviceValueDisplay">-</span>
-          </small>
+        <!-- Tipo Cliente -->
+        <div style="margin-top:10px;">
+          <label>Tipo de Cliente</label><br />
+          <select id="selectTipoCliente">
+            <option value="NORMAL">Cliente Estándar</option>
+            <option value="COLABORADOR">Colaborador</option>
+            <option value="REFINANCIADO">Refinanciamiento</option>
+          </select>
         </div>
 
-        <label>Cuota de entrada</label>
-        <input type="number" id="inputEntrada" placeholder="Valor entrada" />
+        <!-- Tipo de Vehículo -->
+        <div>
+          <label>Tipo de Vehículo</label><br />
+          <select id="selectTipoVehiculo">
+            <option value="">Seleccione</option>
+            <option value="Liviano">Liviano</option>
+            <option value="Pesado">Pesado</option>
+          </select>
+        </div>
 
-        <button id="btnCalcular" type="button">
-          Calcular cotización
-        </button>
+        <!-- Marca -->
+        <div>
+          <label>Marca</label><br />
+          <select id="selectMarca"></select>
+        </div>
+
+        <!-- Modelo -->
+        <div>
+          <label>Modelo</label><br />
+          <select id="selectModelo"></select>
+        </div>
+
+        <!-- PVP -->
+        <div style="margin-top:6px;">
+          <strong>PVP: $<span id="pvp">0.00</span></strong>
+        </div>
+
+        <!-- Tasa -->
+        <div>
+          <label>Tasa de Interés</label><br />
+          <select id="selectTasa"></select>
+        </div>
+
+        <!-- Plazo -->
+        <div>
+          <label>Plazo (meses)</label><br />
+          <select id="selectPlazo"></select>
+        </div>
+
+        <!-- Seguro -->
+        <div style="margin-top:10px;">
+          <label>
+            <input type="checkbox" id="chkSeguro" />
+            Incluir seguro
+          </label><br />
+          <input
+            type="number"
+            id="inputSeguro"
+            placeholder="Valor póliza"
+            disabled
+          />
+        </div>
+
+        <!-- Dispositivo -->
+        <div style="margin-top:10px;">
+          <label>
+            <input type="checkbox" id="chkDispositivo" />
+            Incluir dispositivo
+          </label>
+        </div>
+
+        <div id="deviceContainer" style="display:none; margin-top:6px;">
+          <label>Plan de dispositivo</label><br />
+          <select id="selectDevicePlan"></select>
+          <div style="margin-top:4px;">
+            <small>
+              Proveedor: <span id="deviceProvider"></span><br />
+              Valor: $<span id="deviceValueDisplay">-</span>
+            </small>
+          </div>
+        </div>
+
+        <!-- Entrada -->
+        <div style="margin-top:10px;">
+          <label>Cuota de entrada</label><br />
+          <input
+            type="number"
+            id="inputEntrada"
+            placeholder="Valor entrada"
+          />
+        </div>
+
+        <!-- Acción -->
+        <div style="margin-top:15px;">
+          <button id="btnCalcular" type="button">
+            Calcular cotización
+          </button>
+        </div>
+
       </div>
 
-      <!-- DERECHA -->
+      <!-- =====================
+           COLUMNA DERECHA
+           RESULTADOS
+      ====================== -->
       <div class="app-right">
         <h3>Resultado de la Cotización</h3>
         <div id="tablaFinanciamiento"></div>
