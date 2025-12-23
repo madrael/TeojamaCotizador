@@ -22,5 +22,14 @@
     "nombre": "Christian Castro",
     "rol": "ADMIN",
     "activo": true
+  },
+  {
+    "id": 3,
+    "username": "lberru",
+    "password": "Teojama2026",
+    "nombre": "Leonardo Berru",
+    "rol": "ADMIN",
+    "activo": true
   }
 ]
+
