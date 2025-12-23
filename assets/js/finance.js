@@ -1,8 +1,11 @@
 /*************************************************
- * Archivo: finance.js
- * Proyecto: Cotizador Vehículos Teojama
- * Versión: V 1.0 · Compilación 3.11
- * Motor financiero real (base)
+ * Archivo      : finance.js
+ * Proyecto     : Cotizador Vehículos Teojama
+ * Versión      : V 1.0
+ * Compilación  : 3.23.1
+ * Estado       : ESTABLE
+ * Descripción  : Motor financiero base
+ *               (amortización francesa)
  *************************************************/
 
 /**
@@ -10,6 +13,10 @@
  */
 function calcularCuotaMensual(monto, tasaAnual, plazoMeses) {
   const tasaMensual = (tasaAnual / 100) / 12;
+
+  if (monto <= 0 || plazoMeses <= 0) {
+    return 0;
+  }
 
   if (tasaMensual === 0) {
     return monto / plazoMeses;
@@ -22,30 +29,41 @@ function calcularCuotaMensual(monto, tasaAnual, plazoMeses) {
 
 /**
  * Ejecuta la cotización completa
+ * @param {object} appState Estado actual de la UI
  */
 function calcularCotizacion(appState) {
-  const pvp = Number(document.getElementById("pvp").textContent) || 0;
-  const entrada = Number(document.getElementById("inputEntrada").value) || 0;
+
+  // --- Valores base ---
+  const pvp = Number(document.getElementById("pvp")?.textContent) || 0;
+  const entrada = Number(document.getElementById("inputEntrada")?.value) || 0;
+
   const seguro = appState.incluyeSeguro
-    ? Number(document.getElementById("inputSeguro").value) || 0
+    ? Number(document.getElementById("inputSeguro")?.value) || 0
     : 0;
 
   const dispositivo = appState.incluyeDispositivo && appState.dispositivo
-    ? Number(document.getElementById("deviceValueDisplay").textContent) || 0
+    ? Number(document.getElementById("deviceValueDisplay")?.textContent) || 0
     : 0;
 
+  // --- Tasa y plazo ---
   const tasaCredito = appState.tasa
     ? Number(
         document.querySelector(
           `#selectTasa option[value="${appState.tasa}"]`
-        ).textContent.replace("%", "")
+        )?.textContent.replace("%", "")
       )
     : 0;
 
-  const plazo = appState.plazo;
+  const plazo = Number(appState.plazo) || 0;
 
+  // --- Cálculos ---
   const montoFinanciado = Math.max(pvp - entrada, 0);
-  const cuota = calcularCuotaMensual(montoFinanciado, tasaCredito, plazo);
+  const cuota = calcularCuotaMensual(
+    montoFinanciado,
+    tasaCredito,
+    plazo
+  );
+
   const totalCredito = cuota * plazo;
 
   return {
@@ -68,6 +86,7 @@ function calcularCotizacion(appState) {
  */
 function mostrarResultado(resultado) {
   const div = document.getElementById("tablaFinanciamiento");
+  if (!div) return;
 
   div.innerHTML = `
     <div class="fin-row"><span>PVP</span><strong>$${resultado.pvp.toFixed(2)}</strong></div>
