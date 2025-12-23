@@ -1,105 +1,145 @@
-/*************************************************
- * Archivo      : finance.js
- * Proyecto     : Cotizador Vehículos Teojama
- * Versión      : V 1.0
- * Compilación  : 3.23.1
- * Estado       : ESTABLE
- * Descripción  : Motor financiero base
- *               (amortización francesa)
- *************************************************/
+/* =========================================================
+ Proyecto      : Cotizador de Vehículos Teojama
+ Archivo       : finance.js
+ Versión       : V 1.0
+ Compilación   : 3.23
+ Estado        : AJUSTE – TABLA MULTIPLAZO + RESALTADO
+ Descripción   : Calcula y pinta el detalle de financiamiento
+                 en formato tabular (12/24/36/48/60), resaltando
+                 el plazo seleccionado por el usuario.
+========================================================= */
 
-/**
- * Calcula la cuota mensual usando amortización francesa
- */
-function calcularCuotaMensual(monto, tasaAnual, plazoMeses) {
-  const tasaMensual = (tasaAnual / 100) / 12;
+const PLAZOS_FIJOS = [12, 24, 36, 48, 60];
 
-  if (monto <= 0 || plazoMeses <= 0) {
-    return 0;
+function fmtMoney(value) {
+  const n = Number(value) || 0;
+  return `$${n.toFixed(2)}`;
+}
+
+function getTasaAnualDecimal() {
+  const sel = document.getElementById("selectTasa");
+  if (!sel) return 0;
+
+  const opt = sel.options[sel.selectedIndex];
+  const raw = (opt?.value ?? opt?.textContent ?? "").toString().trim();
+
+  const pctMatch = raw.match(/(\d+(\.\d+)?)/);
+  if (!pctMatch) return 0;
+
+  const num = Number(pctMatch[1]);
+  if (!Number.isFinite(num)) return 0;
+
+  return num > 1 ? (num / 100) : num;
+}
+
+function cuotaFrancesa(monto, tasaAnualDecimal, plazoMeses) {
+  const P = Number(monto) || 0;
+  const n = Number(plazoMeses) || 0;
+  if (P <= 0 || n <= 0) return 0;
+
+  const i = (Number(tasaAnualDecimal) || 0) / 12;
+  if (i <= 0) return P / n;
+
+  const factor = Math.pow(1 + i, n);
+  return P * (i * factor) / (factor - 1);
+}
+
+function clearPlazoActivo() {
+  document.querySelectorAll(".plazo-activo").forEach(el => el.classList.remove("plazo-activo"));
+}
+
+function setPlazoActivo(plazo) {
+  if (!plazo) return;
+  document.querySelectorAll(`[data-plazo="${plazo}"]`).forEach(el => el.classList.add("plazo-activo"));
+}
+
+async function getDeviceValueByPlazo(plazoMeses) {
+  const chk = document.getElementById("chkDispositivo");
+  const sel = document.getElementById("selectDevicePlan");
+  if (!chk?.checked || !sel?.value) return 0;
+
+  if (typeof loadDevicePlans !== "function") return 0;
+
+  const plans = await loadDevicePlans();
+  const idPlan = Number(sel.value);
+  const plan = plans?.find(p => Number(p.idPlan) === idPlan) || null;
+  if (!plan || !plan.valoresPorAnio) return 0;
+
+  const years = String(Math.round((Number(plazoMeses) || 0) / 12));
+  const val = plan.valoresPorAnio?.[years];
+  return Number(val) || 0;
+}
+
+function getSeguroValue() {
+  const chk = document.getElementById("chkSeguro");
+  const inp = document.getElementById("inputSeguro");
+  if (!chk?.checked) return 0;
+  return Number(inp?.value) || 0;
+}
+
+function getPvpValue() {
+  const el = document.getElementById("pvp");
+  const raw = (el?.textContent ?? "").toString().replace(/[^0-9.]/g, "");
+  return Number(raw) || 0;
+}
+
+function getEntradaValue() {
+  const el = document.getElementById("inputEntrada");
+  return Number(el?.value) || 0;
+}
+
+async function renderTablaFinanciamiento() {
+  const pvp = getPvpValue();
+  const entrada = getEntradaValue();
+  const seguro = getSeguroValue();
+  const tasaAnual = getTasaAnualDecimal();
+
+  const plazoSelEl = document.getElementById("selectPlazo");
+  const plazoSeleccionado = Number(plazoSelEl?.value) || 0;
+
+  clearPlazoActivo();
+
+  for (const plazo of PLAZOS_FIJOS) {
+    const device = await getDeviceValueByPlazo(plazo);
+
+    // MVP según formato solicitado:
+    // Monto total = PVP + Dispositivo (Seguro se muestra como fila aparte)
+    const montoTotal = pvp + device;
+    const montoFinanciar = Math.max(montoTotal - entrada, 0);
+    const cuotaMensual = cuotaFrancesa(montoFinanciar, tasaAnual, plazo);
+
+    const set = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    };
+
+    set(`pvp-${plazo}`, fmtMoney(pvp));
+    set(`device-${plazo}`, fmtMoney(device));
+    set(`total-${plazo}`, fmtMoney(montoTotal));
+    set(`entrada-${plazo}`, fmtMoney(entrada));
+    set(`fin-${plazo}`, fmtMoney(montoFinanciar));
+    set(`cuota-${plazo}`, fmtMoney(cuotaMensual));
+    set(`seguro-${plazo}`, fmtMoney(seguro));
   }
 
-  if (tasaMensual === 0) {
-    return monto / plazoMeses;
-  }
-
-  return monto *
-    (tasaMensual * Math.pow(1 + tasaMensual, plazoMeses)) /
-    (Math.pow(1 + tasaMensual, plazoMeses) - 1);
+  setPlazoActivo(plazoSeleccionado);
 }
 
-/**
- * Ejecuta la cotización completa
- * @param {object} appState Estado actual de la UI
- */
-function calcularCotizacion(appState) {
+function bindFinanceButton() {
+  const btn = document.getElementById("btnCalcular");
+  if (!btn) return;
 
-  // --- Valores base ---
-  const pvp = Number(document.getElementById("pvp")?.textContent) || 0;
-  const entrada = Number(document.getElementById("inputEntrada")?.value) || 0;
+  // CAPTURE para bloquear el alert viejo de ui.js sin editar ui.js
+  btn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
 
-  const seguro = appState.incluyeSeguro
-    ? Number(document.getElementById("inputSeguro")?.value) || 0
-    : 0;
-
-  const dispositivo = appState.incluyeDispositivo && appState.dispositivo
-    ? Number(document.getElementById("deviceValueDisplay")?.textContent) || 0
-    : 0;
-
-  // --- Tasa y plazo ---
-  const tasaCredito = appState.tasa
-    ? Number(
-        document.querySelector(
-          `#selectTasa option[value="${appState.tasa}"]`
-        )?.textContent.replace("%", "")
-      )
-    : 0;
-
-  const plazo = Number(appState.plazo) || 0;
-
-  // --- Cálculos ---
-  const montoFinanciado = Math.max(pvp - entrada, 0);
-  const cuota = calcularCuotaMensual(
-    montoFinanciado,
-    tasaCredito,
-    plazo
-  );
-
-  const totalCredito = cuota * plazo;
-
-  return {
-    pvp,
-    entrada,
-    montoFinanciado,
-    tasaCredito,
-    plazo,
-    cuota,
-    totalCredito,
-    seguro,
-    dispositivo,
-    totalOperacion:
-      totalCredito + seguro + dispositivo
-  };
+    try {
+      await renderTablaFinanciamiento();
+    } catch (err) {
+      console.error("Error en motor financiero:", err);
+    }
+  }, true);
 }
 
-/**
- * Renderiza resultados en pantalla
- */
-function mostrarResultado(resultado) {
-  const div = document.getElementById("tablaFinanciamiento");
-  if (!div) return;
-
-  div.innerHTML = `
-    <div class="fin-row"><span>PVP</span><strong>$${resultado.pvp.toFixed(2)}</strong></div>
-    <div class="fin-row"><span>Entrada</span><strong>$${resultado.entrada.toFixed(2)}</strong></div>
-    <div class="fin-row"><span>Monto financiado</span><strong>$${resultado.montoFinanciado.toFixed(2)}</strong></div>
-    <div class="fin-row"><span>Tasa anual</span><strong>${resultado.tasaCredito}%</strong></div>
-    <div class="fin-row"><span>Plazo</span><strong>${resultado.plazo} meses</strong></div>
-    <hr />
-    <div class="fin-row"><span>Cuota mensual</span><strong>$${resultado.cuota.toFixed(2)}</strong></div>
-    <div class="fin-row"><span>Total crédito</span><strong>$${resultado.totalCredito.toFixed(2)}</strong></div>
-    <div class="fin-row"><span>Seguro</span><strong>$${resultado.seguro.toFixed(2)}</strong></div>
-    <div class="fin-row"><span>Dispositivo</span><strong>$${resultado.dispositivo.toFixed(2)}</strong></div>
-    <hr />
-    <div class="fin-row"><span>Total operación</span><strong>$${resultado.totalOperacion.toFixed(2)}</strong></div>
-  `;
-}
+document.addEventListener("DOMContentLoaded", bindFinanceButton);
