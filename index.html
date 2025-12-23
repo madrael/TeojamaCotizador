@@ -4,11 +4,9 @@
  Versión       : V 1.0
  Compilación   : 3.23
  Estado        : ESTABLE
- Descripción   : Línea base estable del cotizador con color y versión dinámica.
-                 Versionado desacoplado vía assets/js/version.js
- Último cambio : Centralización de versión (sin cambios visuales)
+ Descripción   : Línea base UI + estructura de salida
+                 para resultados de cotización
 ========================================================= -->
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -42,11 +40,9 @@
   ========================== -->
   <section id="quote-section" style="display:none;">
 
-    <!-- HEADER SUPERIOR -->
+    <!-- CABECERA -->
     <header class="app-header">
-      <div class="app-title">
-        Cotizador de Vehículos
-      </div>
+      <div class="app-title">Cotizador de Vehículos</div>
       <div class="app-user">
         <span id="loggedUserName"></span>
         <button id="logout-btn" title="Cerrar sesión">⎋</button>
@@ -56,139 +52,158 @@
     <!-- CONTENIDO PRINCIPAL -->
     <div class="app-content">
 
-      <!-- =====================
+      <!-- =========================
            COLUMNA IZQUIERDA
-           PARÁMETROS
-      ====================== -->
+      ========================== -->
       <div class="app-left">
-
         <small><span class="app-version"></span></small>
 
-        <!-- Tipo Cliente -->
-        <div style="margin-top:10px;">
-          <label>Tipo de Cliente</label><br />
-          <select id="selectTipoCliente">
-            <option value="NORMAL">Cliente Estándar</option>
-            <option value="COLABORADOR">Colaborador</option>
-            <option value="REFINANCIADO">Refinanciamiento</option>
-          </select>
-        </div>
+        <label>Tipo de Cliente</label>
+        <select id="selectTipoCliente">
+          <option value="NORMAL">Cliente Estándar</option>
+          <option value="COLABORADOR">Colaborador</option>
+          <option value="REFINANCIADO">Refinanciamiento</option>
+        </select>
 
-        <!-- Tipo de Vehículo -->
-        <div>
-          <label>Tipo de Vehículo</label><br />
-          <select id="selectTipoVehiculo">
-            <option value="">Seleccione</option>
-            <option value="Liviano">Liviano</option>
-            <option value="Pesado">Pesado</option>
-          </select>
-        </div>
+        <label>Tipo de Vehículo</label>
+        <select id="selectTipoVehiculo">
+          <option value="">Seleccione</option>
+          <option value="Liviano">Liviano</option>
+          <option value="Pesado">Pesado</option>
+        </select>
 
-        <!-- Marca -->
-        <div>
-          <label>Marca</label><br />
-          <select id="selectMarca"></select>
-        </div>
+        <label>Marca</label>
+        <select id="selectMarca"></select>
 
-        <!-- Modelo -->
-        <div>
-          <label>Modelo</label><br />
-          <select id="selectModelo"></select>
-        </div>
+        <label>Modelo</label>
+        <select id="selectModelo"></select>
 
-        <!-- PVP -->
-        <div style="margin-top:6px;">
-          <strong>PVP: $<span id="pvp">0.00</span></strong>
-        </div>
+        <strong>PVP: $<span id="pvp">0.00</span></strong>
 
-        <!-- Tasa -->
-        <div>
-          <label>Tasa de Interés</label><br />
-          <select id="selectTasa"></select>
-        </div>
+        <label>Tasa de Interés</label>
+        <select id="selectTasa"></select>
 
-        <!-- Plazo -->
-        <div>
-          <label>Plazo (meses)</label><br />
-          <select id="selectPlazo"></select>
-        </div>
+        <label>Plazo (meses)</label>
+        <select id="selectPlazo"></select>
 
-        <!-- Seguro -->
-        <div style="margin-top:10px;">
-          <label>
-            <input type="checkbox" id="chkSeguro" />
-            Incluir seguro
-          </label><br />
-          <input
-            type="number"
-            id="inputSeguro"
-            placeholder="Valor póliza"
-            disabled
-          />
-        </div>
+        <label>
+          <input type="checkbox" id="chkSeguro" />
+          Incluir seguro
+        </label>
+        <input
+          type="number"
+          id="inputSeguro"
+          placeholder="Valor póliza"
+          disabled
+        />
 
-        <!-- Dispositivo -->
-        <div style="margin-top:10px;">
-          <label>
-            <input type="checkbox" id="chkDispositivo" />
-            Incluir dispositivo
-          </label>
-        </div>
+        <label>
+          <input type="checkbox" id="chkDispositivo" />
+          Incluir dispositivo
+        </label>
 
-        <div id="deviceContainer" style="display:none; margin-top:6px;">
-          <label>Plan de dispositivo</label><br />
+        <div id="deviceContainer" style="display:none;">
+          <label>Plan de dispositivo</label>
           <select id="selectDevicePlan"></select>
-          <div style="margin-top:4px;">
-            <small>
-              Proveedor: <span id="deviceProvider"></span><br />
-              Valor: $<span id="deviceValueDisplay">-</span>
-            </small>
-          </div>
+          <small>
+            Proveedor: <span id="deviceProvider"></span><br />
+            Valor: $<span id="deviceValueDisplay">-</span>
+          </small>
         </div>
 
-        <!-- Entrada -->
-        <div style="margin-top:10px;">
-          <label>Cuota de entrada</label><br />
-          <input
-            type="number"
-            id="inputEntrada"
-            placeholder="Valor entrada"
-          />
-        </div>
+        <label>Cuota de entrada</label>
+        <input
+          type="number"
+          id="inputEntrada"
+          placeholder="Valor entrada"
+        />
 
-        <!-- Acción -->
-        <div style="margin-top:15px;">
-          <button id="btnCalcular" type="button">
-            Calcular cotización
-          </button>
-        </div>
-
+        <button id="btnCalcular" type="button">
+          Calcular cotización
+        </button>
       </div>
 
-      <!-- =====================
-           COLUMNA DERECHA
-           RESULTADOS
-      ====================== -->
+      <!-- =========================
+           COLUMNA DERECHA (RESULTADO)
+      ========================== -->
       <div class="app-right">
-        <h3>Resultado de la Cotización</h3>
-        <div id="tablaFinanciamiento"></div>
-      </div>
 
+        <h3>Resultado de la Cotización</h3>
+
+        <!-- BLOQUE PRINCIPAL -->
+        <div class="result-main">
+          <p>
+            <strong>Cuota mensual estimada:</strong>
+            <span id="res-cuota">$ 0.00</span>
+          </p>
+          <p>
+            <strong>Plazo:</strong>
+            <span id="res-plazo">0 meses</span>
+          </p>
+        </div>
+
+        <hr />
+
+        <!-- DETALLE -->
+        <div class="result-detail">
+          <h4>Detalle del Financiamiento</h4>
+
+          <p>
+            Precio vehículo:
+            <strong id="res-precio">$ 0.00</strong>
+          </p>
+          <p>
+            Entrada:
+            <strong id="res-entrada">$ 0.00</strong>
+          </p>
+          <p>
+            Monto financiado:
+            <strong id="res-financiado">$ 0.00</strong>
+          </p>
+          <p>
+            Tasa:
+            <strong id="res-tasa">0%</strong>
+          </p>
+        </div>
+
+        <hr />
+
+        <!-- ADICIONALES -->
+        <div class="result-extra">
+          <h4>Adicionales</h4>
+
+          <p>
+            Seguro:
+            <strong id="res-seguro">$ 0.00</strong>
+          </p>
+          <p>
+            Dispositivo:
+            <strong id="res-dispositivo">$ 0.00</strong>
+          </p>
+
+          <p>
+            <strong>Total estimado:</strong>
+            <strong id="res-total">$ 0.00</strong>
+          </p>
+        </div>
+
+      </div>
     </div>
   </section>
 
-  <!-- ===================== SCRIPTS ===================== -->
+  <!-- =========================
+       VERSIONADO
+  ========================== -->
   <script src="./assets/js/version.js"></script>
+
+  <!-- =========================
+       SCRIPTS
+  ========================== -->
   <script src="./assets/js/auth.js"></script>
   <script src="./assets/js/dataLoader.js"></script>
   <script src="./assets/js/finance.js"></script>
   <script src="./assets/js/ui.js"></script>
 
-  <!-- VERSION -->
-  <script>
-    document.querySelectorAll(".app-version")
-      .forEach(el => el.textContent = APP_VERSION);
-  </script>
-
 </body>
 </html>
+
