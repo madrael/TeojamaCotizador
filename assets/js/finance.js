@@ -3,143 +3,166 @@
  Archivo       : finance.js
  Versión       : V 1.0
  Compilación   : 3.23
- Estado        : AJUSTE – TABLA MULTIPLAZO + RESALTADO
- Descripción   : Calcula y pinta el detalle de financiamiento
-                 en formato tabular (12/24/36/48/60), resaltando
-                 el plazo seleccionado por el usuario.
+ Estado        : ESTABLE – AJUSTE DISPOSITIVO POR PLAZO
+ Descripción   : Motor financiero con tabla multiazo.
+                 El valor del dispositivo varía según
+                 el plazo (valoresPorAnio).
 ========================================================= */
 
 const PLAZOS_FIJOS = [12, 24, 36, 48, 60];
 
-function fmtMoney(value) {
+/* =========================
+   Utilidades
+========================= */
+
+function money(value) {
   const n = Number(value) || 0;
   return `$${n.toFixed(2)}`;
 }
 
-function getTasaAnualDecimal() {
-  const sel = document.getElementById("selectTasa");
-  if (!sel) return 0;
-
-  const opt = sel.options[sel.selectedIndex];
-  const raw = (opt?.value ?? opt?.textContent ?? "").toString().trim();
-
-  const pctMatch = raw.match(/(\d+(\.\d+)?)/);
-  if (!pctMatch) return 0;
-
-  const num = Number(pctMatch[1]);
-  if (!Number.isFinite(num)) return 0;
-
-  return num > 1 ? (num / 100) : num;
+function limpiarPlazoActivo() {
+  document
+    .querySelectorAll(".plazo-activo")
+    .forEach(el => el.classList.remove("plazo-activo"));
 }
 
-function cuotaFrancesa(monto, tasaAnualDecimal, plazoMeses) {
-  const P = Number(monto) || 0;
-  const n = Number(plazoMeses) || 0;
-  if (P <= 0 || n <= 0) return 0;
-
-  const i = (Number(tasaAnualDecimal) || 0) / 12;
-  if (i <= 0) return P / n;
-
-  const factor = Math.pow(1 + i, n);
-  return P * (i * factor) / (factor - 1);
-}
-
-function clearPlazoActivo() {
-  document.querySelectorAll(".plazo-activo").forEach(el => el.classList.remove("plazo-activo"));
-}
-
-function setPlazoActivo(plazo) {
+function marcarPlazoActivo(plazo) {
   if (!plazo) return;
-  document.querySelectorAll(`[data-plazo="${plazo}"]`).forEach(el => el.classList.add("plazo-activo"));
+  document
+    .querySelectorAll(`[data-plazo="${plazo}"]`)
+    .forEach(el => el.classList.add("plazo-activo"));
 }
 
-async function getDeviceValueByPlazo(plazoMeses) {
-  const chk = document.getElementById("chkDispositivo");
-  const sel = document.getElementById("selectDevicePlan");
-  if (!chk?.checked || !sel?.value) return 0;
+/* =========================
+   Lectura de valores base
+========================= */
 
-  if (typeof loadDevicePlans !== "function") return 0;
-
-  const plans = await loadDevicePlans();
-  const idPlan = Number(sel.value);
-  const plan = plans?.find(p => Number(p.idPlan) === idPlan) || null;
-  if (!plan || !plan.valoresPorAnio) return 0;
-
-  const years = String(Math.round((Number(plazoMeses) || 0) / 12));
-  const val = plan.valoresPorAnio?.[years];
-  return Number(val) || 0;
+function getPVP() {
+  const el = document.getElementById("pvp");
+  if (!el) return 0;
+  return Number(el.textContent.replace(/[^0-9.]/g, "")) || 0;
 }
 
-function getSeguroValue() {
+function getEntrada() {
+  const el = document.getElementById("inputEntrada");
+  return Number(el?.value) || 0;
+}
+
+function getSeguro() {
   const chk = document.getElementById("chkSeguro");
   const inp = document.getElementById("inputSeguro");
   if (!chk?.checked) return 0;
   return Number(inp?.value) || 0;
 }
 
-function getPvpValue() {
-  const el = document.getElementById("pvp");
-  const raw = (el?.textContent ?? "").toString().replace(/[^0-9.]/g, "");
-  return Number(raw) || 0;
+/* =========================
+   Dispositivo por plazo
+========================= */
+
+function getPlanDispositivoSeleccionado() {
+  if (!window.appState?.dispositivo) return null;
+  return window.appState.dispositivo;
 }
 
-function getEntradaValue() {
-  const el = document.getElementById("inputEntrada");
-  return Number(el?.value) || 0;
+function getValorDispositivoPorPlazo(plazoMeses) {
+  const plan = getPlanDispositivoSeleccionado();
+  if (!plan || !plan.valoresPorAnio) return 0;
+
+  const anios = String(plazoMeses / 12);
+  return Number(plan.valoresPorAnio[anios]) || 0;
 }
 
-async function renderTablaFinanciamiento() {
-  const pvp = getPvpValue();
-  const entrada = getEntradaValue();
-  const seguro = getSeguroValue();
-  const tasaAnual = getTasaAnualDecimal();
+/* =========================
+   Tasa y cuota
+========================= */
 
-  const plazoSelEl = document.getElementById("selectPlazo");
-  const plazoSeleccionado = Number(plazoSelEl?.value) || 0;
+function getTasaAnual() {
+  const sel = document.getElementById("selectTasa");
+  if (!sel || sel.selectedIndex < 0) return 0;
 
-  clearPlazoActivo();
+  const raw =
+    sel.options[sel.selectedIndex].textContent || "";
 
-  for (const plazo of PLAZOS_FIJOS) {
-    const device = await getDeviceValueByPlazo(plazo);
+  const match = raw.match(/(\d+(\.\d+)?)/);
+  if (!match) return 0;
 
-    // MVP según formato solicitado:
-    // Monto total = PVP + Dispositivo (Seguro se muestra como fila aparte)
-    const montoTotal = pvp + device;
-    const montoFinanciar = Math.max(montoTotal - entrada, 0);
-    const cuotaMensual = cuotaFrancesa(montoFinanciar, tasaAnual, plazo);
+  return Number(match[1]) / 100;
+}
 
-    const set = (id, value) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = value;
-    };
+function cuotaFrancesa(monto, tasaAnual, plazoMeses) {
+  if (monto <= 0 || plazoMeses <= 0) return 0;
 
-    set(`pvp-${plazo}`, fmtMoney(pvp));
-    set(`device-${plazo}`, fmtMoney(device));
-    set(`total-${plazo}`, fmtMoney(montoTotal));
-    set(`entrada-${plazo}`, fmtMoney(entrada));
-    set(`fin-${plazo}`, fmtMoney(montoFinanciar));
-    set(`cuota-${plazo}`, fmtMoney(cuotaMensual));
-    set(`seguro-${plazo}`, fmtMoney(seguro));
+  const tasaMensual = tasaAnual / 12;
+  if (tasaMensual <= 0) {
+    return monto / plazoMeses;
   }
 
-  setPlazoActivo(plazoSeleccionado);
+  const factor = Math.pow(1 + tasaMensual, plazoMeses);
+  return (monto * tasaMensual * factor) / (factor - 1);
 }
 
-function bindFinanceButton() {
+/* =========================
+   Render principal
+========================= */
+
+function renderTablaFinanciamiento() {
+  const pvp = getPVP();
+  const entrada = getEntrada();
+  const seguro = getSeguro();
+  const tasaAnual = getTasaAnual();
+
+  const plazoSeleccionado =
+    Number(document.getElementById("selectPlazo")?.value) || 0;
+
+  limpiarPlazoActivo();
+
+  PLAZOS_FIJOS.forEach(plazo => {
+    const dispositivo = getValorDispositivoPorPlazo(plazo);
+
+    const montoTotal = pvp + dispositivo;
+    const montoFinanciar = Math.max(montoTotal - entrada, 0);
+
+    const cuota = cuotaFrancesa(
+      montoFinanciar,
+      tasaAnual,
+      plazo
+    );
+
+    const set = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = money(val);
+    };
+
+    set(`pvp-${plazo}`, pvp);
+    set(`device-${plazo}`, dispositivo);
+    set(`total-${plazo}`, montoTotal);
+    set(`entrada-${plazo}`, entrada);
+    set(`fin-${plazo}`, montoFinanciar);
+    set(`cuota-${plazo}`, cuota);
+    set(`seguro-${plazo}`, seguro);
+  });
+
+  marcarPlazoActivo(plazoSeleccionado);
+}
+
+/* =========================
+   Binding botón calcular
+========================= */
+
+function bindFinance() {
   const btn = document.getElementById("btnCalcular");
   if (!btn) return;
 
-  // CAPTURE para bloquear el alert viejo de ui.js sin editar ui.js
-  btn.addEventListener("click", async (e) => {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    try {
-      await renderTablaFinanciamiento();
-    } catch (err) {
-      console.error("Error en motor financiero:", err);
-    }
-  }, true);
+  btn.addEventListener(
+    "click",
+    e => {
+      e.preventDefault();
+      e.stopImmediatePropagation(); // bloquea lógica antigua
+      renderTablaFinanciamiento();
+    },
+    true
+  );
 }
 
-document.addEventListener("DOMContentLoaded", bindFinanceButton);
+document.addEventListener("DOMContentLoaded", bindFinance);
+
