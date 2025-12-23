@@ -2,8 +2,8 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : finance.js
  Versión       : V 1.0
- Compilación   : 3.23
- Estado        : ESTABLE – AJUSTE DISPOSITIVO POR PLAZO
+ Compilación   : 3.24
+ Estado        : ESTABLE – FIX DISPOSITIVO POR PLAZO
  Descripción   : Motor financiero con tabla multiazo.
                  El valor del dispositivo varía según
                  el plazo (valoresPorAnio).
@@ -34,7 +34,7 @@ function marcarPlazoActivo(plazo) {
 }
 
 /* =========================
-   Lectura de valores base
+   Valores base
 ========================= */
 
 function getPVP() {
@@ -44,8 +44,7 @@ function getPVP() {
 }
 
 function getEntrada() {
-  const el = document.getElementById("inputEntrada");
-  return Number(el?.value) || 0;
+  return Number(document.getElementById("inputEntrada")?.value) || 0;
 }
 
 function getSeguro() {
@@ -55,54 +54,46 @@ function getSeguro() {
   return Number(inp?.value) || 0;
 }
 
-/* =========================
-   Dispositivo por plazo
-========================= */
-
-function getPlanDispositivoSeleccionado() {
-  if (!window.appState?.dispositivo) return null;
-  return window.appState.dispositivo;
-}
-
-function getValorDispositivoPorPlazo(plazoMeses) {
-  const plan = getPlanDispositivoSeleccionado();
-  if (!plan || !plan.valoresPorAnio) return 0;
-
-  const anios = String(plazoMeses / 12);
-  return Number(plan.valoresPorAnio[anios]) || 0;
-}
-
-/* =========================
-   Tasa y cuota
-========================= */
-
 function getTasaAnual() {
   const sel = document.getElementById("selectTasa");
   if (!sel || sel.selectedIndex < 0) return 0;
 
-  const raw =
-    sel.options[sel.selectedIndex].textContent || "";
-
-  const match = raw.match(/(\d+(\.\d+)?)/);
-  if (!match) return 0;
-
-  return Number(match[1]) / 100;
+  const txt = sel.options[sel.selectedIndex].textContent;
+  const match = txt.match(/(\d+(\.\d+)?)/);
+  return match ? Number(match[1]) / 100 : 0;
 }
+
+/* =========================
+   Dispositivo por plazo
+========================= */
+
+function getValorDispositivoPorPlazo(plazoMeses) {
+  const dispositivo = window.appState?.dispositivo;
+  if (!dispositivo || !dispositivo.plan) return 0;
+
+  const valores = dispositivo.plan.valoresPorAnio;
+  if (!valores) return 0;
+
+  const anios = String(plazoMeses / 12);
+  return Number(valores[anios]) || 0;
+}
+
+/* =========================
+   Cuota francesa
+========================= */
 
 function cuotaFrancesa(monto, tasaAnual, plazoMeses) {
   if (monto <= 0 || plazoMeses <= 0) return 0;
 
   const tasaMensual = tasaAnual / 12;
-  if (tasaMensual <= 0) {
-    return monto / plazoMeses;
-  }
+  if (tasaMensual === 0) return monto / plazoMeses;
 
-  const factor = Math.pow(1 + tasaMensual, plazoMeses);
-  return (monto * tasaMensual * factor) / (factor - 1);
+  const f = Math.pow(1 + tasaMensual, plazoMeses);
+  return (monto * tasaMensual * f) / (f - 1);
 }
 
 /* =========================
-   Render principal
+   Render tabla
 ========================= */
 
 function renderTablaFinanciamiento() {
@@ -121,12 +112,7 @@ function renderTablaFinanciamiento() {
 
     const montoTotal = pvp + dispositivo;
     const montoFinanciar = Math.max(montoTotal - entrada, 0);
-
-    const cuota = cuotaFrancesa(
-      montoFinanciar,
-      tasaAnual,
-      plazo
-    );
+    const cuota = cuotaFrancesa(montoFinanciar, tasaAnual, plazo);
 
     const set = (id, val) => {
       const el = document.getElementById(id);
@@ -146,7 +132,7 @@ function renderTablaFinanciamiento() {
 }
 
 /* =========================
-   Binding botón calcular
+   Binding botón
 ========================= */
 
 function bindFinance() {
@@ -157,7 +143,7 @@ function bindFinance() {
     "click",
     e => {
       e.preventDefault();
-      e.stopImmediatePropagation(); // bloquea lógica antigua
+      e.stopImmediatePropagation();
       renderTablaFinanciamiento();
     },
     true
@@ -165,4 +151,3 @@ function bindFinance() {
 }
 
 document.addEventListener("DOMContentLoaded", bindFinance);
-
