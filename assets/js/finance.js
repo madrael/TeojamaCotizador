@@ -169,7 +169,9 @@ async function renderResumenDispositivo() {
 function cuotaFrancesa(monto, tasaAnual, plazoMeses) {
   if (monto <= 0 || plazoMeses <= 0) return 0;
 
-  const tasaMensual = tasaAnual / 12;
+  const tasaMensual = typeof getTasaMensualNominal === "function"
+  ? getTasaMensualNominal(tasaAnual)
+  : tasaAnual / 12;
   if (tasaMensual === 0) return monto / plazoMeses;
 
   const f = Math.pow(1 + tasaMensual, plazoMeses);
