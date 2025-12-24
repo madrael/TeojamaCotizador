@@ -68,15 +68,19 @@ function getTasaAnual() {
 ========================= */
 
 function getValorDispositivoPorPlazo(plazoMeses) {
-  const dispositivo = window.appState?.dispositivo;
-  if (!dispositivo || !dispositivo.plan) return 0;
+  const select = document.getElementById("selectPlanDispositivo");
+  if (!select || select.selectedIndex < 0) return 0;
 
-  const valores = dispositivo.plan.valoresPorAnio;
-  if (!valores) return 0;
+  const planId = select.value;
+  if (!planId) return 0;
+
+  const plan = window.devicePlans?.find(p => p.id === planId);
+  if (!plan || !plan.valoresPorAnio) return 0;
 
   const anios = String(plazoMeses / 12);
-  return Number(valores[anios]) || 0;
+  return Number(plan.valoresPorAnio[anios]) || 0;
 }
+
 
 /* =========================
    Cuota francesa
