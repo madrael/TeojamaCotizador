@@ -234,14 +234,23 @@ async function renderTablaFinanciamiento() {
 
     // 🔹 Prorrateo informativo
     const cuotaSeguro = seguroAnual / plazo;
-    const cuotaDispositivo = dispositivo / plazo; // reservado para UI futura
+    const cuotaDispositivo = dispositivo / plazo; // ahora se renderiza en UI
 
     const set = (id, val) => {
       const el = document.getElementById(id);
-      if (el) el.textContent = money(val);
+      if (!el) return;
+      if (typeof val === "string") {
+        el.textContent = val;
+      } else {
+        el.textContent = money(val);
+      }
     };
 
     set(`pvp-${plazo}`, pvp);
+
+    // ✅ NUEVO: Seguro anual TOTAL (fila "Seguro anual")
+    set(`seguro-total-${plazo}`, seguroAnual > 0 ? seguroAnual : "—");
+
     set(`device-${plazo}`, dispositivo);
     set(`total-${plazo}`, montoTotal);
     set(`entrada-${plazo}`, entrada);
@@ -249,7 +258,14 @@ async function renderTablaFinanciamiento() {
     set(`cuota-${plazo}`, cuota);
 
     // ⚠️ mismo ID existente: ahora es cuota mensual del seguro
-    set(`seguro-${plazo}`, cuotaSeguro);
+    set(`seguro-${plazo}`, seguroAnual > 0 ? cuotaSeguro : "—");
+
+    // ✅ NUEVO: Cuota dispositivo
+    set(`device-cuota-${plazo}`, dispositivo > 0 ? cuotaDispositivo : "—");
+
+    // ✅ NUEVO: Total cuota mensual = cuota crédito + cuota seguro + cuota dispositivo
+    const totalCuota = cuota + cuotaSeguro + cuotaDispositivo;
+    set(`total-cuota-${plazo}`, totalCuota);
 
     // === NUEVO: Resumen tipo banco (solo para plazo seleccionado) ===
     if (plazo === plazoSeleccionado) {
@@ -262,8 +278,6 @@ async function renderTablaFinanciamiento() {
         dispositivoTotal: dispositivo
       });
     }
-
-    // cuotaDispositivo queda calculada para el siguiente paso
   }
 
   marcarPlazoActivo(plazoSeleccionado);
@@ -311,5 +325,6 @@ function bindFinance() {
 }
 
 document.addEventListener("DOMContentLoaded", bindFinance);
+
 
 
