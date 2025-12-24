@@ -1,12 +1,14 @@
 /* =========================================================
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : finance.js
- Versión       : V 1.0
- Compilación   : 3.25
- Estado        : ESTABLE – FIX ROBUSTO DISPOSITIVO POR PLAZO
- Descripción   : Motor financiero con tabla multi-plazo.
-                 El valor del dispositivo varía según el plazo
-                 (valoresPorAnio) y se resuelve desde DOM + catálogo.
+ Versión       : V 1.1
+ Compilación   : 3.26
+ Estado        : AJUSTE MODELO FINANCIERO (SEGURO FINANCIADO)
+ Descripción   :
+   - Seguro anual se financia
+   - Seguro anual se prorratea por plazo
+   - Dispositivo sigue variando por plazo
+   - Cuota francesa se calcula sobre el total financiado
 ========================================================= */
 
 const PLAZOS_FIJOS = [12, 24, 36, 48, 60];
@@ -51,7 +53,7 @@ function getSeguro() {
   const chk = document.getElementById("chkSeguro");
   const inp = document.getElementById("inputSeguro");
   if (!chk?.checked) return 0;
-  return Number(inp?.value) || 0;
+  return Number(inp?.value) || 0; // valor ANUAL
 }
 
 function getTasaAnual() {
@@ -71,18 +73,10 @@ function isDispositivoActivo() {
   return !!document.getElementById("chkDispositivo")?.checked;
 }
 
-/**
- * Devuelve el plan seleccionado, intentando:
- * 1) window.appState.dispositivo.plan
- * 2) dataset del option seleccionado (si UI lo pone)
- * 3) buscar en DevicePlans.json (vía loadDevicePlans)
- */
 async function resolveDevicePlan() {
-  // 1) AppState (si existe)
   const planState = window.appState?.dispositivo?.plan;
   if (planState) return planState;
 
-  // 2) DOM option dataset
   const sel = document.getElementById("selectDevicePlan");
   if (sel && sel.selectedIndex >= 0) {
     const opt = sel.options[sel.selectedIndex];
@@ -96,22 +90,17 @@ async function resolveDevicePlan() {
       try {
         const parsed = JSON.parse(raw);
         if (parsed && parsed.valoresPorAnio) return parsed;
-      } catch (_) {
-        // si no es JSON válido, seguimos con lookup
-      }
+      } catch (_) {}
     }
 
-    // 3) Lookup en catálogo por value (idPlan o codigo)
     const value = (sel.value || "").trim();
     if (value) {
       try {
-        // loadDevicePlans viene de dataLoader.js
         const plans = await (typeof loadDevicePlans === "function"
           ? loadDevicePlans()
           : Promise.resolve(null));
 
         if (Array.isArray(plans)) {
-          // value puede ser idPlan (num) o codigo (string)
           const asNum = Number(value);
           const found =
             plans.find(p => Number(p.idPlan) === asNum) ||
@@ -121,11 +110,10 @@ async function resolveDevicePlan() {
           if (found) return found;
         }
       } catch (e) {
-        console.warn("No se pudo cargar DevicePlans para lookup:", e);
+        console.warn("No se pudo cargar DevicePlans:", e);
       }
     }
   }
-
   return null;
 }
 
@@ -142,10 +130,10 @@ async function getValorDispositivoPorPlazo(plazoMeses) {
   return getValorPorAnio(plan, plazoMeses);
 }
 
-/**
- * Actualiza el panel izquierdo (Proveedor / Valor) usando el plazo seleccionado.
- * Si no hay plazo seleccionado, usa 12.
- */
+/* =========================
+   Panel izquierdo
+========================= */
+
 async function renderResumenDispositivo() {
   const providerEl = document.getElementById("deviceProvider");
   const valueEl = document.getElementById("deviceValueDisplay");
@@ -170,7 +158,8 @@ async function renderResumenDispositivo() {
   const val = getValorPorAnio(plan, plazoSel);
 
   providerEl.textContent = plan.proveedor || "-";
-  valueEl.textContent = (Number.isFinite(val) && val > 0) ? val.toFixed(2) : "-";
+  valueEl.textContent =
+    Number.isFinite(val) && val > 0 ? val.toFixed(2) : "-";
 }
 
 /* =========================
@@ -194,7 +183,7 @@ function cuotaFrancesa(monto, tasaAnual, plazoMeses) {
 async function renderTablaFinanciamiento() {
   const pvp = getPVP();
   const entrada = getEntrada();
-  const seguro = getSeguro();
+  const seguroAnual = getSeguro();
   const tasaAnual = getTasaAnual();
 
   const plazoSeleccionado =
@@ -205,9 +194,14 @@ async function renderTablaFinanciamiento() {
   for (const plazo of PLAZOS_FIJOS) {
     const dispositivo = await getValorDispositivoPorPlazo(plazo);
 
-    const montoTotal = pvp + dispositivo;
+    // 🔹 MODELO FINANCIERO CORREGIDO
+    const montoTotal = pvp + seguroAnual + dispositivo;
     const montoFinanciar = Math.max(montoTotal - entrada, 0);
     const cuota = cuotaFrancesa(montoFinanciar, tasaAnual, plazo);
+
+    // 🔹 Prorrateo informativo
+    const cuotaSeguro = seguroAnual / plazo;
+    const cuotaDispositivo = dispositivo / plazo; // reservado para UI futura
 
     const set = (id, val) => {
       const el = document.getElementById(id);
@@ -220,12 +214,14 @@ async function renderTablaFinanciamiento() {
     set(`entrada-${plazo}`, entrada);
     set(`fin-${plazo}`, montoFinanciar);
     set(`cuota-${plazo}`, cuota);
-    set(`seguro-${plazo}`, seguro);
+
+    // ⚠️ mismo ID existente: ahora es cuota mensual del seguro
+    set(`seguro-${plazo}`, cuotaSeguro);
+
+    // cuotaDispositivo queda calculada para el siguiente paso
   }
 
   marcarPlazoActivo(plazoSeleccionado);
-
-  // Panel izquierdo: valor del dispositivo depende del plazo seleccionado
   await renderResumenDispositivo();
 }
 
@@ -247,7 +243,6 @@ function bindFinance() {
     );
   }
 
-  // Si cambia plazo o plan, refrescar el resumen del dispositivo (panel izquierdo)
   const plazoSel = document.getElementById("selectPlazo");
   const planSel = document.getElementById("selectDevicePlan");
   const chkDev = document.getElementById("chkDispositivo");
