@@ -179,6 +179,37 @@ function cuotaFrancesa(monto, tasaAnual, plazoMeses) {
 }
 
 /* =========================
+   Resumen tipo banco (nuevo)
+========================= */
+
+function renderResumenCredito({
+  plazo,
+  tasaAnual,
+  cuota,
+  montoFinanciar,
+  seguroAnual,
+  dispositivoTotal
+}) {
+  const totalInteres = (cuota * plazo) - montoFinanciar;
+  const totalPagar = cuota * plazo;
+
+  const setText = (id, text) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  };
+
+  setText("summary-cuota", money(cuota));
+  setText("summary-tasa", `${(tasaAnual * 100).toFixed(1)}%`);
+  setText("summary-tasa-detail", `${(tasaAnual * 100).toFixed(1)}%`);
+  setText("summary-plazo", `${plazo} meses`);
+  setText("summary-capital", money(montoFinanciar));
+  setText("summary-seguro", money(seguroAnual));
+  setText("summary-dispositivo", money(dispositivoTotal));
+  setText("summary-interes", money(totalInteres));
+  setText("summary-total-pagar", money(totalPagar));
+}
+
+/* =========================
    Render tabla
 ========================= */
 
@@ -220,6 +251,18 @@ async function renderTablaFinanciamiento() {
     // ⚠️ mismo ID existente: ahora es cuota mensual del seguro
     set(`seguro-${plazo}`, cuotaSeguro);
 
+    // === NUEVO: Resumen tipo banco (solo para plazo seleccionado) ===
+    if (plazo === plazoSeleccionado) {
+      renderResumenCredito({
+        plazo,
+        tasaAnual,
+        cuota,
+        montoFinanciar,
+        seguroAnual,
+        dispositivoTotal: dispositivo
+      });
+    }
+
     // cuotaDispositivo queda calculada para el siguiente paso
   }
 
@@ -249,10 +292,24 @@ function bindFinance() {
   const planSel = document.getElementById("selectDevicePlan");
   const chkDev = document.getElementById("chkDispositivo");
 
-  plazoSel?.addEventListener("change", () => renderResumenDispositivo());
-  planSel?.addEventListener("change", () => renderResumenDispositivo());
-  chkDev?.addEventListener("change", () => renderResumenDispositivo());
+  // Antes: solo actualizaba panel dispositivo.
+  // Ahora: también refresca tabla + resumen (sin romper lo anterior).
+  plazoSel?.addEventListener("change", async () => {
+    await renderResumenDispositivo();
+    await renderTablaFinanciamiento();
+  });
+
+  planSel?.addEventListener("change", async () => {
+    await renderResumenDispositivo();
+    await renderTablaFinanciamiento();
+  });
+
+  chkDev?.addEventListener("change", async () => {
+    await renderResumenDispositivo();
+    await renderTablaFinanciamiento();
+  });
 }
 
 document.addEventListener("DOMContentLoaded", bindFinance);
+
 
