@@ -123,5 +123,89 @@
               "VPlazo": 60
                }
               ]
+  },
+  {
+    "IdTasa": "TZ006",
+    "TasaAnual": 14.9,
+    "Plazos": [{
+              "IdPlazo": "PL01",
+              "VPlazo": 12
+               },
+               {
+              "IdPlazo": "PL02",
+              "VPlazo": 24
+               },
+               {
+              "IdPlazo": "PL03",
+              "VPlazo": 36
+               },
+               {
+              "IdPlazo": "PL04",
+              "VPlazo": 48
+               },
+               {
+              "IdPlazo": "PL05",
+              "VPlazo": 60
+               },
+               {
+              "IdPlazo": "PL06",
+              "VPlazo": 72
+               }
+              ]
+  },
+  {
+    "IdTasa": "TZ007",
+    "TasaAnual": 14.99,
+    "Plazos": [{
+              "IdPlazo": "PL01",
+              "VPlazo": 12
+               },
+               {
+              "IdPlazo": "PL02",
+              "VPlazo": 24
+               },
+               {
+              "IdPlazo": "PL03",
+              "VPlazo": 36
+               },
+               {
+              "IdPlazo": "PL04",
+              "VPlazo": 48
+               },
+               {
+              "IdPlazo": "PL05",
+              "VPlazo": 60
+               },
+               {
+              "IdPlazo": "PL06",
+              "VPlazo": 72
+               }
+              ]
+  },
+  {
+    "IdTasa": "TZ008",
+    "TasaAnual": 14.6,
+    "Plazos": [{
+              "IdPlazo": "PL01",
+              "VPlazo": 12
+               },
+               {
+              "IdPlazo": "PL02",
+              "VPlazo": 24
+               },
+               {
+              "IdPlazo": "PL03",
+              "VPlazo": 36
+               },
+               {
+              "IdPlazo": "PL04",
+              "VPlazo": 48
+               },
+               {
+              "IdPlazo": "PL05",
+              "VPlazo": 60
+               }
+              ]
   }
+
 ]
