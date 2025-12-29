@@ -201,13 +201,14 @@ body {
 
 .finance-table thead th {
   background-color: #f6f8fa;
-  font-weight: 600;
+  font-weight: 700;
   color: #24292f;
 }
 
+/* Corrección bug concepto en negrillas, se omite esta sentencia
 .finance-table thead th:first-child {
   font-weight: 700;
-}
+}*/
 
 .finance-table th:first-child,
 .finance-table td:first-child {
@@ -262,6 +263,10 @@ body {
   align-items: center;
   gap: 8px;
   margin-top: 10px;
+}
+
+.finance-table tr.row-cuota-mensual td.concepto {
+  font-weight: 400;
 }
 
 .form-check input[type="checkbox"] {
