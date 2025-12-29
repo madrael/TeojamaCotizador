@@ -224,17 +224,17 @@ body {
 }
 
 .finance-separator td {
-  padding: 0;
-  border-bottom: none;
-  height: 10px;
+  padding: 0 !important;
+  border: none !important;
+  height: 14px;
   background: #ffffff;
 }
 
 .finance-separator td::after {
   content: "";
   display: block;
-  border-top: 2px solid #e5e7eb;
-  margin: 8px 0;
+  border-top: 1px solid #e5e7eb;
+  margin: 6px 0;
 }
 
 .plazo-activo {
@@ -259,20 +259,27 @@ body {
   display: none;
 }
 .form-check {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   margin-top: 10px;
 }
 
-.finance-table tr.row-cuota-mensual td.concepto {
-  font-weight: 400;
+.check-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  cursor: pointer;
 }
 
-.form-check input[type="checkbox"] {
+.check-inline span {
+  white-space: nowrap;
+}
+
+.check-inline input[type="checkbox"] {
   margin: 0;
 }
-#insuranceValue {
+
+#inputSeguro {
   height: 38px;
 }
+
 
