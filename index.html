@@ -115,20 +115,21 @@
 
         <!-- Seguro -->
         <div style="margin-top:10px;">
-          <label>
-            <input type="checkbox" id="chkSeguro" />
-            Incluir seguro
-          </label>
-          <input type="number" id="inputSeguro" placeholder="Valor póliza" disabled />
+           <div class="form-check">
+               <input type="checkbox" id="chkSeguro" />
+               <label for="chkSeguro">Incluir seguro</label>
+            </div>
+            <input type="number" id="inputSeguro" placeholder="Valor póliza" disabled />
         </div>
 
         <!-- Dispositivo -->
         <div style="margin-top:10px;">
-          <label>
+          
+          <div class="form-check">
             <input type="checkbox" id="chkDispositivo" />
-            Incluir dispositivo
-          </label>
-
+            <label for="chkDispositivo">Incluir dispositivo</label>
+          </div>
+        
           <div id="deviceContainer" style="display:none;">
             <label>Plan de dispositivo</label><br />
             <select id="selectDevicePlan"></select>
@@ -225,11 +226,6 @@
     <td data-plazo="36" id="entrada-36">—</td>
     <td data-plazo="48" id="entrada-48">—</td>
     <td data-plazo="60" id="entrada-60">—</td>
-  </tr>
-
-  <!-- SEPARADOR -->
-  <tr class="finance-separator">
-    <td colspan="6"></td>
   </tr>
 
   <!-- MONTO A FINANCIAR -->
