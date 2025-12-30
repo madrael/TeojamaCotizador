@@ -164,6 +164,14 @@ body {
   background: #2c974b;
 }
 
+/* =========================================
+   Ajuste puntual: input Valor entrada
+   No afecta otros inputs ni selects
+========================================= */
+#inputEntrada {
+  box-sizing: border-box;
+}
+
 /* Dispositivo */
 #deviceContainer {
   background: #f6f8fa;
