@@ -282,4 +282,33 @@ body {
   height: 38px;
 }
 
+/* =========================
+   Correcciones inputs + checkboxes
+========================= */
+
+.form-group {
+  margin-top: 10px;
+}
+
+.form-group input[type="number"],
+.form-group select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.check-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.check-inline input[type="checkbox"] {
+  margin: 0;
+}
+
+.check-inline span {
+  white-space: nowrap;
+}
 
