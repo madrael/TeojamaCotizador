@@ -172,6 +172,11 @@ body {
   border-radius: 6px;
 }
 
+.device-meta {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
 /* Resultado */
 #tablaFinanciamiento {
   margin-top: 10px;
@@ -278,9 +283,11 @@ body {
   margin: 0;
 }
 
-#inputSeguro {
+#inputSeguro,
+#inputEntrada {
   height: 38px;
 }
+
 
 /* =========================
    Correcciones inputs + checkboxes
