@@ -172,14 +172,6 @@ body {
   box-sizing: border-box;
 }
 
-/* =========================================
-   Ajuste puntual: input Valor entrada
-   No afecta otros inputs ni selects
-========================================= */
-#inputEntrada {
-  box-sizing: border-box;
-}
-
 /* Dispositivo */
 #deviceContainer {
   background: #f6f8fa;
@@ -294,6 +286,15 @@ body {
   margin: 0;
 }
 
+/* =========================================
+   Ajuste puntual: input Valor póliza
+   - Corrige ancho (box model)
+   - Unifica altura visual
+   - No afecta otros inputs
+========================================= */
 #inputSeguro {
+  box-sizing: border-box;
   height: 38px;
+  width: 100%;
 }
+
