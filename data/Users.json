@@ -30,6 +30,15 @@
     "nombre": "Leonardo Berru",
     "rol": "ADMIN",
     "activo": true
+  },
+  {
+    "id": 4,
+    "username": "jtrujillo",
+    "password": "Teojama2026",
+    "nombre": "Javier Trujillo",
+    "rol": "ASESOR_COMERCIAL",
+    "activo": true
   }
 ]
+
 
