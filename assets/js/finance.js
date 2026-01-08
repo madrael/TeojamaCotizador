@@ -199,8 +199,8 @@ function renderResumenCredito({
   };
 
   setText("summary-cuota", money(cuota));
-  setText("summary-tasa", `${(tasaAnual * 100).toFixed(1)}%`);
-  setText("summary-tasa-detail", `${(tasaAnual * 100).toFixed(1)}%`);
+  setText("summary-tasa", `${(tasaAnual * 100).toFixed(2)}%`);
+  setText("summary-tasa-detail", `${(tasaAnual * 100).toFixed(2)}%`);
   setText("summary-plazo", `${plazo} meses`);
   setText("summary-capital", money(montoFinanciar));
   setText("summary-seguro", money(seguroAnual));
