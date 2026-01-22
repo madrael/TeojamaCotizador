@@ -1,0 +1,15 @@
+{
+  "S": "Sedán",
+  "HB": "Hatchback",
+  "SV": "SUV",
+  "SM": "Smart",
+  "DC": "Camioneta Doble Cabina",
+  "F": "Furgoneta",
+  "C": "Camión",
+  "V": "Volqueta",
+  "B": "Bus",
+  "BA": "Buseta",
+  "CA": "Cabezal",
+  "CT": "Cabezal-T",
+  "J": "Jeep"
+}
