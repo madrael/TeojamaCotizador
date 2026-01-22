@@ -1,0 +1,17 @@
+{
+  "A": {
+    "S": "AUTO_SEDAN",
+    "HB": "AUTO_HATCHBACK",
+    "SV": "AUTO_SUV",
+    "SM": "AUTO_SMART"
+  },
+  "J": {
+    "SV": "JEEP_SUV"
+  },
+  "P": {
+    "DC": "CAMIONETA_DOBLE_CABINA"
+  },
+  "F": {
+    "F": "FURGONETA"
+  }
+}
