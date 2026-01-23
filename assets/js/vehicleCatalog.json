@@ -1,0 +1,83 @@
+[
+  {
+    "classID": "A",
+    "classDesc": "Automóvil",
+    "subClasses": [
+      {
+        "subClassID": "S",
+        "subClassDesc": "Sedán",
+        "riskId": "R01"
+      },
+      {
+        "subClassID": "HB",
+        "subClassDesc": "Hatchback",
+        "riskId": "R02"
+      },
+      {
+        "subClassID": "SV",
+        "subClassDesc": "SUV / Crossover",
+        "riskId": "R03"
+      },
+      {
+        "subClassID": "SM",
+        "subClassDesc": "Smart / Compacto",
+        "riskId": "R04"
+      }
+    ]
+  },
+  {
+    "classID": "P",
+    "classDesc": "Camioneta",
+    "subClasses": [
+      {
+        "subClassID": "DC",
+        "subClassDesc": "Doble Cabina",
+        "riskId": "R05"
+      }
+    ]
+  },
+  {
+    "classID": "C",
+    "classDesc": "Camión",
+    "subClasses": [
+      {
+        "subClassID": "C",
+        "subClassDesc": "Camión",
+        "riskId": "R06"
+      }
+    ]
+  },
+  {
+    "classID": "CA",
+    "classDesc": "Cabezal",
+    "subClasses": [
+      {
+        "subClassID": "CA",
+        "subClassDesc": "Cabezal",
+        "riskId": "R07"
+      }
+    ]
+  },
+  {
+    "classID": "O",
+    "classDesc": "Ómnibus",
+    "subClasses": [
+      {
+        "subClassID": "O",
+        "subClassDesc": "Ómnibus",
+        "riskId": "R08"
+      }
+    ]
+  },
+  {
+    "classID": "BA",
+    "classDesc": "Buseta",
+    "subClasses": [
+      {
+        "subClassID": "BA",
+        "subClassDesc": "Buseta",
+        "riskId": "R09"
+      }
+    ]
+  }
+]
