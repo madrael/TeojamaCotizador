@@ -96,108 +96,79 @@
           <select id="selectModelo"></select>
         </div>
 
-        <!-- =====================
-             TABS INPUTS IZQUIERDA
-        ====================== -->
-        <div class="tabs-container">
+   <!-- =====================
+     TABS INPUTS IZQUIERDA
+====================== -->
+<div class="tabs-container">
 
-        <div class="tabs-header">
-            <button class="tab-btn active" data-tab="tab-vehiculo">
-              Vehículo de interés
-            </button>
-            <button class="tab-btn" data-tab="tab-prospecto">
-              Datos Prospecto
-            </button>
-         </div>
-       </div>
-      
-        <!-- TABS HEADER -->
-        <div class="tabs-header">
-         <button class="tab-btn" data-tab="tab-prospecto">
-                Datos Prospecto
-         </button>
-         <button class="tab-btn active" data-tab="tab-vehiculo">
-                Vehículo de interés
-            </button>
-        </div>
-     
-        <!-- TAB: Datos Prospecto -->
-        <div id="tab-prospecto" class="tab-panel">
-            <!-- vacío por ahora -->
-        </div>
-       
-        <!-- TAB: Vehículo de interés -->
-        <div id="tab-vehiculo" class="tab-panel active">
-              
-        <!-- PVP -->
-        <div style="margin-top:10px;">
-          <strong>PVP: $<span id="pvp">0.00</span></strong>
-        </div>
+  <!-- Header -->
+  <div class="tabs-header">
+    <button class="tab-btn active" data-tab="tab-vehiculo">
+      Vehículo de interés
+    </button>
+    <button class="tab-btn" data-tab="tab-prospecto">
+      Datos Prospecto
+    </button>
+  </div>
 
-        <!-- Tasa -->
-        <div>
-          <label>Tasa de Interés</label><br />
-          <select id="selectTasa"></select>
-        </div>
+  <!-- TAB: Prospecto -->
+  <div id="tab-prospecto" class="tab-panel">
+    <!-- vacío por ahora -->
+  </div>
+ 
+  <!-- TAB: Vehículo -->
+  <div id="tab-vehiculo" class="tab-panel active">
 
-        <!-- Plazo -->
-        <div>
-          <label>Plazo (meses)</label><br />
-          <select id="selectPlazo"></select>
-        </div>
+    <!-- PVP -->
+    <div style="margin-top:10px;">
+      <strong>PVP: $<span id="pvp">0.00</span></strong>
+    </div>
 
-        <!-- Entrada -->
-        <div style="margin-top:10px;">
-          <label>Cuota de entrada</label><br />
-          <input type="number" id="inputEntrada" placeholder="Valor entrada" />
-        </div>
-       
-        <!-- Seguro -->
-        <div style="margin-top:10px;">
-            <div class="form-check">
-             <label class="check-inline">
-               <input type="checkbox" id="chkSeguro" />
-               <span>Incluir seguro</span>
-             </label>
-            </div>
-            <input type="number" id="inputSeguro" placeholder="Valor póliza" disabled />
-        </div>
+    <!-- Tasa -->
+    <div>
+      <label>Tasa de Interés</label><br />
+      <select id="selectTasa"></select>
+    </div>
 
-        <!-- Dispositivo -->
-        <div style="margin-top:10px;">
+    <!-- Plazo -->
+    <div>
+      <label>Plazo (meses)</label><br />
+      <select id="selectPlazo"></select>
+    </div>
 
-         <div class="form-check">
-            <label class="check-inline">
-              <input type="checkbox" id="chkDispositivo" />
-              <span>Incluir dispositivo</span>
-            </label>
-         </div>
+    <!-- Entrada -->
+    <div style="margin-top:10px;">
+      <label>Cuota de entrada</label><br />
+      <input type="number" id="inputEntrada" placeholder="Valor entrada" />
+    </div>
 
-          <div id="deviceContainer" style="display:none;">
-            <label>Plan de dispositivo</label><br />
-            <select id="selectDevicePlan"></select>
+    <!-- Seguro -->
+    <div style="margin-top:10px;">
+      <label class="check-inline">
+        <input type="checkbox" id="chkSeguro" />
+        <span>Incluir seguro</span>
+      </label>
+      <input type="number" id="inputSeguro" placeholder="Valor póliza" disabled />
+    </div>
 
-            <div style="margin-top:8px;">
-              <div>Proveedor: <span id="deviceProvider">-</span></div>
-              <div>Valor: $<span id="deviceValueDisplay">-</span></div>
-            </div>
-          </div>
-        </div>
+    <!-- Dispositivo -->
+    <div style="margin-top:10px;">
+      <label class="check-inline">
+        <input type="checkbox" id="chkDispositivo" />
+        <span>Incluir dispositivo</span>
+      </label>
 
-        <!-- Botón -->
-        <div style="margin-top:14px;">
-          <button id="btnCalcular" type="button">Calcular cotización</button>
-        </div>
-
-       </div> <!-- cierre tab-vehiculo -->
-
-       </div> <!-- cierre tabs-content -->
-
-       </div> <!-- cierre tabs-container -->
-
-
-
+      <div id="deviceContainer" style="display:none;">
+        <label>Plan de dispositivo</label><br />
+        <select id="selectDevicePlan"></select>
       </div>
+    </div>
+
+  </div>
+
+
+
+</div>
 
       <!-- =====================
            COLUMNA DERECHA
