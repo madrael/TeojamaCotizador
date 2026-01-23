@@ -348,3 +348,49 @@ body {
   width: 100%;
 }
 
+/* =========================================
+   Tabs - Inputs izquierda
+   No afecta lógica ni estilos existentes
+========================================= */
+
+.tabs-container {
+  margin-top: 12px;
+}
+
+/* Header de tabs */
+.tabs-header {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 8px 10px;
+  background: #f6f8fa;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #24292f;
+}
+
+.tab-btn:hover {
+  background: #eef1f4;
+}
+
+.tab-btn.active {
+  background: #ffffff;
+  border-color: #2da44e;
+  color: #2da44e;
+}
+
+/* Contenido tabs */
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
