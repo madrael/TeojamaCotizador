@@ -1,0 +1,12 @@
+[
+  {
+    "providerId": "TECS001",
+    "providerName": "TECNISEGUROS",
+    "active": true
+  },
+  {
+    "providerId": "ORLS001",
+    "providerName": "ORLANDO ESPINOZA",
+    "active": true
+  }
+]
