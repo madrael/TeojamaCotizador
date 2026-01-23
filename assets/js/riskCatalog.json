@@ -1,0 +1,50 @@
+[
+  {
+    "riskId": "R01",
+    "riskDesc": "Vehículo liviano estándar",
+    "lineBusiness": "LIVIANOS",
+    "active": true
+  },
+  {
+    "riskId": "R02",
+    "riskDesc": "Vehículo liviano SUV / crossover",
+    "lineBusiness": "LIVIANOS",
+    "active": true
+  },
+  {
+    "riskId": "R03",
+    "riskDesc": "Camioneta doble cabina",
+    "lineBusiness": "LIVIANOS",
+    "active": true
+  },
+  {
+    "riskId": "R04",
+    "riskDesc": "Camión liviano",
+    "lineBusiness": "PESADOS",
+    "active": true
+  },
+  {
+    "riskId": "R05",
+    "riskDesc": "Camión pesado",
+    "lineBusiness": "PESADOS",
+    "active": true
+  },
+  {
+    "riskId": "R06",
+    "riskDesc": "Cabezal",
+    "lineBusiness": "PESADOS",
+    "active": true
+  },
+  {
+    "riskId": "R07",
+    "riskDesc": "Ómnibus",
+    "lineBusiness": "PESADOS",
+    "active": true
+  },
+  {
+    "riskId": "R08",
+    "riskDesc": "Buseta",
+    "lineBusiness": "PESADOS",
+    "active": true
+  }
+]
