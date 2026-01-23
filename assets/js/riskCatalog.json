@@ -1,50 +1,66 @@
 [
   {
     "riskId": "R01",
-    "riskDesc": "Vehículo liviano estándar",
+    "subClassID": "S",
+    "riskDesc": "Automóvil sedán",
     "lineBusiness": "LIVIANOS",
     "active": true
   },
   {
     "riskId": "R02",
-    "riskDesc": "Vehículo liviano SUV / crossover",
+    "subClassID": "HB",
+    "riskDesc": "Automóvil hatchback",
     "lineBusiness": "LIVIANOS",
     "active": true
   },
   {
     "riskId": "R03",
-    "riskDesc": "Camioneta doble cabina",
+    "subClassID": "SV",
+    "riskDesc": "Automóvil SUV / crossover",
     "lineBusiness": "LIVIANOS",
     "active": true
   },
   {
     "riskId": "R04",
-    "riskDesc": "Camión liviano",
-    "lineBusiness": "PESADOS",
+    "subClassID": "SM",
+    "riskDesc": "Automóvil compacto / smart",
+    "lineBusiness": "LIVIANOS",
     "active": true
   },
   {
     "riskId": "R05",
-    "riskDesc": "Camión pesado",
-    "lineBusiness": "PESADOS",
+    "subClassID": "DC",
+    "riskDesc": "Camioneta doble cabina",
+    "lineBusiness": "LIVIANOS",
     "active": true
   },
   {
     "riskId": "R06",
-    "riskDesc": "Cabezal",
+    "subClassID": "C",
+    "riskDesc": "Camión",
     "lineBusiness": "PESADOS",
     "active": true
   },
   {
     "riskId": "R07",
-    "riskDesc": "Ómnibus",
+    "subClassID": "CA",
+    "riskDesc": "Cabezal",
     "lineBusiness": "PESADOS",
     "active": true
   },
   {
     "riskId": "R08",
+    "subClassID": "O",
+    "riskDesc": "Ómnibus",
+    "lineBusiness": "PESADOS",
+    "active": true
+  },
+  {
+    "riskId": "R09",
+    "subClassID": "BA",
     "riskDesc": "Buseta",
     "lineBusiness": "PESADOS",
     "active": true
   }
 ]
+
