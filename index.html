@@ -96,9 +96,9 @@
           <select id="selectModelo"></select>
         </div>
 
-   <!-- =====================
+<!-- =================================
      TABS INPUTS IZQUIERDA
-====================== -->
+================================= -->
 <div class="tabs-container">
 
   <!-- Header -->
@@ -111,12 +111,12 @@
     </button>
   </div>
 
-  <!-- TAB: Prospecto -->
+  <!-- TAB: Datos Prospecto -->
   <div id="tab-prospecto" class="tab-panel">
     <!-- vacío por ahora -->
   </div>
- 
-  <!-- TAB: Vehículo -->
+
+  <!-- TAB: Vehículo de interés -->
   <div id="tab-vehiculo" class="tab-panel active">
 
     <!-- PVP -->
@@ -157,18 +157,21 @@
         <input type="checkbox" id="chkDispositivo" />
         <span>Incluir dispositivo</span>
       </label>
+    </div>
 
-      <div id="deviceContainer" style="display:none;">
-        <label>Plan de dispositivo</label><br />
-        <select id="selectDevicePlan"></select>
+    <div id="deviceContainer" style="display:none;">
+      <label>Plan de dispositivo</label><br />
+      <select id="selectDevicePlan"></select>
+
+      <div style="margin-top:8px;">
+        <div>Proveedor: <span id="deviceProvider">-</span></div>
+        <div>Valor: $<span id="deviceValueDisplay">-</span></div>
       </div>
     </div>
 
   </div>
-
-
-
 </div>
+
 
       <!-- =====================
            COLUMNA DERECHA
