@@ -16,169 +16,59 @@
   <title>Cotizador de Vehículos</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- CSS existente -->
-  <link rel="stylesheet" href="./assets/css/styles.css" />
-
-  <!-- CSS SOLO PARA ESTA BASE -->
-  <style>
-    body {
-      background: #f4f6f8;
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    /* ================= HEADER ================= */
-    .app-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 20px;
-      background: #ffffff;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .app-title {
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    /* ================= LAYOUT ================= */
-    .app-content {
-      display: grid;
-      grid-template-columns: 420px 1fr;
-      gap: 16px;
-      padding: 20px;
-    }
-
-    .app-left,
-    .app-right {
-      background: #ffffff;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      padding: 16px;
-    }
-
-    /* ================= TABS ================= */
-    .tabs-header {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 16px;
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 10px 12px;
-      border-radius: 20px;
-      border: 1px solid #d0d7de;
-      background: #f6f8fa;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .tab-btn.active {
-      background: #ffffff;
-      border-color: #2da44e;
-      color: #2da44e;
-    }
-
-    .tab-panel {
-      display: none;
-      padding: 12px;
-      border-radius: 10px;
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-    }
-
-    .tab-panel.active {
-      display: block;
-    }
-
-    /* ================= PLACEHOLDERS ================= */
-    .placeholder {
-      padding: 20px;
-      text-align: center;
-      color: #6b7280;
-      font-size: 14px;
-    }
-
-    @media (max-width: 980px) {
-      .app-content {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
-<header class="app-header">
-  <div class="app-title">Cotizador de Vehículos</div>
-  <div>Usuario</div>
-</header>
-
-<!-- ================= CONTENIDO ================= -->
-<div class="app-content">
-
-  <!-- ============ COLUMNA IZQUIERDA ============ -->
-  <div class="app-left">
-
-    <!-- TABS -->
-    <div class="tabs-header">
-      <button class="tab-btn active" data-tab="tab-vehiculo">
-        Vehículo de interés
-      </button>
-      <button class="tab-btn" data-tab="tab-prospecto">
-        Datos Prospecto
-      </button>
+  <!-- =========================
+       HEADER
+  ========================== -->
+  <header class="app-header">
+    <h1>Cotizador de Vehículos</h1>
+    <div class="user-info">
+      Christian Castro
     </div>
+  </header>
 
-    <!-- TAB VEHÍCULO -->
-    <div id="tab-vehiculo" class="tab-panel active">
-      <div class="placeholder">
-        Aquí irán los inputs del vehículo
-      </div>
-    </div>
+  <!-- =========================
+       CONTENEDOR PRINCIPAL
+  ========================== -->
+  <main class="app-content">
 
-    <!-- TAB PROSPECTO -->
-    <div id="tab-prospecto" class="tab-panel">
-      <div class="placeholder">
-        Aquí irán los datos del cliente / prospecto
-      </div>
-    </div>
+    <!-- =========================
+         COLUMNA IZQUIERDA
+    ========================== -->
+    <section class="left-panel">
 
-  </div>
+      <!-- =========================
+           TABS CONTAINER
+      ========================== -->
+      <div class="tabs-container">
 
-  <!-- ============ COLUMNA DERECHA ============ -->
-  <div class="app-right">
-    <h3>Detalle Financiamiento</h3>
-    <div class="placeholder">
-      Tabla financiera, resumen, PDF, impresión, etc.
-    </div>
-  </div>
+        <!-- CABECERA DE PESTAÑAS -->
+        <div class="tabs-header">
 
-</div>
+          <button
+            class="tab-btn active"
+            data-tab="tab-vehiculo"
+            type="button"
+          >
+            Vehículo de interés
+          </button>
 
-<!-- ================= JS TABS ================= -->
-<script>
-  document.querySelectorAll(".tab-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const tabId = btn.dataset.tab;
+          <button
+            class="tab-btn"
+            data-tab="tab-prospecto"
+            type="button"
+          >
+            Datos Prospecto
+          </button>
 
-      document.querySelectorAll(".tab-btn")
-        .forEach(b => b.classList.remove("active"));
+        </div>
 
-      document.querySelectorAll(".tab-panel")
-        .forEach(p => p.classList.remove("active"));
+        <!-- CUERPO DE TABS -->
+        <div class="tabs-body">
 
-      btn.classList.add("active");
-      document.getElementById(tabId).classList.add("active");
-    });
-  });
-</script>
-
-</body>
-</html>
-
+          <!-- =========================
