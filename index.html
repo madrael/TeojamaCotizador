@@ -12,393 +12,395 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Cotizador Vehículos Teojama</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./assets/css/styles.css" />
+    <meta charset="UTF-8" />
+    <title>Cotizador Vehículos Teojama</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/css/styles.css" />
 </head>
+
 <body>
+     <!-- =========================
+          LOGIN
+     ============================== -->
+    <section id="login-section" class="login-container">
+        <div class="login-box">
+            <h2>Acceso Cotizador</h2>
+            <div class="login-version">
+                <span class="app-version"></span>
+            </div>
+            <input type="text" id="username" placeholder="Usuario" />
+            <input type="password" id="password" placeholder="Contraseña" />
+            <button id="login-btn" type="button">Ingresar</button>
+            <p id="login-error" class="error" style="display:none;"></p>
+        </div>
+    </section>
 
-  <!-- =========================
-       LOGIN
-  ========================== -->
-  <section id="login-section" class="login-container">
-    <div class="login-box">
-      <h2>Acceso Cotizador</h2>
-      <div class="login-version">
-        <span class="app-version"></span>
-      </div>
-
-      <input type="text" id="username" placeholder="Usuario" />
-      <input type="password" id="password" placeholder="Contraseña" />
-      <button id="login-btn" type="button">Ingresar</button>
-
-      <p id="login-error" class="error" style="display:none;"></p>
-    </div>
-  </section>
-
-  <!-- =========================
+    <!-- =========================
        APP
-  ========================== -->
-  <section id="quote-section" style="display:none;">
+    ========================== -->
+    <section id="quote-section" style="display:none;">
 
-    <!-- HEADER SUPERIOR -->
-    <header class="app-header">
-      <div class="app-title">
-        Cotizador de Vehículos
-      </div>
-      <div class="app-user">
-        <span id="loggedUserName"></span>
-        <button id="logout-btn" title="Cerrar sesión">⎋</button>
-      </div>
-    </header>
-
-    <!-- CONTENIDO (2 COLUMNAS) -->
-    <div class="app-content">
-
-      <!-- =====================
-           COLUMNA IZQUIERDA
-           PARÁMETROS
-      ====================== -->
-      <div class="app-left">
-
-        <small><span class="app-version"></span></small>
-
-    <div class="tabs">
-  <input class="input" name="tabs" type="radio" id="tab-1" checked="checked"/>
-  <label class="label" for="tab-1">Prospecto</label>
-  <div class="panel">
-    <h1>Datos del Prospecto</h1>
-
-     <!-- Tipo Cliente -->
-        <div style="margin-top:10px;">
-          <label>Tipo de Cliente</label><br />
-          <select id="selectTipoCliente">
-            <option value="NORMAL">Cliente Estándar</option>
-            <option value="COLABORADOR">Colaborador</option>
-            <option value="REFINANCIADO">Refinanciamiento</option>
-          </select>
-        </div>
-
-<!-- Tipo de Persona -->
-<div style="margin-top:10px;">
-  <label>Tipo de persona</label><br />
-  <select id="selectTipoPersona">
-    <option value="">Seleccione</option>
-    <option value="NATURAL">Persona Natural</option>
-    <option value="JURIDICA">Persona Jurídica</option>
-  </select>
-</div>
-
-<!-- Edad del Cliente -->
-<div style="margin-top:10px;">
-  <label>Edad del cliente</label><br />
-  <input
-    type="number"
-    id="inputEdad"
-    min="18"
-    max="100"
-    placeholder="Ej: 35"
-  />
-</div>
-    
-  </div>
-  <input class="input" name="tabs" type="radio" id="tab-2"/>
-  <label class="label" for="tab-2">Vehículo</label>
-  <div class="panel">
-    <h1>Vehículo de Interés</h1>
-    
-            <!-- Tipo de Vehículo -->
-        <div>
-          <label>Tipo de Vehículo</label><br />
-          <select id="selectTipoVehiculo">
-            <option value="">Seleccione</option>
-            <option value="Liviano">Liviano</option>
-            <option value="Pesado">Pesado</option>
-          </select>
-        </div>
-
-        <!-- Marca -->
-        <div>
-          <label>Marca</label><br />
-          <select id="selectMarca"></select>
-        </div>
-
-        <!-- Modelo -->
-        <div>
-          <label>Modelo</label><br />
-          <select id="selectModelo"></select>
-        </div>
-
-        <!-- PVP -->
-        <div style="margin-top:10px;">
-          <strong>PVP: $<span id="pvp">0.00</span></strong>
-        </div>
-
-        <!-- Tasa -->
-        <div>
-          <label>Tasa de Interés</label><br />
-          <select id="selectTasa"></select>
-        </div>
-
-        <!-- Plazo -->
-        <div>
-          <label>Plazo (meses)</label><br />
-          <select id="selectPlazo"></select>
-        </div>
-
-        <!-- Entrada -->
-        <div style="margin-top:10px;">
-          <label>Cuota de entrada</label><br />
-          <input type="number" id="inputEntrada" placeholder="Valor entrada" />
-        </div>
-       
-        <!-- Seguro -->
-        <div style="margin-top:10px;">
-            <div class="form-check">
-             <label class="check-inline">
-               <input type="checkbox" id="chkSeguro" />
-               <span>Incluir seguro</span>
-             </label>
+        <!-- HEADER SUPERIOR -->
+        <header class="app-header">
+            <div class="app-title">
+                Cotizador de Vehículos
             </div>
-            <input type="number" id="inputSeguro" placeholder="Valor póliza" disabled />
-        </div>
-
-   <div class="form-group checkbox-group">
-  <input type="checkbox" id="chkLucroCesante" />
-  <label for="chkLucroCesante">Incluir lucro cesante</label>
-</div>
-   
-        <!-- Dispositivo -->
-        <div style="margin-top:10px;">
-
-         <div class="form-check">
-            <label class="check-inline">
-              <input type="checkbox" id="chkDispositivo" />
-              <span>Incluir dispositivo</span>
-            </label>
-         </div>
-
-          <div id="deviceContainer" style="display:none;">
-            <label>Plan de dispositivo</label><br />
-            <select id="selectDevicePlan"></select>
-
-            <div style="margin-top:8px;">
-              <div>Proveedor: <span id="deviceProvider">-</span></div>
-              <div>Valor: $<span id="deviceValueDisplay">-</span></div>
+            <div class="app-user">
+                <span id="loggedUserName"></span>
+                <button id="logout-btn" title="Cerrar sesión">⎋</button>
             </div>
-          </div>
-        </div>
-    
-    
-    
-  </div>
-  <input class="input" name="tabs" type="radio" id="tab-3"/>
-  <label class="label" for="tab-3">Acerca de ...</label>
-  <div class="panel">
-    <h1>Cotizador Vehículos</h1>
-    <p>Genera la cotización del vehículo seleccionado del catálogo disponible.</p>
-  </div>
-</div>
+        </header>
 
-       
-        <!-- Botón -->
-        <div style="margin-top:14px;">
-          <button id="btnCalcular" type="button">Calcular cotización</button>
-        </div>
+        <!-- CONTENIDO (2 COLUMNAS) -->
+        <div class="app-content">
 
-      </div>
+            <!-- ============================
+            COLUMNA IZQUIERDA PARÁMETROS
+            ================================= -->
+            <div class="app-left">
+                <small><span class="app-version"></span></small>
+                <div class="tabs">
+                    <input class="input" name="tabs" type="radio" id="tab-1" checked="checked" />
+                    <label class="label" for="tab-1">Prospecto</label>
+                    <div class="panel">
+                        <h1>Datos del Prospecto</h1>
 
-      <!-- =====================
-           COLUMNA DERECHA
-           RESULTADOS
-      ====================== -->
-      <div class="app-right">
-        <h3>Detalle Financiamiento</h3>
+                        <!-- Tipo Cliente -->
+                        <div style="margin-top:10px;">
+                            <label>Tipo de Cliente</label>
+                            <br />
+                            <select id="selectTipoCliente">
+                                <option value="NORMAL">Cliente Estándar</option>
+                                <option value="COLABORADOR">Colaborador</option>
+                                <option value="REFINANCIADO">Refinanciamiento</option>
+                            </select>
+                        </div>
 
-        <!-- CONTENEDOR EXISTENTE (NO SE CAMBIA EL ID) -->
-        <div id="tablaFinanciamiento">
+                        <!-- Tipo de Persona -->
+                        <div style="margin-top:10px;">
+                            <label>Tipo de persona</label>
+                            <br />
+                            <select id="selectTipoPersona">
+                                <option value="">Seleccione</option>
+                                <option value="NATURAL">Persona Natural</option>
+                                <option value="JURIDICA">Persona Jurídica</option>
+                            </select>
+                        </div>
 
-          <table class="finance-table" id="financeTable">
-            <thead>
-              <tr>
-                <th>Concepto</th>
-                <th data-plazo="12">12 meses</th>
-                <th data-plazo="24">24 meses</th>
-                <th data-plazo="36">36 meses</th>
-                <th data-plazo="48">48 meses</th>
-                <th data-plazo="60">60 meses</th>
-              </tr>
-            </thead>
+                        <!-- Edad del Cliente -->
+                        <div style="margin-top:10px;">
+                            <label>Edad del cliente</label>
+                            <br />
+                            <input type="number" id="inputEdad" min="18" max="100" placeholder="Ej: 35" />
+                        </div>
 
-<tbody>
+                    </div>
+                    <input class="input" name="tabs" type="radio" id="tab-2" />
+                    <label class="label" for="tab-2">Vehículo</label>
+                    <div class="panel">
+                        <h1>Vehículo de Interés</h1>
 
-  <!-- PVP -->
-  <tr>
-    <td class="concepto">PVP Vehículo</td>
-    <td data-plazo="12" id="pvp-12">—</td>
-    <td data-plazo="24" id="pvp-24">—</td>
-    <td data-plazo="36" id="pvp-36">—</td>
-    <td data-plazo="48" id="pvp-48">—</td>
-    <td data-plazo="60" id="pvp-60">—</td>
-  </tr>
+                        <!-- Tipo de Vehículo -->
+                        <div>
+                            <label>Tipo de Vehículo</label>
+                            <br />
+                            <select id="selectTipoVehiculo">
+                                <option value="">Seleccione</option>
+                                <option value="Liviano">Liviano</option>
+                                <option value="Pesado">Pesado</option>
+                            </select>
+                        </div>
 
-  <!-- SEGURO -->
-  <tr>
-    <td class="concepto">Seguro anual</td>
-    <td data-plazo="12" id="seguro-total-12">—</td>
-    <td data-plazo="24" id="seguro-total-24">—</td>
-    <td data-plazo="36" id="seguro-total-36">—</td>
-    <td data-plazo="48" id="seguro-total-48">—</td>
-    <td data-plazo="60" id="seguro-total-60">—</td>
-  </tr>
+                        <!-- Marca -->
+                        <div>
+                            <label>Marca</label>
+                            <br />
+                            <select id="selectMarca"></select>
+                        </div>
 
-  <!-- DISPOSITIVO -->
-  <tr>
-    <td class="concepto">Dispositivo Satelital</td>
-    <td data-plazo="12" id="device-12">—</td>
-    <td data-plazo="24" id="device-24">—</td>
-    <td data-plazo="36" id="device-36">—</td>
-    <td data-plazo="48" id="device-48">—</td>
-    <td data-plazo="60" id="device-60">—</td>
-  </tr>
+                        <!-- Modelo -->
+                        <div>
+                            <label>Modelo</label>
+                            <br />
+                            <select id="selectModelo"></select>
+                        </div>
 
-  <!-- ENTRADA -->
-  <tr>
-    <td class="concepto">Cuota de entrada</td>
-    <td data-plazo="12" id="entrada-12">—</td>
-    <td data-plazo="24" id="entrada-24">—</td>
-    <td data-plazo="36" id="entrada-36">—</td>
-    <td data-plazo="48" id="entrada-48">—</td>
-    <td data-plazo="60" id="entrada-60">—</td>
-  </tr>
- 
-  <!-- SEPARADOR -->
-  <tr class="finance-separator">
-    <td colspan="6"></td>
-  </tr>
- 
-  <!-- MONTO TOTAL -->
-  <tr>
-    <td class="concepto"><strong>Monto total</strong></td>
-    <td data-plazo="12" id="total-12">—</td>
-    <td data-plazo="24" id="total-24">—</td>
-    <td data-plazo="36" id="total-36">—</td>
-    <td data-plazo="48" id="total-48">—</td>
-    <td data-plazo="60" id="total-60">—</td>
-  </tr>
+                        <!-- PVP -->
+                        <div style="margin-top:10px;">
+                            <strong>PVP: $<span id="pvp">0.00</span></strong>
+                        </div>
 
-  <!-- SEPARADOR -->
-  <tr class="finance-separator">
-    <td colspan="6"></td>
-  </tr>
- 
-  <!-- MONTO A FINANCIAR -->
-  <tr>
-    <td class="concepto"><strong>Monto a financiar</strong></td>
-    <td data-plazo="12" id="fin-12">—</td>
-    <td data-plazo="24" id="fin-24">—</td>
-    <td data-plazo="36" id="fin-36">—</td>
-    <td data-plazo="48" id="fin-48">—</td>
-    <td data-plazo="60" id="fin-60">—</td>
-  </tr>
+                        <!-- Tasa -->
+                        <div>
+                            <label>Tasa de Interés</label>
+                            <br />
+                            <select id="selectTasa"></select>
+                        </div>
 
-  <!-- SEPARADOR -->
-  <tr class="finance-separator">
-    <td colspan="6"></td>
-  </tr>
- 
-  <!-- CUOTA BASE -->
-  <tr>
-    <td class="concepto">Cuota mensual</td>
-    <td data-plazo="12" id="cuota-12">—</td>
-    <td data-plazo="24" id="cuota-24">—</td>
-    <td data-plazo="36" id="cuota-36">—</td>
-    <td data-plazo="48" id="cuota-48">—</td>
-    <td data-plazo="60" id="cuota-60">—</td>
-  </tr>
+                        <!-- Plazo -->
+                        <div>
+                            <label>Plazo (meses)</label>
+                            <br />
+                            <select id="selectPlazo"></select>
+                        </div>
 
-  <!-- CUOTA SEGURO -->
-  <tr>
-    <td class="concepto">Cuota seguro</td>
-    <td data-plazo="12" id="seguro-12">—</td>
-    <td data-plazo="24" id="seguro-24">—</td>
-    <td data-plazo="36" id="seguro-36">—</td>
-    <td data-plazo="48" id="seguro-48">—</td>
-    <td data-plazo="60" id="seguro-60">—</td>
-  </tr>
+                        <!-- Entrada -->
+                        <div style="margin-top:10px;">
+                            <label>Cuota de entrada</label>
+                            <br />
+                            <input type="number" id="inputEntrada" placeholder="Valor entrada" />
+                        </div>
 
-  <!-- CUOTA DISPOSITIVO -->
-  <tr>
-    <td class="concepto">Cuota dispositivo</td>
-    <td data-plazo="12" id="device-cuota-12">—</td>
-    <td data-plazo="24" id="device-cuota-24">—</td>
-    <td data-plazo="36" id="device-cuota-36">—</td>
-    <td data-plazo="48" id="device-cuota-48">—</td>
-    <td data-plazo="60" id="device-cuota-60">—</td>
-  </tr>
+                        <!-- Seguro -->
+                        <div style="margin-top:10px;">
+                            <div class="form-check">
+                                <label class="check-inline">
+                                    <input type="checkbox" id="chkSeguro" />
+                                    <span>Incluir seguro</span>
+                                </label>
+                            </div>
+                            <input type="number" id="inputSeguro" placeholder="Valor póliza" disabled />
+                        </div>
 
-  <!-- SEPARADOR -->
-  <tr class="finance-separator">
-    <td colspan="6"></td>
-  </tr>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="chkLucroCesante" />
+                            <label for="chkLucroCesante">Incluir lucro cesante</label>
+                        </div>
 
-  <!-- TOTAL CUOTA -->
-  <tr>
-    <td class="concepto"><strong>Total cuota mensual</strong></td>
-    <td data-plazo="12" id="total-cuota-12">—</td>
-    <td data-plazo="24" id="total-cuota-24">—</td>
-    <td data-plazo="36" id="total-cuota-36">—</td>
-    <td data-plazo="48" id="total-cuota-48">—</td>
-    <td data-plazo="60" id="total-cuota-60">—</td>
-  </tr>
+                        <!-- Dispositivo -->
+                        <div style="margin-top:10px;">
 
-</tbody>
+                            <div class="form-check">
+                                <label class="check-inline">
+                                    <input type="checkbox" id="chkDispositivo" />
+                                    <span>Incluir dispositivo</span>
+                                </label>
+                            </div>
 
-          </table>
-        </div> <!-- cierre #tablaFinanciamiento -->
+                            <div id="deviceContainer" style="display:none;">
+                                <label>Plan de dispositivo</label>
+                                <br />
+                                <select id="selectDevicePlan"></select>
 
-       <!-- =====================
-             RESUMEN TIPO BANCO
-        ====================== -->
-        <div class="credit-summary">
-          <h4>Resumen del crédito</h4>
+                                <div style="margin-top:8px;">
+                                    <div>Proveedor: <span id="deviceProvider">-</span></div>
+                                    <div>Valor: $<span id="deviceValueDisplay">-</span></div>
+                                </div>
+                            </div>
+                        </div>
 
-          <div class="summary-grid">
-            <div><span>Cuota mensual:</span><strong id="summary-cuota">—</strong></div>
-            <div><span>Tasa:</span><strong id="summary-tasa">—</strong></div>
-            <div><span>Plazo:</span><strong id="summary-plazo">—</strong></div>
 
-            <div><span>Capital financiado:</span><strong id="summary-capital">—</strong></div>
-            <div><span>Seguro:</span><strong id="summary-seguro">—</strong></div>
-            <div><span>Dispositivo:</span><strong id="summary-dispositivo">—</strong></div>
 
-            <div><span>Intereses:</span><strong id="summary-interes">—</strong></div>
-            <div class="summary-total">
-              <span>Total a pagar:</span>
-              <strong id="summary-total-pagar">—</strong>
+                    </div>
+                    <input class="input" name="tabs" type="radio" id="tab-3" />
+                    <label class="label" for="tab-3">Acerca de ...</label>
+                    <div class="panel">
+                        <h1>Cotizador Vehículos</h1>
+                        <p>Genera la cotización del vehículo seleccionado del catálogo disponible.</p>
+                    </div>
+                </div>
+
+                <!-- Botón -->
+                <div style="margin-top:14px;">
+                    <button id="btnCalcular" type="button">Calcular cotización</button>
+                </div>
+
             </div>
-          </div>
-        </div> <!-- Cierre resumen tipo banco -->       
-      </div> <!-- cierre .app-right -->
-    </div> <!-- cierre .app-content -->
-  </section>
 
-  <!-- ============
-       SCRIPTS
-  ============ -->
-  <script src="./assets/js/version.js"></script>
-  <script src="./assets/js/auth.js"></script>
-  <script src="./assets/js/dataLoader.js"></script>
-  <script src="./assets/js/nominalBase.js"></script>
-  <script src="./assets/js/finance.js"></script>
-  <script src="./assets/js/ui.js"></script>
+            <!-- ===========================
+                 COLUMNA DERECHA RESULTADOS
+            ================================ -->
+            <div class="app-right">
+                <h3>Detalle Financiamiento</h3>
 
-   <!-- VERSION -->
-  <script>
-    document.querySelectorAll(".app-version")
-      .forEach(el => el.textContent = APP_VERSION);
-  </script>
+                <!-- CONTENEDOR EXISTENTE (NO SE CAMBIA EL ID) -->
+                <div id="tablaFinanciamiento">
+
+                    <table class="finance-table" id="financeTable">
+                        <thead>
+                            <tr>
+                                <th>Concepto</th>
+                                <th data-plazo="12">12 meses</th>
+                                <th data-plazo="24">24 meses</th>
+                                <th data-plazo="36">36 meses</th>
+                                <th data-plazo="48">48 meses</th>
+                                <th data-plazo="60">60 meses</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <!-- PVP -->
+                            <tr>
+                                <td class="concepto">PVP Vehículo</td>
+                                <td data-plazo="12" id="pvp-12">—</td>
+                                <td data-plazo="24" id="pvp-24">—</td>
+                                <td data-plazo="36" id="pvp-36">—</td>
+                                <td data-plazo="48" id="pvp-48">—</td>
+                                <td data-plazo="60" id="pvp-60">—</td>
+                            </tr>
+
+                            <!-- SEGURO -->
+                            <tr>
+                                <td class="concepto">Seguro anual</td>
+                                <td data-plazo="12" id="seguro-total-12">—</td>
+                                <td data-plazo="24" id="seguro-total-24">—</td>
+                                <td data-plazo="36" id="seguro-total-36">—</td>
+                                <td data-plazo="48" id="seguro-total-48">—</td>
+                                <td data-plazo="60" id="seguro-total-60">—</td>
+                            </tr>
+
+                            <!-- DISPOSITIVO -->
+                            <tr>
+                                <td class="concepto">Dispositivo Satelital</td>
+                                <td data-plazo="12" id="device-12">—</td>
+                                <td data-plazo="24" id="device-24">—</td>
+                                <td data-plazo="36" id="device-36">—</td>
+                                <td data-plazo="48" id="device-48">—</td>
+                                <td data-plazo="60" id="device-60">—</td>
+                            </tr>
+
+                            <!-- ENTRADA -->
+                            <tr>
+                                <td class="concepto">Cuota de entrada</td>
+                                <td data-plazo="12" id="entrada-12">—</td>
+                                <td data-plazo="24" id="entrada-24">—</td>
+                                <td data-plazo="36" id="entrada-36">—</td>
+                                <td data-plazo="48" id="entrada-48">—</td>
+                                <td data-plazo="60" id="entrada-60">—</td>
+                            </tr>
+
+                            <!-- SEPARADOR -->
+                            <tr class="finance-separator">
+                                <td colspan="6"></td>
+                            </tr>
+
+                            <!-- MONTO TOTAL -->
+                            <tr>
+                                <td class="concepto"><strong>Monto total</strong></td>
+                                <td data-plazo="12" id="total-12">—</td>
+                                <td data-plazo="24" id="total-24">—</td>
+                                <td data-plazo="36" id="total-36">—</td>
+                                <td data-plazo="48" id="total-48">—</td>
+                                <td data-plazo="60" id="total-60">—</td>
+                            </tr>
+
+                            <!-- SEPARADOR -->
+                            <tr class="finance-separator">
+                                <td colspan="6"></td>
+                            </tr>
+
+                            <!-- MONTO A FINANCIAR -->
+                            <tr>
+                                <td class="concepto"><strong>Monto a financiar</strong></td>
+                                <td data-plazo="12" id="fin-12">—</td>
+                                <td data-plazo="24" id="fin-24">—</td>
+                                <td data-plazo="36" id="fin-36">—</td>
+                                <td data-plazo="48" id="fin-48">—</td>
+                                <td data-plazo="60" id="fin-60">—</td>
+                            </tr>
+
+                            <!-- SEPARADOR -->
+                            <tr class="finance-separator">
+                                <td colspan="6"></td>
+                            </tr>
+
+                            <!-- CUOTA BASE -->
+                            <tr>
+                                <td class="concepto">Cuota mensual</td>
+                                <td data-plazo="12" id="cuota-12">—</td>
+                                <td data-plazo="24" id="cuota-24">—</td>
+                                <td data-plazo="36" id="cuota-36">—</td>
+                                <td data-plazo="48" id="cuota-48">—</td>
+                                <td data-plazo="60" id="cuota-60">—</td>
+                            </tr>
+
+                            <!-- CUOTA SEGURO -->
+                            <tr>
+                                <td class="concepto">Cuota seguro</td>
+                                <td data-plazo="12" id="seguro-12">—</td>
+                                <td data-plazo="24" id="seguro-24">—</td>
+                                <td data-plazo="36" id="seguro-36">—</td>
+                                <td data-plazo="48" id="seguro-48">—</td>
+                                <td data-plazo="60" id="seguro-60">—</td>
+                            </tr>
+
+                            <!-- CUOTA DISPOSITIVO -->
+                            <tr>
+                                <td class="concepto">Cuota dispositivo</td>
+                                <td data-plazo="12" id="device-cuota-12">—</td>
+                                <td data-plazo="24" id="device-cuota-24">—</td>
+                                <td data-plazo="36" id="device-cuota-36">—</td>
+                                <td data-plazo="48" id="device-cuota-48">—</td>
+                                <td data-plazo="60" id="device-cuota-60">—</td>
+                            </tr>
+
+                            <!-- SEPARADOR -->
+                            <tr class="finance-separator">
+                                <td colspan="6"></td>
+                            </tr>
+
+                            <!-- TOTAL CUOTA -->
+                            <tr>
+                                <td class="concepto"><strong>Total cuota mensual</strong></td>
+                                <td data-plazo="12" id="total-cuota-12">—</td>
+                                <td data-plazo="24" id="total-cuota-24">—</td>
+                                <td data-plazo="36" id="total-cuota-36">—</td>
+                                <td data-plazo="48" id="total-cuota-48">—</td>
+                                <td data-plazo="60" id="total-cuota-60">—</td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                </div>
+                <!-- cierre #tablaFinanciamiento -->
+
+                <!-- =====================
+                     RESUMEN TIPO BANCO
+                =========================== -->
+                <div class="credit-summary">
+                    <h4>Resumen del crédito</h4>
+
+                    <div class="summary-grid">
+                        <div><span>Cuota mensual:</span><strong id="summary-cuota">—</strong></div>
+                        <div><span>Tasa:</span><strong id="summary-tasa">—</strong></div>
+                        <div><span>Plazo:</span><strong id="summary-plazo">—</strong></div>
+
+                        <div><span>Capital financiado:</span><strong id="summary-capital">—</strong></div>
+                        <div><span>Seguro:</span><strong id="summary-seguro">—</strong></div>
+                        <div><span>Dispositivo:</span><strong id="summary-dispositivo">—</strong></div>
+
+                        <div><span>Intereses:</span><strong id="summary-interes">—</strong></div>
+                        <div class="summary-total">
+                            <span>Total a pagar:</span>
+                            <strong id="summary-total-pagar">—</strong>
+                        </div>
+                    </div>
+                </div>
+                <!-- Cierre resumen tipo banco -->
+            </div>
+            <!-- cierre .app-right -->
+        </div>
+        <!-- cierre .app-content -->
+    </section>
+
+    <!-- ============
+         SCRIPTS
+         ============ -->
+    <script src="./assets/js/version.js"></script>
+    <script src="./assets/js/auth.js"></script>
+    <script src="./assets/js/dataLoader.js"></script>
+    <script src="./assets/js/nominalBase.js"></script>
+    <script src="./assets/js/finance.js"></script>
+    <script src="./assets/js/ui.js"></script>
+
+    <!-- VERSION -->
+    <script>
+        document.querySelectorAll(".app-version")
+          .forEach(el => el.textContent = APP_VERSION);
+    </script>
 
 </body>
+
 </html>
