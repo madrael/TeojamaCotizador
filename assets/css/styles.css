@@ -344,7 +344,7 @@ body {
 }
 
 
-
+/*
 /* =========================================
    Ajuste puntual: input Valor póliza
    - Corrige ancho (box model)
@@ -439,6 +439,8 @@ p {
 .input:checked + .label + .panel {
   display: block;
 }
+
+*/
 
 /* ======================================================
    FIX BUG TABS – DIMENSION INICIAL DESPROPORCIONADA
