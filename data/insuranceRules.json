@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "iva": 0.15,
+  "brokers": {
+    "TECNISEGUROS": {
+      "meta": {
+        "appliesTo": ["LIVIANO"]
+      },
+      "eligibility": {
+        "lucroCesante": {
+          "ageMax": 65,
+          "default": true,
+          "allowOverride": true
+        }
+      },
+      "vehicle": {
+        "ratesByCategory": {
+          "AUTO_SUV": 0.028,
+          "CAMIONETA_DOBLE_CABINA": 0.026
+        },
+        "depreciationByYear": {
+          "1": 1.00,
+          "2": 0.90,
+          "3": 0.85,
+          "4": 0.80,
+          "5": 0.80
+        },
+        "emissionFee": 3.00
+      },
+      "life": {
+        "rate": 0.003,
+        "emissionFee": 0.50
+      },
+      "lucroCesante": {
+        "annualValue": 180.00
+      }
+    }
+  }
+}
