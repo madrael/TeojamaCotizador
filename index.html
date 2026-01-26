@@ -64,7 +64,13 @@
 
         <small><span class="app-version"></span></small>
 
-        <!-- Tipo Cliente -->
+    <div class="tabs">
+  <input class="input" name="tabs" type="radio" id="tab-1" checked="checked"/>
+  <label class="label" for="tab-1">Prospecto</label>
+  <div class="panel">
+    <h1>Datos del Prospecto</h1>
+
+     <!-- Tipo Cliente -->
         <div style="margin-top:10px;">
           <label>Tipo de Cliente</label><br />
           <select id="selectTipoCliente">
@@ -73,8 +79,17 @@
             <option value="REFINANCIADO">Refinanciamiento</option>
           </select>
         </div>
-
-        <!-- Tipo de Vehículo -->
+    
+    
+    
+    
+  </div>
+  <input class="input" name="tabs" type="radio" id="tab-2"/>
+  <label class="label" for="tab-2">Vehículo</label>
+  <div class="panel">
+    <h1>Vehículo de Interés</h1>
+    
+            <!-- Tipo de Vehículo -->
         <div>
           <label>Tipo de Vehículo</label><br />
           <select id="selectTipoVehiculo">
@@ -150,7 +165,19 @@
             </div>
           </div>
         </div>
+    
+    
+    
+  </div>
+  <input class="input" name="tabs" type="radio" id="tab-3"/>
+  <label class="label" for="tab-3">Acerca de ...</label>
+  <div class="panel">
+    <h1>Cotizador Vehículos</h1>
+    <p>Genera la cotización del vehículo seleccionado del catálogo disponible.</p>
+  </div>
+</div>
 
+       
         <!-- Botón -->
         <div style="margin-top:14px;">
           <button id="btnCalcular" type="button">Calcular cotización</button>
