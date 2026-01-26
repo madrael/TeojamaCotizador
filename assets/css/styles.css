@@ -441,7 +441,6 @@ p {
   display: block;
 }
 
-/*
 /* ======================================================
    FIX BUG TABS – DIMENSION INICIAL DESPROPORCIONADA
    ====================================================== */
@@ -475,7 +474,6 @@ p {
 .tabs {
   contain: layout;
 }
-*/
 
 /* ===============================
    Tabs – Fix real (scoped)
