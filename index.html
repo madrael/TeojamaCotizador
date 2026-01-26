@@ -79,8 +79,17 @@
             <option value="REFINANCIADO">Refinanciamiento</option>
           </select>
         </div>
-    
-    <div class="form-group">
+
+<div class="form-group">
+  <label for="selectTipoPersona">Tipo de persona</label>
+  <select id="selectTipoPersona">
+    <option value="">Seleccione</option>
+    <option value="NATURAL">Persona Natural</option>
+    <option value="JURIDICA">Persona Jurídica</option>
+  </select>
+</div>
+   
+  <div class="form-group">
   <label for="inputEdad">Edad del cliente</label>
   <input
     type="number"
@@ -155,6 +164,11 @@
             <input type="number" id="inputSeguro" placeholder="Valor póliza" disabled />
         </div>
 
+   <div class="form-group checkbox-group">
+  <input type="checkbox" id="chkLucroCesante" />
+  <label for="chkLucroCesante">Incluir lucro cesante</label>
+</div>
+   
         <!-- Dispositivo -->
         <div style="margin-top:10px;">
 
