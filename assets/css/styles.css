@@ -439,38 +439,3 @@ p {
 .input:checked + .label + .panel {
   display: block;
 }
-
-/* ======================================================
-   FIX BUG TABS – DIMENSION INICIAL DESPROPORCIONADA
-   ====================================================== */
-
-/* Contenedor general de tabs */
-.tabs {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Contenedor de labels (cabecera de tabs) */
-.tabs > label {
-  min-height: 44px;          /* fuerza altura estable */
-  padding: 10px 16px;
-  box-sizing: border-box;
-  white-space: nowrap;
-}
-
-/* Evita que el contenido interno empuje el layout */
-.tabs .panel {
-  min-height: 220px;         /* ajusta si deseas */
-  box-sizing: border-box;
-}
-
-/* Estabiliza el ancho inicial de los tabs */
-.tabs label {
-  flex: 0 0 auto;
-}
-
-/* Previene saltos visuales al primer render */
-.tabs {
-  contain: layout;
-}
-
