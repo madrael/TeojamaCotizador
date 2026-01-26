@@ -1,74 +1,43 @@
 <!-- =========================================================
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : index.html
- Versión       : V 1.0
- Compilación   : 3.23
- Estado        : ESTABLE
+ Versión       : V 2.0
+ Compilación   : 3.50
+ Estado        : Prueba
  Descripción   : Línea base estable del cotizador con color y versión dinámica.
                  Versionado desacoplado vía assets/js/version.js
  Último cambio : Centralización de versión (sin cambios visuales)
 ========================================================= -->
 
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Cotizador de Vehículos</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
-  <!-- =========================
-       HEADER
-  ========================== -->
-  <header class="app-header">
-    <h1>Cotizador de Vehículos</h1>
-    <div class="user-info">
-      Christian Castro
+  <h1>Cotizador de Vehículos</h1>
+  <p>Christian Castro</p>
+
+  <div class="tabs">
+
+    <!-- TAB 1 -->
+    <input class="input" name="tabs" type="radio" id="tab-vehiculo" checked />
+    <label class="label" for="tab-vehiculo">Vehículo de interés</label>
+    <div class="panel">
+      <!-- Aquí irán los inputs del vehículo -->
     </div>
-  </header>
 
-  <!-- =========================
-       CONTENEDOR PRINCIPAL
-  ========================== -->
-  <main class="app-content">
+    <!-- TAB 2 -->
+    <input class="input" name="tabs" type="radio" id="tab-prospecto" />
+    <label class="label" for="tab-prospecto">Datos Prospecto</label>
+    <div class="panel">
+      <!-- Aquí irán los datos del cliente -->
+    </div>
 
-    <!-- =========================
-         COLUMNA IZQUIERDA
-    ========================== -->
-    <section class="left-panel">
+  </div>
 
-      <!-- =========================
-           TABS CONTAINER
-      ========================== -->
-      <div class="tabs-container">
-
-        <!-- CABECERA DE PESTAÑAS -->
-        <div class="tabs-header">
-
-          <button
-            class="tab-btn active"
-            data-tab="tab-vehiculo"
-            type="button"
-          >
-            Vehículo de interés
-          </button>
-
-          <button
-            class="tab-btn"
-            data-tab="tab-prospecto"
-            type="button"
-          >
-            Datos Prospecto
-          </button>
-
-        </div>
-
-        <!-- CUERPO DE TABS -->
-        <div class="tabs-body">
-
-          <!-- =========================
+</body>
+</html>
