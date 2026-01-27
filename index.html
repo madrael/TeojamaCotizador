@@ -65,34 +65,102 @@
                     <div class="panel">
                         <h1>Datos del Prospecto</h1>
 
-                        <!-- Tipo Cliente -->
-                        <div style="margin-top:10px;">
-                            <label>Tipo de Cliente</label>
-                            <br />
-                            <select id="selectTipoCliente">
-                                <option value="NORMAL">Cliente Estándar</option>
-                                <option value="COLABORADOR">Colaborador</option>
-                                <option value="REFINANCIADO">Refinanciamiento</option>
-                            </select>
-                        </div>
+                        <!-- =========================
+     DATOS DEL PROSPECTO
+========================= -->
 
-                        <!-- Tipo de Persona -->
-                        <div style="margin-top:10px;">
-                            <label>Tipo de persona</label>
-                            <br />
-                            <select id="selectTipoPersona">
-                                <option value="">Seleccione</option>
-                                <option value="NATURAL">Persona Natural</option>
-                                <option value="JURIDICA">Persona Jurídica</option>
-                            </select>
-                        </div>
+<!-- Tipo de Cliente -->
+<div style="margin-top:10px;">
+  <label>Tipo de Cliente</label><br />
+  <select id="selectTipoCliente">
+    <option value="NORMAL">Cliente Estándar</option>
+    <option value="COLABORADOR">Colaborador</option>
+    <option value="REFINANCIADO">Refinanciamiento</option>
+  </select>
+</div>
 
-                        <!-- Edad del Cliente -->
-                        <div style="margin-top:10px;">
-                            <label>Edad del cliente</label>
-                            <br />
-                            <input type="number" id="inputEdad" min="18" max="100" placeholder="Ej: 35" />
-                        </div>
+<!-- Tipo de persona -->
+<div style="margin-top:10px;">
+  <label>Tipo de persona</label><br />
+  <select id="selectTipoPersona">
+    <option value="">Seleccione</option>
+    <option value="NATURAL">Persona Natural</option>
+    <option value="JURIDICA">Persona Jurídica</option>
+  </select>
+</div>
+
+<!-- Cédula / RUC -->
+<div style="margin-top:10px;">
+  <label>Cédula / RUC</label><br />
+  <input
+    type="text"
+    id="inputIdentificacion"
+    placeholder="Ingrese cédula o RUC"
+  />
+</div>
+
+<!-- Razón Social (solo persona jurídica) -->
+<div style="margin-top:10px;">
+  <label>Razón Social</label><br />
+  <input
+    type="text"
+    id="inputRazonSocial"
+    placeholder="Razón social (si aplica)"
+  />
+</div>
+
+<!-- Nombres -->
+<div style="margin-top:10px;">
+  <label>Nombres</label><br />
+  <input
+    type="text"
+    id="inputNombres"
+    placeholder="Ingrese nombres"
+  />
+</div>
+
+<!-- Apellidos -->
+<div style="margin-top:10px;">
+  <label>Apellidos</label><br />
+  <input
+    type="text"
+    id="inputApellidos"
+    placeholder="Ingrese apellidos"
+  />
+</div>
+
+<!-- Edad -->
+<div style="margin-top:10px;">
+  <label>Edad del cliente</label><br />
+  <input
+    type="number"
+    id="inputEdadCliente"
+    placeholder="Ej: 35"
+    min="18"
+    max="100"
+  />
+</div>
+
+<!-- Teléfono -->
+<div style="margin-top:10px;">
+  <label>Teléfono</label><br />
+  <input
+    type="tel"
+    id="inputTelefono"
+    placeholder="Ej: 0999999999"
+  />
+</div>
+
+<!-- Correo electrónico -->
+<div style="margin-top:10px;">
+  <label>Correo electrónico</label><br />
+  <input
+    type="email"
+    id="inputEmail"
+    placeholder="correo@ejemplo.com"
+  />
+</div>
+
 
                     </div>
                     <input class="input" name="tabs" type="radio" id="tab-2" />
