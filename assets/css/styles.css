@@ -374,7 +374,7 @@ p {
 .tabs {
   display: flex;
   flex-wrap: wrap;
-  max-width: 600px;
+  max-width: 550px;
   background: #e5e5e5;
   box-shadow: 0 48px 80px -32px rgba(0,0,0,0.3);
 }
@@ -413,6 +413,7 @@ p {
 .panel {
   display: none;
   padding: 20px 30px 30px;
+  width: 550px; 
   background: #fff;
 }
 @media (min-width: 600px) {
