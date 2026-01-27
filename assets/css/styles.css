@@ -452,3 +452,23 @@ p {
   pointer-events: none;
 }
 
+/* ===============================
+   Layout fila Cuota de entrada
+   =============================== */
+.entrada-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* ancho controlado para porcentaje */
+.input-percent-wrapper {
+  position: relative;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+/* input de valor ocupa el resto */
+.entrada-row #inputEntrada {
+  flex: 1;
+}
