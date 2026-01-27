@@ -18,7 +18,7 @@
   {
     "id": 3,
     "username": "ccastro",
-    "password": "Teojama2026",
+    "password": "T2",
     "nombre": "Christian Castro",
     "rol": "ADMIN",
     "activo": true
@@ -40,5 +40,6 @@
     "activo": true
   }
 ]
+
 
 
