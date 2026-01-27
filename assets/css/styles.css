@@ -425,3 +425,30 @@ p {
   display: block;
 }
 
+/* ===============================
+   Input porcentaje con símbolo %
+   =============================== */
+.input-percent-wrapper {
+  position: relative;
+  width: 120px;
+}
+
+.input-percent-wrapper input {
+  width: 100%;
+  padding-right: 28px; /* espacio para el % */
+}
+
+/* ===============================
+   Entrada de vehiculo porcentaje con símbolo %
+   =============================== */
+
+.input-percent-wrapper .percent-suffix {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6e7781;
+  font-size: 14px;
+  pointer-events: none;
+}
+
