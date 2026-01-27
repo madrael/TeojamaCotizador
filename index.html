@@ -227,15 +227,18 @@
 
   <div style="display:flex; gap:8px;">
     <!-- Entrada por porcentaje -->
-    <input
-      type="number"
-      id="inputEntradaPorcentaje"
-      placeholder="Ej: 30 (%)"
-      min="0"
-      max="100"
-      step="1"
-      style="width:120px;"
-    />
+   <div class="input-percent-wrapper">
+  <input
+    type="number"
+    id="inputEntradaPorcentaje"
+    placeholder="Ej: 30"
+    min="0"
+    max="100"
+    step="0.01"
+  />
+  <span class="percent-suffix">%</span>
+</div>
+
 
     <!-- Entrada por valor -->
     <input
