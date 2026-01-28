@@ -53,12 +53,52 @@ function initUI() {
   const chkLucroCesante = document.getElementById("chkLucroCesante");
   const inputLucroCesante = document.getElementById("inputLucroCesante");
 
+  const selectTipoPersona = document.getElementById("selectTipoPersona");
+  const inputIdentificacion = document.getElementById("inputIdentificacion");
+
   const chkDispositivo = document.getElementById("chkDispositivo");
   const deviceContainer = document.getElementById("deviceContainer");
   const selDevicePlan = document.getElementById("selectDevicePlan");
   const lblDeviceProvider = document.getElementById("deviceProvider");
 
   const btnCalcular = document.getElementById("btnCalcular");
+
+  /* ===== Identificación: Cédula / RUC ===== */
+  if (selTipoPersona && inputIdentificacion) {
+    // Ajuste dinámico de placeholder y longitud
+    selTipoPersona.addEventListener("change", () => {
+      inputIdentificacion.value = "";
+
+      if (selTipoPersona.value === "JURIDICA") {
+        inputIdentificacion.placeholder = "RUC (13 dígitos)";
+        inputIdentificacion.maxLength = 13;
+      } else {
+        inputIdentificacion.placeholder = "Cédula (10) o RUC (13)";
+        inputIdentificacion.maxLength = 13;
+      }
+    });
+
+    // Validación al perder foco
+    inputIdentificacion.addEventListener("blur", () => {
+      const valor = inputIdentificacion.value.trim();
+      if (!valor) return;
+
+      if (selTipoPersona.value === "JURIDICA") {
+        if (valor.length !== 13) {
+          alert("Para persona jurídica debe ingresar un RUC de 13 dígitos");
+          inputIdentificacion.focus();
+        }
+      } else {
+        if (valor.length !== 10 && valor.length !== 13) {
+          alert("Ingrese una cédula (10 dígitos) o RUC (13 dígitos)");
+          inputIdentificacion.focus();
+        }
+      }
+    });
+
+  }
+
+  
 
   /* ===== Tipo / Marca / Modelo ===== */
   selTipo.addEventListener("change", () => {
