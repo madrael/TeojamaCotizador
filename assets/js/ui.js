@@ -50,8 +50,8 @@ function initUI() {
   const chkSeguro = document.getElementById("chkSeguro");
   const inpSeguro = document.getElementById("inputSeguro");
 
-  const chkSeguro = document.getElementById("chkLucroCesante");
-  const inpSeguro = document.getElementById("inputLucroCesante ");
+  const chkLucroCesante = document.getElementById("chkLucroCesante");
+  const inputLucroCesante = document.getElementById("inputLucroCesante");
 
   const chkDispositivo = document.getElementById("chkDispositivo");
   const deviceContainer = document.getElementById("deviceContainer");
