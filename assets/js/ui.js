@@ -22,6 +22,7 @@ const appState = {
   tipoCliente: "NORMAL", // preparado para UI (NORMAL | COLABORADOR | REFINANCIADO)
 
   incluyeSeguro: false,
+  incluyeLucroCesante: false,
   incluyeDispositivo: false,
   dispositivo: null
 };
@@ -48,6 +49,9 @@ function initUI() {
 
   const chkSeguro = document.getElementById("chkSeguro");
   const inpSeguro = document.getElementById("inputSeguro");
+
+  const chkSeguro = document.getElementById("chkLucroCesante");
+  const inpSeguro = document.getElementById("inputLucroCesante ");
 
   const chkDispositivo = document.getElementById("chkDispositivo");
   const deviceContainer = document.getElementById("deviceContainer");
@@ -125,6 +129,13 @@ function initUI() {
     appState.incluyeSeguro = chkSeguro.checked;
     inpSeguro.disabled = !chkSeguro.checked;
     if (!chkSeguro.checked) inpSeguro.value = "";
+  });
+
+  /* ===== Lucro cesante ===== */
+  chkLucroCesante.addEventListener("change", () => {
+    appState.incluyeLucroCesante = chkLucroCesante.checked;
+    inputLucroCesante.disabled = !chkLucroCesante.checked;
+    if (!chkLucroCesante.checked) inputLucroCesante.value = "";
   });
 
   /* ===== Dispositivo ===== */
