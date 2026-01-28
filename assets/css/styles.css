@@ -487,3 +487,14 @@ p {
 .entrada-row #inputEntrada {
   flex: 1;
 }
+
+/* ===============================
+   Lucro cesante – porcentaje
+   =============================== */
+
+/* input porcentaje */
+#inputDescPorcentaje {
+  width: 100%;
+  padding-right: 22px;  /* espacio para el % */
+  box-sizing: border-box;
+}
