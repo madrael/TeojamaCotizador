@@ -206,6 +206,38 @@
                             <strong>PVP: $<span id="pvp">0.00</span></strong>
                         </div>
 
+                        <!-- Valor Descuento -->
+<div style="margin-top:10px;">
+  <label>Descuento</label>
+  <br />
+
+  <div style="display:flex; gap:8px;">
+    <!-- Descuento por porcentaje -->
+   <div class="input-percent-wrapper">
+  <input
+    type="number"
+    id="inputDescPorcentaje"
+    placeholder="Ej: 3"
+    min="0"
+    max="100"
+    step="0.01"
+  />
+  <span class="percent-suffix">%</span>
+</div>
+
+
+    <!-- Entrada por valor Descuento-->
+    <input
+      type="number"
+      id="inputValorDesc"
+      placeholder="Valor Descuento"
+      min="0"
+      step="0.01"
+      style="flex:1;"
+    />
+  </div>
+</div>
+                     
                         <!-- Tasa -->
                         <div>
                             <label>Tasa de Interés</label>
