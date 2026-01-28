@@ -439,36 +439,41 @@ p {
 }
 
 /* ===============================
-   Entrada de vehiculo porcentaje con símbolo %
+   Cuota de entrada – porcentaje
    =============================== */
 
-.input-percent-wrapper .percent-suffix {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #6e7781;
-  font-size: 14px;
-  pointer-events: none;
-}
-
-/* ===============================
-   Layout fila Cuota de entrada
-   =============================== */
 .entrada-row {
   display: flex;
   gap: 12px;
   align-items: center;
 }
 
-/* ancho controlado para porcentaje */
+/* contenedor porcentaje */
 .input-percent-wrapper {
   position: relative;
-  width: 80px;
+  width: 90px;          /* ancho fijo estable */
   flex-shrink: 0;
 }
 
-/* input de valor ocupa el resto */
+/* input porcentaje */
+#inputEntradaPorcentaje {
+  width: 100%;
+  padding-right: 22px;  /* espacio para el % */
+  box-sizing: border-box;
+}
+
+/* símbolo % */
+.percent-suffix {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6e7781;
+  font-size: 13px;
+  pointer-events: none;
+}
+
+/* input valor ocupa el resto */
 .entrada-row #inputEntrada {
   flex: 1;
 }
