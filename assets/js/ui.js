@@ -53,8 +53,8 @@ function initUI() {
   const chkLucroCesante = document.getElementById("chkLucroCesante");
   const inputLucroCesante = document.getElementById("inputLucroCesante");
 
-  const selectTipoPersona = document.getElementById("selectTipoPersona");
-  const inputIdentificacion = document.getElementById("inputIdentificacion");
+  const selTipoPersona = document.getElementById("selectTipoPersona");
+  const inpIdentificacion = document.getElementById("inputIdentificacion");
 
   const chkDispositivo = document.getElementById("chkDispositivo");
   const deviceContainer = document.getElementById("deviceContainer");
