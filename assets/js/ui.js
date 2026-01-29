@@ -109,8 +109,38 @@ if (selTipoPersona && inputIdentificacion) {
   selTipoPersona.dispatchEvent(new Event("change"));
 }
 
+/* ===== Fecha de nacimiento → Cálculo de edad ===== */
+const inputFechaNacimiento = document.getElementById("inputFechaNacimiento");
+const inputEdadCliente = document.getElementById("inputEdadCliente");
 
-  
+if (inputFechaNacimiento && inputEdadCliente) {
+
+  inputFechaNacimiento.addEventListener("change", () => {
+    const fechaValue = inputFechaNacimiento.value;
+    if (!fechaValue) {
+      inputEdadCliente.value = "";
+      return;
+    }
+
+    const fechaNac = new Date(fechaValue);
+    const hoy = new Date();
+
+    let edad = hoy.getFullYear() - fechaNac.getFullYear();
+    const mes = hoy.getMonth() - fechaNac.getMonth();
+
+    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+      edad--;
+    }
+
+    // Validación defensiva
+    if (edad < 0 || edad > 120) {
+      inputEdadCliente.value = "";
+      return;
+    }
+
+    inputEdadCliente.value = edad;
+  });
+}
 
   /* ===== Tipo / Marca / Modelo ===== */
   selTipo.addEventListener("change", () => {
