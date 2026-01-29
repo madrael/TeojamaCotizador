@@ -201,13 +201,12 @@
                             <select id="selectModelo"></select>
                         </div>
 
-   <!-- Valor Descuento -->
+<!-- Descuento -->
 <div style="margin-top:10px;">
-  <label>Descuento</label>
-  <br />
+  <label>Descuento</label><br />
 
-  <div style="display:flex; gap:8px;">
-    <!-- Descuento por porcentaje -->
+  <div class="entrada-row">
+    <!-- % Descuento -->
     <div class="input-percent-wrapper">
       <input
         type="number"
@@ -220,22 +219,31 @@
       <span class="percent-suffix">%</span>
     </div>
 
-    <!-- Entrada por valor Descuento-->
+    <!-- Valor Descuento -->
     <input
       type="number"
       id="inputValorDesc"
       placeholder="Valor Descuento"
       min="0"
       step="0.01"
-      style="flex:1;"
+    />
+
+    <!-- PVP final -->
+    <input
+      type="number"
+      id="inputPvpFinal"
+      placeholder="Valor PVP - Descuento"
+      min="0"
+      step="0.01"
     />
   </div>
 </div>
 
-<!-- PVP -->
-<div style="margin-top:10px;">
+<!-- PVP base (informativo) -->
+<div style="margin-top:6px;">
   <strong>PVP: $<span id="pvp">0.00</span></strong>
 </div>
+
 
                      
                         <!-- Tasa -->
