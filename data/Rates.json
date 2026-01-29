@@ -1,13 +1,14 @@
 [
-{"IdTasa":"TZ043","TasaAnual":1,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60}]},	
-{"IdTasa":"TZ025","TasaAnual":12.99,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60},{"IdPlazo":"PL06","VPlazo":72}]},	
-{"IdTasa":"TZ024","TasaAnual":13.99,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60},{"IdPlazo":"PL06","VPlazo":72}]},	
-{"IdTasa":"TZ012","TasaAnual":14.49,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60}]},	
-{"IdTasa":"TZ027","TasaAnual":14.5,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60},{"IdPlazo":"PL06","VPlazo":72}]},	
-{"IdTasa":"TZ07","TasaAnual":14.6,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60}]},	
-{"IdTasa":"TZ026","TasaAnual":14.99,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60},{"IdPlazo":"PL06","VPlazo":72}]},	
-{"IdTasa":"TZ029","TasaAnual":15,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60}]},	
-{"IdTasa":"TZ041","TasaAnual":15.49,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60}]},	
-{"IdTasa":"TZ034","TasaAnual":15.6,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60}]},	
-{"IdTasa":"TZ042","TasaAnual":15.99,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60},{"IdPlazo":"PL06","VPlazo":72}]}
+{"IdTasa":"TZ043","TasaAnual":1,"PerEntrada":30,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60}]},	
+{"IdTasa":"TZ025","TasaAnual":12.99,"PerEntrada":40,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60},{"IdPlazo":"PL06","VPlazo":72}]},	
+{"IdTasa":"TZ024","TasaAnual":13.99,"PerEntrada":35,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60},{"IdPlazo":"PL06","VPlazo":72}]},	
+{"IdTasa":"TZ012","TasaAnual":14.49,"PerEntrada":37.50,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60}]},	
+{"IdTasa":"TZ027","TasaAnual":14.5,"PerEntrada":30,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60},{"IdPlazo":"PL06","VPlazo":72}]},	
+{"IdTasa":"TZ07","TasaAnual":14.6,"PerEntrada":30,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60}]},	
+{"IdTasa":"TZ026","TasaAnual":14.99,"PerEntrada":30,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60},{"IdPlazo":"PL06","VPlazo":72}]},	
+{"IdTasa":"TZ029","TasaAnual":15,"PerEntrada":30,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60}]},	
+{"IdTasa":"TZ041","TasaAnual":15.49,"PerEntrada":30,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60}]},	
+{"IdTasa":"TZ034","TasaAnual":15.6,"PerEntrada":30,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60}]},	
+{"IdTasa":"TZ042","TasaAnual":15.99,"PerEntrada":25,"Plazos": [{"IdPlazo":"PL01","VPlazo":12},{"IdPlazo":"PL02","VPlazo":24},{"IdPlazo":"PL03","VPlazo":36},{"IdPlazo":"PL04","VPlazo":48},{"IdPlazo":"PL05","VPlazo":60},{"IdPlazo":"PL06","VPlazo":72}]}
 ]
+
