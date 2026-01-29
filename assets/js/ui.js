@@ -71,7 +71,7 @@ if (selTipoPersona && inputIdentificacion) {
   selTipoPersona.addEventListener("change", () => {
     inputIdentificacion.value = "";
 
-    if (selTipoPersona.value === "JURIDICA") {
+    if (selTipoPersona.value === "Persona Jurídica") {
       inputIdentificacion.placeholder = "RUC (13 dígitos)";
       inputIdentificacion.maxLength = 13;
     } else {
@@ -95,7 +95,7 @@ if (selTipoPersona && inputIdentificacion) {
       return;
     }
 
-    if (selTipoPersona.value === "JURIDICA") {
+    if (selTipoPersona.value === "Persona Jurídica") {
       // Jurídica → SOLO 13
       if (valor.length !== 13) {
         alert("Para persona jurídica debe ingresar un RUC de 13 dígitos");
