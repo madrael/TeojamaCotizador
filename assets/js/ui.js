@@ -79,22 +79,26 @@ function initUI() {
     });
 
     // Validación al perder foco
-    inputIdentificacion.addEventListener("blur", () => {
-      const valor = inputIdentificacion.value.trim();
-      if (!valor) return;
+  inpIdentificacion.addEventListener("blur", () => {
+  const valor = (inpIdentificacion.value || "").trim();
+  if (!valor) return;
 
-      if (selTipoPersona.value === "JURIDICA") {
-        if (valor.length !== 13) {
-          alert("Para persona jurídica debe ingresar un RUC de 13 dígitos");
-          inputIdentificacion.focus();
-        }
-      } else {
-        if (valor.length !== 10 && valor.length !== 13) {
-          alert("Ingrese una cédula (10 dígitos) o RUC (13 dígitos)");
-          inputIdentificacion.focus();
-        }
-      }
-    });
+  //NO validar si está incompleto
+  if (valor.length < 10) return;
+
+  if (selTipoPersona.value === "JURIDICA") {
+    if (valor.length !== 13) {
+      alert("Para persona jurídica debe ingresar un RUC de 13 dígitos");
+      inpIdentificacion.focus();
+    }
+  } else {
+    if (valor.length !== 10 && valor.length !== 13) {
+      alert("Ingrese una cédula (10 dígitos) o RUC (13 dígitos)");
+      inpIdentificacion.focus();
+    }
+  }
+});
+
 
   }
 
