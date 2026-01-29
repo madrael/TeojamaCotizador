@@ -63,8 +63,7 @@ function initUI() {
 
   const btnCalcular = document.getElementById("btnCalcular");
 
- /* ===== Identificación: Cédula / RUC ===== */
-
+/* ===== Identificación: Cédula / RUC ===== */
 if (selTipoPersona && inputIdentificacion) {
 
   /* Ajuste dinámico según tipo de persona */
@@ -75,7 +74,6 @@ if (selTipoPersona && inputIdentificacion) {
       inputIdentificacion.placeholder = "RUC (13 dígitos)";
       inputIdentificacion.maxLength = 13;
     } else {
-      // Persona Natural (por defecto)
       inputIdentificacion.placeholder = "Cédula (10) o RUC (13)";
       inputIdentificacion.maxLength = 13;
     }
@@ -83,7 +81,7 @@ if (selTipoPersona && inputIdentificacion) {
 
   /* Validación al perder foco */
   inputIdentificacion.addEventListener("blur", () => {
-    let valor = (inputIdentificacion.value || "").trim();
+    const valor = (inputIdentificacion.value || "").trim();
     inputIdentificacion.value = valor;
 
     if (!valor) return;
@@ -91,29 +89,26 @@ if (selTipoPersona && inputIdentificacion) {
     // Solo números
     if (!/^\d+$/.test(valor)) {
       alert("La identificación solo debe contener números");
-      inputIdentificacion.focus();
       return;
     }
 
     if (selTipoPersona.value === "JURIDICA") {
-      // Jurídica → SOLO 13
       if (valor.length !== 13) {
         alert("Para persona jurídica debe ingresar un RUC de 13 dígitos");
-        inputIdentificacion.focus();
         return;
       }
     } else {
-      // Natural → SOLO 10 o 13
       if (valor.length !== 10 && valor.length !== 13) {
         alert("Para persona natural ingrese una cédula (10 dígitos) o RUC (13 dígitos)");
-        inputIdentificacion.focus();
         return;
       }
     }
   });
+
+  // Estado inicial coherente
+  selTipoPersona.dispatchEvent(new Event("change"));
 }
 
-  
 
   
 
