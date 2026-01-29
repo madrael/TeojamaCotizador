@@ -61,6 +61,10 @@ function initUI() {
   const selDevicePlan = document.getElementById("selectDevicePlan");
   const lblDeviceProvider = document.getElementById("deviceProvider");
 
+  const selectTasa = document.getElementById("selectTasa");
+  const inputEntradaPorcentaje = document.getElementById("inputEntradaPorcentaje");
+  const inputEntrada = document.getElementById("inputEntrada");
+
   const btnCalcular = document.getElementById("btnCalcular");
 
 /* ===== Identificación: Cédula / RUC ===== */
@@ -104,6 +108,64 @@ if (selTipoPersona && inputIdentificacion) {
       }
     }
   });
+
+  /* ===== Entrada (% y valor) ligada a Tasa ===== */
+
+// Helpers seguros
+function getPVPActual() {
+  const el = document.getElementById("lblPVP");
+  if (!el) return 0;
+  return parseFloat(el.innerText.replace("$", "").replace(",", "")) || 0;
+}
+
+function redondear(valor) {
+  return Math.round(valor * 100) / 100;
+}
+
+/* Al cambiar la TASA → set % por defecto y calcula valor */
+if (selectTasa) {
+  selectTasa.addEventListener("change", () => {
+    const tasaId = selectTasa.value;
+    if (!tasaId || !window.ratesData) return;
+
+    const tasa = window.ratesData.find(t => t.IdTasa === tasaId);
+    if (!tasa || tasa.PerEntrada == null) return;
+
+    const pvp = getPVPActual();
+    const porcentaje = parseFloat(tasa.PerEntrada);
+
+    inputEntradaPorcentaje.value = porcentaje;
+
+    if (pvp > 0) {
+      inputEntrada.value = redondear(pvp * porcentaje / 100);
+    }
+  });
+}
+
+/* Si cambia el % → recalcula valor */
+if (inputEntradaPorcentaje) {
+  inputEntradaPorcentaje.addEventListener("input", () => {
+    const pvp = getPVPActual();
+    const porcentaje = parseFloat(inputEntradaPorcentaje.value);
+
+    if (!pvp || isNaN(porcentaje)) return;
+
+    inputEntrada.value = redondear(pvp * porcentaje / 100);
+  });
+}
+
+/* Si cambia el valor → recalcula % */
+if (inputEntrada) {
+  inputEntrada.addEventListener("input", () => {
+    const pvp = getPVPActual();
+    const valor = parseFloat(inputEntrada.value);
+
+    if (!pvp || isNaN(valor)) return;
+
+    inputEntradaPorcentaje.value = redondear((valor / pvp) * 100);
+  });
+}
+
 
   // Estado inicial coherente
   selTipoPersona.dispatchEvent(new Event("change"));
