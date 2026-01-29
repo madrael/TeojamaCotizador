@@ -113,7 +113,7 @@ if (selTipoPersona && inputIdentificacion) {
   });
 }
 
-  }
+  
 
   
 
