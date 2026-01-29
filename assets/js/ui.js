@@ -54,7 +54,7 @@ function initUI() {
   const inputLucroCesante = document.getElementById("inputLucroCesante");
 
   const selTipoPersona = document.getElementById("selectTipoPersona");
-  const inpIdentificacion = document.getElementById("inputIdentificacion");
+  const inputIdentificacion = document.getElementById("inputIdentificacion");
 
   const chkDispositivo = document.getElementById("chkDispositivo");
   const deviceContainer = document.getElementById("deviceContainer");
@@ -64,8 +64,6 @@ function initUI() {
   const btnCalcular = document.getElementById("btnCalcular");
 
  /* ===== Identificación: Cédula / RUC ===== */
-const selTipoPersona = document.getElementById("selectTipoPersona");
-const inputIdentificacion = document.getElementById("inputIdentificacion");
 
 if (selTipoPersona && inputIdentificacion) {
 
