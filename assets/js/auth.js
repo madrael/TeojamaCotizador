@@ -1,7 +1,7 @@
 /*************************************************
  * auth.js
  * Cotizador Vehículos Teojama
- * FIX DEFINITIVO LOGIN
+ * REvisión rollbac ene 2026
  *************************************************/
 
 document.addEventListener("DOMContentLoaded", () => {
