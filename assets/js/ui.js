@@ -62,7 +62,7 @@ function initUI() {
   const lblDeviceProvider = document.getElementById("deviceProvider");
 
   const selectTasa = document.getElementById("selectTasa");
-  const inputEntradaPorcentaje = document.getElementById("inputEntradaPorcentaje"); 
+  const inputEntradaPorcentaje = document.getElementById("inputEntradaPorcentaje");
   const inputEntrada = document.getElementById("inputEntrada");
 
   const btnCalcular = document.getElementById("btnCalcular");
@@ -109,65 +109,63 @@ if (selTipoPersona && inputIdentificacion) {
     }
   });
 
-/* ===== Entrada (% y valor) ligada a Tasa ===== */
+  /* ===== Entrada (% y valor) ligada a Tasa ===== */
 
-// Obtiene PVP actual desde la UI
+// Helpers seguros
 function getPVPActual() {
-  const el = document.getElementById("pvp");
+  const el = document.getElementById("lblPVP");
   if (!el) return 0;
-  return parseFloat(el.textContent.replace(/[^0-9.]/g, "")) || 0;
+  return parseFloat(el.innerText.replace("$", "").replace(",", "")) || 0;
 }
 
-function round2(v) {
-  return Math.round(v * 100) / 100;
+function redondear(valor) {
+  return Math.round(valor * 100) / 100;
 }
 
-/* Al cambiar la TASA → % por defecto y valor */
-if (selectTasa && inputEntradaPorcentaje && inputEntrada) {
+/* Al cambiar la TASA → set % por defecto y calcula valor */
+if (selectTasa) {
   selectTasa.addEventListener("change", () => {
     const tasaId = selectTasa.value;
-    if (!tasaId || !rates) return;
+    if (!tasaId || !window.ratesData) return;
 
-    const tasa = rates.find(r => String(r.IdTasa) === String(tasaId));
+    const tasa = window.ratesData.find(t => t.IdTasa === tasaId);
     if (!tasa || tasa.PerEntrada == null) return;
 
     const pvp = getPVPActual();
     const porcentaje = parseFloat(tasa.PerEntrada);
 
-    if (isNaN(porcentaje)) return;
-
     inputEntradaPorcentaje.value = porcentaje;
 
     if (pvp > 0) {
-      inputEntrada.value = round2((pvp * porcentaje) / 100);
+      inputEntrada.value = redondear(pvp * porcentaje / 100);
     }
   });
 }
 
 /* Si cambia el % → recalcula valor */
-if (inputEntradaPorcentaje && inputEntrada) {
+if (inputEntradaPorcentaje) {
   inputEntradaPorcentaje.addEventListener("input", () => {
     const pvp = getPVPActual();
     const porcentaje = parseFloat(inputEntradaPorcentaje.value);
 
     if (!pvp || isNaN(porcentaje)) return;
 
-    inputEntrada.value = round2((pvp * porcentaje) / 100);
+    inputEntrada.value = redondear(pvp * porcentaje / 100);
   });
 }
 
 /* Si cambia el valor → recalcula % */
-if (inputEntrada && inputEntradaPorcentaje) {
+if (inputEntrada) {
   inputEntrada.addEventListener("input", () => {
     const pvp = getPVPActual();
     const valor = parseFloat(inputEntrada.value);
 
     if (!pvp || isNaN(valor)) return;
 
-    inputEntradaPorcentaje.value = round2((valor / pvp) * 100);
+    inputEntradaPorcentaje.value = redondear((valor / pvp) * 100);
   });
 }
-  
+
 
   // Estado inicial coherente
   selTipoPersona.dispatchEvent(new Event("change"));
@@ -438,4 +436,3 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
       .classList.add("active");
   });
 });
-
