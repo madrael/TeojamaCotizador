@@ -498,3 +498,49 @@ p {
   box-sizing: border-box;
 }
 
+/* ===============================
+   Descuento + PVP Final (layout)
+   =============================== */
+
+.entrada-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.entrada-row input {
+  height: 38px;
+}
+
+/* % pequeño */
+.input-percent-wrapper {
+  position: relative;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.input-percent-wrapper input {
+  width: 100%;
+  padding-right: 22px;
+}
+
+/* símbolo % */
+.percent-suffix {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #6e7781;
+  pointer-events: none;
+}
+
+/* Valor descuento */
+#inputValorDesc {
+  flex: 1;
+}
+
+/* PVP final */
+#inputPvpFinal {
+  flex: 1.2;
+}
