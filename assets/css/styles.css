@@ -1,5 +1,5 @@
 /* =================================================
-   RESET + LOGIN (CONGELADO) + Desc. % y Entrada %
+   RESET + LOGIN (CONGELADO)
 ================================================= */
 body {
   margin: 0;
@@ -15,6 +15,7 @@ body {
   align-items: center;
   justify-content: center;
 }
+
 .login-box {
   background: #ffffff;
   padding: 32px;
@@ -113,6 +114,9 @@ body {
   background: #2c974b;
 }
 
+/* =================================================
+   LAYOUT GENERAL
+================================================= */
 .app-content {
   display: grid;
   grid-template-columns: 35% 65%;
@@ -166,6 +170,7 @@ body {
   background: #2c974b;
 }
 
+/* Inputs especiales */
 #inputEntrada,
 #inputSeguro,
 #inputLucroCesante {
@@ -251,7 +256,7 @@ body {
 }
 
 /* =================================================
-   TABS
+   TABS (⚠️ NO TOCAR)
 ================================================= */
 .tabs {
   display: flex;
@@ -314,6 +319,7 @@ body {
   pointer-events: none;
 }
 
+/* Campos asociados */
 #inputValorDesc {
   flex: 1;
 }
