@@ -1,5 +1,5 @@
 /* =================================================
-   RESET + LOGIN (CONGELADO) REV-2
+   BASE / RESET  V2.0 Compilación 1.50
 ================================================= */
 
 body {
@@ -77,6 +77,14 @@ body {
 }
 
 /* =================================================
+   LOGIN
+================================================= */
+
+/* =================================================
+   LAYOUT APP
+================================================= */
+
+/* =================================================
    APP (POST LOGIN)
 ================================================= */
 .app-header {
@@ -125,7 +133,6 @@ body {
   align-items: stretch; /* <-- ESTA */
 }
 
-
 .app-left,
 .app-right {
   background: #ffffff;
@@ -140,16 +147,6 @@ body {
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 120px);
-}
-
-.app-left select,
-.app-left input {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid #d0d7de;
-  border-radius: 8px;
-  font-size: 14px;
-  margin-top: 6px;
 }
 
 .app-left select:focus,
@@ -174,10 +171,22 @@ body {
   background: #2c974b;
 }
 
-/* =========================================
-   Ajuste puntual: input Valor entrada
-   No afecta otros inputs ni selects
-========================================= */
+/* =================================================
+   FORM CONTROLS
+================================================= */
+
+/* FIX: altura completa columna izquierda (tabs) */
+.app-left select,
+.app-left input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+/* Ajuste puntual: input Valor entrada */
 #inputEntrada {
   box-sizing: border-box;
 }
@@ -190,14 +199,190 @@ body {
   border-radius: 6px;
 }
 
-/* Resultado */
+.form-check {
+  margin-top: 10px;
+}
+
+.check-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.check-inline span {
+  white-space: nowrap;
+}
+
+.check-inline input[type="checkbox"] {
+  margin: 0;
+}
+
+/* Ajuste puntual: input Valor póliza */
+#inputSeguro {
+  box-sizing: border-box;
+  height: 38px;
+  width: 100%;
+}
+
+/* Ajuste puntual: input Lucro Cesante */
+#inputLucroCesante {
+  box-sizing: border-box;
+  height: 38px;
+  width: 100%;
+}
+
+/* Ajuste de TABS */
+h1 {
+  margin: 0;
+  font-family: 'Bree Serif', serif;
+
+}
+p {
+  margin-top: 20px;
+  margin-bottom: 0;
+  padding: 0;
+
+  line-height: 1.5;
+}
+
+/* =================================================
+   TABS (AISLADO)
+================================================= */
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  background: #e5e5e5;
+  box-shadow: 0 48px 80px -32px rgba(0,0,0,0.3);
+}
+
+.input {
+  position: absolute;
+  opacity: 0;
+}
+
+.label {
+  width: 100%;
+  padding: 20px 30px;
+  background: #e5e5e5;
+  cursor: pointer;
+  font-weight: bold;
+  color: #7f7f7f;
+  transition: background 0.1s, color 0.1s;
+}
+
+.label:hover {
+  background: #d8d8d8;
+}
+
+.label:active {
+  background: #ccc;
+}
+
+.input:focus + .label {
+  z-index: 1;
+}
+
+.input:checked + .label {
+  background: #fff;
+  color: #000;
+}
+
+@media (min-width: 600px) {
+  .label {
+    width: auto;
+  }
+}
+
+.panel {
+  display: none;
+  padding: 20px 30px 30px;
+  width: 100%;
+  background: #fff;
+}
+
+@media (min-width: 600px) {
+  .panel {
+    order: 99;
+  }
+}
+
+.input:checked + .label + .panel {
+  display: block;
+}
+
+/* =================================================
+   INPUTS ESPECIALES (%)
+================================================= */
+
+/* Fila contenedora (entrada / descuento / PVP final) */
+.app-left .tabs .entrada-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Altura uniforme para inputs de la fila */
+.app-left .tabs .entrada-row input {
+  height: 38px;
+}
+
+/* Wrapper base porcentaje */
+.app-left .tabs .input-percent-wrapper {
+  position: relative;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.app-left .tabs .input-percent-wrapper input {
+  width: 100%;
+  padding-right: 22px;
+  box-sizing: border-box;
+}
+
+/* Inputs porcentaje */
+.app-left .tabs #inputEntradaPorcentaje,
+.app-left .tabs #inputDescPorcentaje {
+  width: 100%;
+  padding-right: 22px;
+  box-sizing: border-box;
+}
+
+/* Input valor ocupa resto */
+.app-left .tabs #inputEntrada,
+.app-left .tabs #inputValorDesc {
+  flex: 1;
+}
+
+/* PVP final ligeramente mayor */
+.app-left .tabs #inputPvpFinal {
+  flex: 1.2;
+}
+
+/* Símbolo % */
+.app-left .tabs .percent-suffix {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: #6e7781;
+  pointer-events: none;
+}
+
+/* =================================================
+   FINANCIERO
+================================================= */
+
+/* Contenedor resultado */
 #tablaFinanciamiento {
   margin-top: 10px;
 }
 
-/* =================================================
-   TABLA FINANCIAMIENTO (DETALLE)
-================================================= */
+/* Tabla base */
 .finance-table {
   width: 100%;
   border-collapse: collapse;
@@ -223,11 +408,6 @@ body {
   color: #24292f;
 }
 
-/* Corrección bug concepto en negrillas, se omite esta sentencia
-.finance-table thead th:first-child {
-  font-weight: 700;
-}*/
-
 .finance-table th:first-child,
 .finance-table td:first-child {
   text-align: left;
@@ -241,6 +421,7 @@ body {
   border-bottom: none;
 }
 
+/* Separadores visuales */
 .finance-separator td {
   padding: 0 !important;
   border: none !important;
@@ -255,6 +436,7 @@ body {
   margin: 6px 0;
 }
 
+/* Estados especiales */
 .plazo-activo {
   background-color: #e6f4ea; /* verde suave estilo GitHub */
   color: #2da44e;
@@ -262,13 +444,7 @@ body {
   font-size: 14px;
 }
 
-/* Responsive (mantener usabilidad) */
-@media (max-width: 980px) {
-  .app-content {
-    grid-template-columns: 1fr;
-  }
-}
-
+/* Ajustes específicos */
 .finance-table tr.row-cuota-mensual td.concepto {
   font-weight: 400;
 }
@@ -276,29 +452,11 @@ body {
 .row-cuota-mensual + .finance-separator {
   display: none;
 }
-.form-check {
-  margin-top: 10px;
-}
-
-.check-inline {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0;
-  cursor: pointer;
-}
-
-.check-inline span {
-  white-space: nowrap;
-}
-
-.check-inline input[type="checkbox"] {
-  margin: 0;
-}
 
 /* =================================================
-   Resumen tipo banco (UI)
+   RESUMEN
 ================================================= */
+
 .credit-summary {
   margin-top: 20px;
   padding: 16px;
@@ -343,205 +501,15 @@ body {
   font-size: 15px;
 }
 
-/* =========================================
-   Ajuste puntual: input Valor póliza
-   - Corrige ancho (box model)
-   - Unifica altura visual
-   - No afecta otros inputs
-========================================= */
-#inputSeguro {
-  box-sizing: border-box;
-  height: 38px;
-  width: 100%;
-}
+/* =================================================
+   RESPONSIVE
+================================================= */
 
-/* =========================================
-   Ajuste de tamaño Lucro cesante
-   =========================================*/
-
-#inputLucroCesante {
-  box-sizing: border-box;
-  height: 38px;
-  width: 100%;
-}
-
-/* =======================================
-   CSS de TABS 
-   =======================================*/
-
-h1 {
-  margin: 0;
-  font-family: 'Bree Serif', serif;
-
-}
-p {
-  margin-top: 20px;
-  margin-bottom: 0;
-  padding: 0;
-
-  line-height: 1.5;
-}
-.tabs {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  background: #e5e5e5;
-  box-shadow: 0 48px 80px -32px rgba(0,0,0,0.3);
-}
-.input {
-  position: absolute;
-  opacity: 0;
-}
-.label {
-  width: 100%;
-  padding: 20px 30px;
-  background: #e5e5e5;
-  cursor: pointer;
-  font-weight: bold;
-
-  color: #7f7f7f;
-  transition: background 0.1s, color 0.1s;
-}
-.label:hover {
-  background: #d8d8d8;
-}
-.label:active {
-  background: #ccc;
-}
-.input:focus + .label {
-  z-index: 1;
-}
-.input:checked + .label {
-  background: #fff;
-  color: #000;
-}
-@media (min-width: 600px) {
-  .label {
-    width: auto;
+/* Responsive (mantener usabilidad) */
+@media (max-width: 980px) {
+  .app-content {
+    grid-template-columns: 1fr;
   }
 }
-.panel {
-  display: none;
-  padding: 20px 30px 30px;
-  width: 100%; 
-  background: #fff;
-}
-@media (min-width: 600px) {
-  .panel {
-    order: 99;
-  }
-}
-.input:checked + .label + .panel {
-  display: block;
-}
 
-/* ===============================
-   Input porcentaje con símbolo %
-   =============================== */
-.input-percent-wrapper {
-  position: relative;
-  width: 120px;
-}
 
-.input-percent-wrapper input {
-  width: 100%;
-  padding-right: 28px; /* espacio para el % */
-}
-
-/* ===============================
-   Cuota de entrada – porcentaje
-   =============================== */
-
-.entrada-row {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-/* contenedor porcentaje */
-.input-percent-wrapper {
-  position: relative;
-  width: 90px;          /* ancho fijo estable */
-  flex-shrink: 0;
-}
-
-/* input porcentaje */
-#inputEntradaPorcentaje {
-  width: 100%;
-  padding-right: 22px;  /* espacio para el % */
-  box-sizing: border-box;
-}
-
-/* símbolo % */
-.percent-suffix {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #6e7781;
-  font-size: 13px;
-  pointer-events: none;
-}
-
-/* input valor ocupa el resto */
-.entrada-row #inputEntrada {
-  flex: 1;
-}
-
-/* ===============================
-   Tamaño Descuento – porcentaje
-   =============================== */
-
-/* input porcentaje */
-#inputDescPorcentaje {
-  width: 100%;
-  padding-right: 22px;  /* espacio para el % */
-  box-sizing: border-box;
-}
-
-/* ===============================
-   Descuento + PVP Final (layout)
-   =============================== */
-
-.entrada-row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.entrada-row input {
-  height: 38px;
-}
-
-/* % pequeño */
-.input-percent-wrapper {
-  position: relative;
-  width: 80px;
-  flex-shrink: 0;
-}
-
-.input-percent-wrapper input {
-  width: 100%;
-  padding-right: 22px;
-}
-
-/* símbolo % */
-.percent-suffix {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 14px;
-  color: #6e7781;
-  pointer-events: none;
-}
-
-/* Valor descuento */
-#inputValorDesc {
-  flex: 1;
-}
-
-/* PVP final */
-#inputPvpFinal {
-  flex: 1.2;
-}
