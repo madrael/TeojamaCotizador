@@ -259,12 +259,14 @@ p {
   box-shadow: 0 48px 80px -32px rgba(0,0,0,0.3);
 }
 
-.input {
+/* Radio oculto */
+.tabs .input {
   position: absolute;
   opacity: 0;
 }
 
-.label {
+/* Etiquetas */
+.tabs .label {
   width: 100%;
   padding: 20px 30px;
   background: #e5e5e5;
@@ -274,30 +276,32 @@ p {
   transition: background 0.1s, color 0.1s;
 }
 
-.label:hover {
+.tabs .label:hover {
   background: #d8d8d8;
 }
 
-.label:active {
+.tabs .label:active {
   background: #ccc;
 }
 
-.input:focus + .label {
+.tabs .input:focus + .label {
   z-index: 1;
 }
 
-.input:checked + .label {
+.tabs .input:checked + .label {
   background: #fff;
   color: #000;
 }
 
+/* Labels horizontales en desktop */
 @media (min-width: 600px) {
-  .label {
+  .tabs .label {
     width: auto;
   }
 }
 
-.panel {
+/* Panel */
+.tabs .panel {
   display: none;
   padding: 20px 30px 30px;
   width: 100%;
@@ -305,13 +309,27 @@ p {
 }
 
 @media (min-width: 600px) {
-  .panel {
+  .tabs .panel {
     order: 99;
   }
 }
 
-.input:checked + .label + .panel {
+.tabs .input:checked + .label + .panel {
   display: block;
+}
+
+/* Tipografía interna (AISLADA) */
+.app-left .tabs .panel h1 {
+  margin: 0;
+  font-family: 'Bree Serif', serif;
+  font-size: 20px;
+}
+
+.app-left .tabs .panel p {
+  margin-top: 20px;
+  margin-bottom: 0;
+  padding: 0;
+  line-height: 1.5;
 }
 
 /* =================================================
