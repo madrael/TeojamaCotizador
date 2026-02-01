@@ -70,16 +70,6 @@
      DATOS DEL PROSPECTO
 ========================= -->
 
-<!-- Tipo de Cliente -->
-<div style="margin-top:10px;">
-  <label>Tipo de Cliente</label><br />
-  <select id="selectTipoCliente">
-    <option value="NORMAL">Cliente Estándar</option>
-    <option value="COLABORADOR">Colaborador</option>
-    <option value="REFINANCIADO">Refinanciamiento</option>
-  </select>
-</div>
-
 <!-- Tipo de persona -->
 <div style="margin-top:10px;">
   <label>Tipo de persona</label><br />
@@ -168,13 +158,22 @@
   />
 </div>
 
-
                     </div> <!-- Cierra PANEL1 -->
-                 
+             
                     <input class="input" name="tabs" type="radio" id="tab-2" />
                     <label class="label" for="tab-2">Vehículo</label>
                     <div class="panel">
                         <h1>Vehículo de Interés</h1>
+
+                        <!-- Tipo de Cliente -->
+                        <div style="margin-top:10px;">
+                          <label>Tipo de Cliente</label><br />
+                          <select id="selectTipoCliente">
+                            <option value="NORMAL">Cliente Estándar</option>
+                            <option value="COLABORADOR">Colaborador</option>
+                            <option value="REFINANCIADO">Refinanciamiento</option>
+                          </select>
+                        </div>
 
                         <!-- Tipo de Vehículo -->
                         <div style="margin-top:10px;">
