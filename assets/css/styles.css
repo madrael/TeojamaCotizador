@@ -380,6 +380,12 @@ p {
   flex: 1.2;
 }
 
+/* FIX FLEX: permite que los inputs se reduzcan (evita anchos raros en flex) */
+.app-left .tabs #inputValorDesc,
+.app-left .tabs #inputPvpFinal {
+  min-width: 0;
+}
+
 /* Símbolo % */
 .app-left .tabs .percent-suffix {
   position: absolute;
