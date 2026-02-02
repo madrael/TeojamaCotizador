@@ -224,7 +224,31 @@ if (inputEntrada && inputEntradaPorcentaje) {
   });
 }
 
+/* ===== Reacción de ENTRADA ante cambios de DESCUENTO ===== */
 
+function recalcularEntradaDesdePVPEfectivo() {
+  if (!selectTasa || !inputEntrada || !inputEntradaPorcentaje) return;
+
+  const tasaId = selectTasa.value;
+  if (!tasaId || !rates) {
+    // No hay tasa → limpiar entrada
+    inputEntrada.value = "";
+    inputEntradaPorcentaje.value = "";
+    return;
+  }
+
+  const tasa = rates.find(r => String(r.IdTasa) === String(tasaId));
+  if (!tasa || tasa.PerEntrada == null) return;
+
+  const pvp = getPVPEfectivo();
+  const porcentaje = parseFloat(tasa.PerEntrada);
+
+  if (pvp <= 0 || isNaN(porcentaje)) return;
+
+  inputEntradaPorcentaje.value = porcentaje;
+  inputEntrada.value = round2((pvp * porcentaje) / 100);
+}
+  
   // Estado inicial coherente
   selTipoPersona.dispatchEvent(new Event("change"));
 }
