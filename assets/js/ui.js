@@ -211,13 +211,28 @@ function initUI() {
     inputIdentificacion.maxLength = 13;
   });
 
-  inputIdentificacion?.addEventListener("blur", () => {
-    const v = inputIdentificacion.value.trim();
-    if (!v) return;
-    if (!/^\d+$/.test(v)) {
-      alert("La identificación solo debe contener números");
+ inputIdentificacion?.addEventListener("blur", () => {
+  const valor = inputIdentificacion.value.trim();
+  if (!valor) return;
+
+  if (!/^\d+$/.test(valor)) {
+    alert("La identificación solo debe contener números");
+    return;
+  }
+
+  if (selTipoPersona.value === "JURIDICA") {
+    if (valor.length !== 13) {
+      alert("Para persona jurídica debe ingresar un RUC de 13 dígitos");
+      return;
     }
-  });
+  } else {
+    if (valor.length !== 10 && valor.length !== 13) {
+      alert("Para persona natural ingrese una cédula (10 dígitos) o RUC (13 dígitos)");
+      return;
+    }
+  }
+});
+
 
   selTipoPersona?.dispatchEvent(new Event("change"));
 
