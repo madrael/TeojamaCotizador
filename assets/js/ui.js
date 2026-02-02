@@ -248,6 +248,26 @@ function recalcularEntradaDesdePVPEfectivo() {
   inputEntradaPorcentaje.value = porcentaje;
   inputEntrada.value = round2((pvp * porcentaje) / 100);
 }
+
+/* SINCRONIZACIÓN DESCUENTO → ENTRADA */
+if (inputDescPorcentaje) {
+  inputDescPorcentaje.addEventListener("input", () => {
+    recalcularEntradaDesdePVPEfectivo();
+  });
+}
+
+  if (inputValorDesc) {
+  inputValorDesc.addEventListener("input", () => {
+    recalcularEntradaDesdePVPEfectivo();
+  });
+}
+if (inputPvpFinal) {
+  inputPvpFinal.addEventListener("input", () => {
+    recalcularEntradaDesdePVPEfectivo();
+  });
+}
+
+
   
   // Estado inicial coherente
   selTipoPersona.dispatchEvent(new Event("change"));
