@@ -383,8 +383,9 @@ p {
 /* FIX ESPECÍFICO: igualar ancho de "Valor Descuento" y "Valor PVP - Descuento" (evita que el placeholder/auto min-width rompa el flex) */
 .app-left .tabs #inputValorDesc,
 .app-left .tabs #inputPvpFinal {
-  flex: 1 1 0;     /* mismo reparto real */
-  min-width: 0;    /* clave: permite encoger en flex */
+  width: 100%;
+  padding-right: 22px;
+  box-sizing: border-box;
 }
 
 /* Símbolo % */
