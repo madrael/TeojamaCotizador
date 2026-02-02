@@ -164,6 +164,12 @@ function getPVPActual() {
   return parseFloat(el.textContent.replace(/[^0-9.]/g, "")) || 0;
 }
 
+function getPVPEfectivo() {
+  const el = document.getElementById("inputPvpFinal");
+  if (!el) return 0;
+  return parseFloat(el.value) || 0;
+}
+
 function round2(v) {
   return Math.round(v * 100) / 100;
 }
@@ -177,7 +183,7 @@ if (selectTasa && inputEntradaPorcentaje && inputEntrada) {
     const tasa = rates.find(r => String(r.IdTasa) === String(tasaId));
     if (!tasa || tasa.PerEntrada == null) return;
 
-    const pvp = getPVPActual();
+    const pvp = getPVPEfectivo();
     const porcentaje = parseFloat(tasa.PerEntrada);
 
     if (isNaN(porcentaje)) return;
