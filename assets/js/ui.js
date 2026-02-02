@@ -74,51 +74,34 @@ function getPVPEfectivo() {
 
 function initUI() {
 
-  /* -----------------------------
-     Selectores principales
-  ------------------------------ */
-
+  /* Selectores principales */
   const selTipoVehiculo = getEl("selectTipoVehiculo");
   const selMarca = getEl("selectMarca");
   const selModelo = getEl("selectModelo");
   const selTasa = getEl("selectTasa");
   const selPlazo = getEl("selectPlazo");
-
   const btnCalcular = getEl("btnCalcular");
 
-  /* -----------------------------
-     Inputs descuento / entrada
-  ------------------------------ */
-
+  /* Inputs descuento / entrada */
   const inputDescPorcentaje = getEl("inputDescPorcentaje");
   const inputValorDesc = getEl("inputValorDesc");
   const inputPvpFinal = getEl("inputPvpFinal");
-
   const inputEntradaPorcentaje = getEl("inputEntradaPorcentaje");
   const inputEntrada = getEl("inputEntrada");
 
-  /* -----------------------------
-     Seguro / Lucro / Dispositivo
-  ------------------------------ */
-
+  /* Seguro / Lucro / Dispositivo */
   const chkSeguro = getEl("chkSeguro");
   const inputSeguro = getEl("inputSeguro");
-
   const chkLucroCesante = getEl("chkLucroCesante");
   const inputLucroCesante = getEl("inputLucroCesante");
-
   const chkDispositivo = getEl("chkDispositivo");
   const deviceContainer = getEl("deviceContainer");
   const selDevicePlan = getEl("selectDevicePlan");
   const lblDeviceProvider = getEl("deviceProvider");
 
-  /* -----------------------------
-     Prospecto
-  ------------------------------ */
-
+  /* Prospecto */
   const selTipoPersona = getEl("selectTipoPersona");
   const inputIdentificacion = getEl("inputIdentificacion");
-
   const inputFechaNacimiento = getEl("inputFechaNacimiento");
   const inputEdadCliente = getEl("inputEdadCliente");
 
@@ -232,7 +215,6 @@ function initUI() {
     }
   }
 });
-
 
   selTipoPersona?.dispatchEvent(new Event("change"));
 
