@@ -1,12 +1,14 @@
 /*************************************************
  * Archivo: ui.js
  * Proyecto: Cotizador Vehículos Teojama
- * Versión: V 1.0 · Compilación 3.11
- * Cambios:
- * - Reglas de negocio para planes de dispositivo
- * - Filtro por tipoCliente
- * - Prioridad por coincidencia de tasa
+ * Versión: V 2.0
+ * Compilación: 1.62
+ * Estado: REORGANIZADO (sin cambios funcionales)
  *************************************************/
+
+/* =================================================
+   ESTADO GLOBAL
+================================================= */
 
 let vehicles = [];
 let rates = [];
@@ -19,17 +21,19 @@ const appState = {
   tasa: null,
   plazo: null,
 
-  tipoCliente: "NORMAL", // preparado para UI (NORMAL | COLABORADOR | REFINANCIADO)
+  tipoCliente: "NORMAL",
 
   incluyeSeguro: false,
   incluyeLucroCesante: false,
   incluyeDispositivo: false,
+
   dispositivo: null
 };
 
-/* =============================
+/* =================================================
    INIT
-============================= */
+================================================= */
+
 document.addEventListener("DOMContentLoaded", async () => {
   vehicles = await loadVehicles();
   rates = await loadRates();
@@ -37,279 +41,213 @@ document.addEventListener("DOMContentLoaded", async () => {
   initUI();
 });
 
-/* =============================
-   UI INIT
-============================= */
-function initUI() {
-  const selTipo = document.getElementById("selectTipoVehiculo");
-  const selMarca = document.getElementById("selectMarca");
-  const selModelo = document.getElementById("selectModelo");
-  const selTasa = document.getElementById("selectTasa");
-  const selPlazo = document.getElementById("selectPlazo");
+/* =================================================
+   DOM / SELECTORES
+================================================= */
 
-  const chkSeguro = document.getElementById("chkSeguro");
-  const inpSeguro = document.getElementById("inputSeguro");
-
-  const chkLucroCesante = document.getElementById("chkLucroCesante");
-  const inputLucroCesante = document.getElementById("inputLucroCesante");
-
-  const selTipoPersona = document.getElementById("selectTipoPersona");
-  const inputIdentificacion = document.getElementById("inputIdentificacion");
-
-  const chkDispositivo = document.getElementById("chkDispositivo");
-  const deviceContainer = document.getElementById("deviceContainer");
-  const selDevicePlan = document.getElementById("selectDevicePlan");
-  const lblDeviceProvider = document.getElementById("deviceProvider");
-
-  const selectTasa = document.getElementById("selectTasa");
-  const inputEntradaPorcentaje = document.getElementById("inputEntradaPorcentaje"); 
-  const inputEntrada = document.getElementById("inputEntrada");
-
-  const btnCalcular = document.getElementById("btnCalcular");
-
-  /* logica de calculo de porcentaje de descuento */
-  const inputDescPorcentaje = document.getElementById("inputDescPorcentaje");
-  const inputValorDesc = document.getElementById("inputValorDesc"); 
-  const inputPvpFinal = document.getElementById("inputPvpFinal");
-  const spanPvp = document.getElementById("pvp");
-
-  function getPvpBase() {
-  const value = parseFloat(spanPvp.textContent.replace(",", ""));
-  return isNaN(value) ? 0 : value;
-  }
-
-  inputDescPorcentaje.addEventListener("input", () => {
-  const pvpBase = getPvpBase();
-  const porcentaje = parseFloat(inputDescPorcentaje.value);
-
-  if (!pvpBase || isNaN(porcentaje)) {
-    inputValorDesc.value = "";
-    inputPvpFinal.value = "";
-    return;
-  }
-
-  const valorDescuento = pvpBase * (porcentaje / 100);
-  const pvpFinal = pvpBase - valorDescuento;
-
-  inputValorDesc.value = valorDescuento.toFixed(2);
-  inputPvpFinal.value = pvpFinal.toFixed(2);
-  });
-
-  inputValorDesc.addEventListener("input", () => {
-  const pvpBase = getPvpBase();
-  const valorDescuento = parseFloat(inputValorDesc.value);
-
-  if (!pvpBase || isNaN(valorDescuento)) {
-    inputDescPorcentaje.value = "";
-    inputPvpFinal.value = "";
-    return;
-  }
-
-  const porcentaje = (valorDescuento / pvpBase) * 100;
-  const pvpFinal = pvpBase - valorDescuento;
-
-  inputDescPorcentaje.value = porcentaje.toFixed(2);
-  inputPvpFinal.value = pvpFinal.toFixed(2);
-  });
-
-
-/* ===== Identificación: Cédula / RUC ===== */
-if (selTipoPersona && inputIdentificacion) {
-
-  /* Ajuste dinámico según tipo de persona */
-  selTipoPersona.addEventListener("change", () => {
-    inputIdentificacion.value = "";
-
-    if (selTipoPersona.value === "JURIDICA") {
-      inputIdentificacion.placeholder = "RUC (13 dígitos)";
-      inputIdentificacion.maxLength = 13;
-    } else {
-      inputIdentificacion.placeholder = "Cédula (10) o RUC (13)";
-      inputIdentificacion.maxLength = 13;
-    }
-  });
-
-  /* Validación al perder foco */
-  inputIdentificacion.addEventListener("blur", () => {
-    const valor = (inputIdentificacion.value || "").trim();
-    inputIdentificacion.value = valor;
-
-    if (!valor) return;
-
-    // Solo números
-    if (!/^\d+$/.test(valor)) {
-      alert("La identificación solo debe contener números");
-      return;
-    }
-
-    if (selTipoPersona.value === "JURIDICA") {
-      if (valor.length !== 13) {
-        alert("Para persona jurídica debe ingresar un RUC de 13 dígitos");
-        return;
-      }
-    } else {
-      if (valor.length !== 10 && valor.length !== 13) {
-        alert("Para persona natural ingrese una cédula (10 dígitos) o RUC (13 dígitos)");
-        return;
-      }
-    }
-  });
-
-/* ===== Entrada (% y valor) ligada a Tasa ===== */
-
-/* PVP base (solo lectura desde UI) */
-function getPVPBase() {
-  const el = document.getElementById("pvp");
-  if (!el) return 0;
-  return parseFloat(el.textContent.replace(/[^0-9.]/g, "")) || 0;
+function getEl(id) {
+  return document.getElementById(id);
 }
 
-/* PVP efectivo (PVP - descuento). 
-   Si aún no existe, usa PVP base */
-function getPVPEfectivo() {
-  const el = document.getElementById("inputPvpFinal");
-  const pvpFinal = el ? parseFloat(el.value) : NaN;
-
-  if (!isNaN(pvpFinal) && pvpFinal > 0) {
-    return pvpFinal;
-  }
-
-  return getPVPBase();
-}
+/* =================================================
+   UTILIDADES
+================================================= */
 
 function round2(v) {
   return Math.round(v * 100) / 100;
 }
 
-/* Al cambiar la TASA → % por defecto y valor */
-if (selectTasa && inputEntradaPorcentaje && inputEntrada) {
-  selectTasa.addEventListener("change", () => {
-    const tasaId = selectTasa.value;
-    if (!tasaId || !rates) return;
+function getPVPBase() {
+  const el = getEl("pvp");
+  return el ? parseFloat(el.textContent.replace(/[^0-9.]/g, "")) || 0 : 0;
+}
 
-    const tasa = rates.find(r => String(r.IdTasa) === String(tasaId));
+function getPVPEfectivo() {
+  const el = getEl("inputPvpFinal");
+  const val = el ? parseFloat(el.value) : NaN;
+  return !isNaN(val) && val > 0 ? val : getPVPBase();
+}
+
+/* =================================================
+   INIT UI
+================================================= */
+
+function initUI() {
+
+  /* -----------------------------
+     Selectores principales
+  ------------------------------ */
+
+  const selTipoVehiculo = getEl("selectTipoVehiculo");
+  const selMarca = getEl("selectMarca");
+  const selModelo = getEl("selectModelo");
+  const selTasa = getEl("selectTasa");
+  const selPlazo = getEl("selectPlazo");
+
+  const btnCalcular = getEl("btnCalcular");
+
+  /* -----------------------------
+     Inputs descuento / entrada
+  ------------------------------ */
+
+  const inputDescPorcentaje = getEl("inputDescPorcentaje");
+  const inputValorDesc = getEl("inputValorDesc");
+  const inputPvpFinal = getEl("inputPvpFinal");
+
+  const inputEntradaPorcentaje = getEl("inputEntradaPorcentaje");
+  const inputEntrada = getEl("inputEntrada");
+
+  /* -----------------------------
+     Seguro / Lucro / Dispositivo
+  ------------------------------ */
+
+  const chkSeguro = getEl("chkSeguro");
+  const inputSeguro = getEl("inputSeguro");
+
+  const chkLucroCesante = getEl("chkLucroCesante");
+  const inputLucroCesante = getEl("inputLucroCesante");
+
+  const chkDispositivo = getEl("chkDispositivo");
+  const deviceContainer = getEl("deviceContainer");
+  const selDevicePlan = getEl("selectDevicePlan");
+  const lblDeviceProvider = getEl("deviceProvider");
+
+  /* -----------------------------
+     Prospecto
+  ------------------------------ */
+
+  const selTipoPersona = getEl("selectTipoPersona");
+  const inputIdentificacion = getEl("inputIdentificacion");
+
+  const inputFechaNacimiento = getEl("inputFechaNacimiento");
+  const inputEdadCliente = getEl("inputEdadCliente");
+
+  /* =================================================
+     DESCUENTO (PVP → PVP EFECTIVO)
+  ================================================= */
+
+  function recalcularDesdeDescuento() {
+    const pvpBase = getPVPBase();
+
+    if (!pvpBase) {
+      inputValorDesc.value = "";
+      inputPvpFinal.value = "";
+      return;
+    }
+
+    const porc = parseFloat(inputDescPorcentaje.value);
+    const val = parseFloat(inputValorDesc.value);
+
+    if (!isNaN(porc)) {
+      const desc = pvpBase * (porc / 100);
+      inputValorDesc.value = desc.toFixed(2);
+      inputPvpFinal.value = (pvpBase - desc).toFixed(2);
+    }
+
+    if (!isNaN(val)) {
+      inputDescPorcentaje.value = round2((val / pvpBase) * 100);
+      inputPvpFinal.value = (pvpBase - val).toFixed(2);
+    }
+  }
+
+  inputDescPorcentaje?.addEventListener("input", recalcularDesdeDescuento);
+  inputValorDesc?.addEventListener("input", recalcularDesdeDescuento);
+
+  /* =================================================
+     ENTRADA (% y valor) – basada en PVP EFECTIVO
+  ================================================= */
+
+  function recalcularEntradaDesdePVPEfectivo() {
+    if (!selTasa.value) {
+      inputEntrada.value = "";
+      inputEntradaPorcentaje.value = "";
+      return;
+    }
+
+    const tasa = rates.find(r => String(r.IdTasa) === String(selTasa.value));
     if (!tasa || tasa.PerEntrada == null) return;
 
     const pvp = getPVPEfectivo();
-    const porcentaje = parseFloat(tasa.PerEntrada);
+    const porc = parseFloat(tasa.PerEntrada);
 
-    if (isNaN(porcentaje) || pvp <= 0) return;
+    if (pvp <= 0 || isNaN(porc)) return;
 
-    inputEntradaPorcentaje.value = porcentaje;
-    inputEntrada.value = round2((pvp * porcentaje) / 100);
-  });
-}
-
-/* Si cambia el % → recalcula valor */
-if (inputEntradaPorcentaje && inputEntrada) {
-  inputEntradaPorcentaje.addEventListener("input", () => {
-    const pvp = getPVPEfectivo();
-    const porcentaje = parseFloat(inputEntradaPorcentaje.value);
-
-    if (isNaN(porcentaje) || pvp <= 0) return;
-
-    inputEntrada.value = round2((pvp * porcentaje) / 100);
-  });
-}
-
-/* Si cambia el valor → recalcula % */
-if (inputEntrada && inputEntradaPorcentaje) {
-  inputEntrada.addEventListener("input", () => {
-    const pvp = getPVPEfectivo();
-    const valor = parseFloat(inputEntrada.value);
-
-    if (isNaN(valor) || pvp <= 0) return;
-
-    inputEntradaPorcentaje.value = round2((valor / pvp) * 100);
-  });
-}
-
-/* ===== Reacción de ENTRADA ante cambios de DESCUENTO ===== */
-
-function recalcularEntradaDesdePVPEfectivo() {
-  if (!selectTasa || !inputEntrada || !inputEntradaPorcentaje) return;
-
-  const tasaId = selectTasa.value;
-  if (!tasaId || !rates) {
-    // No hay tasa → limpiar entrada
-    inputEntrada.value = "";
-    inputEntradaPorcentaje.value = "";
-    return;
+    inputEntradaPorcentaje.value = porc;
+    inputEntrada.value = round2((pvp * porc) / 100);
   }
 
-  const tasa = rates.find(r => String(r.IdTasa) === String(tasaId));
-  if (!tasa || tasa.PerEntrada == null) return;
-
-  const pvp = getPVPEfectivo();
-  const porcentaje = parseFloat(tasa.PerEntrada);
-
-  if (pvp <= 0 || isNaN(porcentaje)) return;
-
-  inputEntradaPorcentaje.value = porcentaje;
-  inputEntrada.value = round2((pvp * porcentaje) / 100);
-}
-
-/* SINCRONIZACIÓN DESCUENTO → ENTRADA */
-if (inputDescPorcentaje) {
-  inputDescPorcentaje.addEventListener("input", () => {
-    recalcularEntradaDesdePVPEfectivo();
+  inputEntradaPorcentaje?.addEventListener("input", () => {
+    const pvp = getPVPEfectivo();
+    const porc = parseFloat(inputEntradaPorcentaje.value);
+    if (!isNaN(porc) && pvp > 0) {
+      inputEntrada.value = round2((pvp * porc) / 100);
+    }
   });
-}
 
-  if (inputValorDesc) {
-  inputValorDesc.addEventListener("input", () => {
-    recalcularEntradaDesdePVPEfectivo();
+  inputEntrada?.addEventListener("input", () => {
+    const pvp = getPVPEfectivo();
+    const val = parseFloat(inputEntrada.value);
+    if (!isNaN(val) && pvp > 0) {
+      inputEntradaPorcentaje.value = round2((val / pvp) * 100);
+    }
   });
-}
-if (inputPvpFinal) {
-  inputPvpFinal.addEventListener("input", () => {
-    recalcularEntradaDesdePVPEfectivo();
+
+  inputDescPorcentaje?.addEventListener("input", recalcularEntradaDesdePVPEfectivo);
+  inputValorDesc?.addEventListener("input", recalcularEntradaDesdePVPEfectivo);
+  inputPvpFinal?.addEventListener("input", recalcularEntradaDesdePVPEfectivo);
+
+  selTasa?.addEventListener("change", recalcularEntradaDesdePVPEfectivo);
+
+  /* =================================================
+     IDENTIFICACIÓN – CÉDULA / RUC
+  ================================================= */
+
+  selTipoPersona?.addEventListener("change", () => {
+    inputIdentificacion.value = "";
+    inputIdentificacion.placeholder =
+      selTipoPersona.value === "JURIDICA"
+        ? "RUC (13 dígitos)"
+        : "Cédula (10) o RUC (13)";
+    inputIdentificacion.maxLength = 13;
   });
-}
 
+  inputIdentificacion?.addEventListener("blur", () => {
+    const v = inputIdentificacion.value.trim();
+    if (!v) return;
+    if (!/^\d+$/.test(v)) {
+      alert("La identificación solo debe contener números");
+    }
+  });
 
-  
-  // Estado inicial coherente
-  selTipoPersona.dispatchEvent(new Event("change"));
-}
+  selTipoPersona?.dispatchEvent(new Event("change"));
 
-/* ===== Fecha de nacimiento → Cálculo de edad ===== */
-const inputFechaNacimiento = document.getElementById("inputFechaNacimiento");
-const inputEdadCliente = document.getElementById("inputEdadCliente");
+  /* =================================================
+     FECHA NACIMIENTO → EDAD
+  ================================================= */
 
-if (inputFechaNacimiento && inputEdadCliente) {
-
-  inputFechaNacimiento.addEventListener("change", () => {
-    const fechaValue = inputFechaNacimiento.value;
-    if (!fechaValue) {
+  inputFechaNacimiento?.addEventListener("change", () => {
+    if (!inputFechaNacimiento.value) {
       inputEdadCliente.value = "";
       return;
     }
 
-    const fechaNac = new Date(fechaValue);
+    const fn = new Date(inputFechaNacimiento.value);
     const hoy = new Date();
+    let edad = hoy.getFullYear() - fn.getFullYear();
+    const m = hoy.getMonth() - fn.getMonth();
 
-    let edad = hoy.getFullYear() - fechaNac.getFullYear();
-    const mes = hoy.getMonth() - fechaNac.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < fn.getDate())) edad--;
 
-    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
-      edad--;
-    }
-
-    // Validación defensiva
-    if (edad < 0 || edad > 120) {
-      inputEdadCliente.value = "";
-      return;
-    }
-
-    inputEdadCliente.value = edad;
+    inputEdadCliente.value = edad > 0 && edad < 120 ? edad : "";
   });
-}
 
-  /* ===== Tipo / Marca / Modelo ===== */
-  selTipo.addEventListener("change", () => {
+  /* =================================================
+     VEHÍCULO → MARCA → MODELO
+  ================================================= */
+
+  selTipoVehiculo?.addEventListener("change", () => {
     resetAll();
-    appState.tipoVehiculo = selTipo.value;
+    appState.tipoVehiculo = selTipoVehiculo.value;
 
     [...new Set(
       vehicles
@@ -318,21 +256,19 @@ if (inputFechaNacimiento && inputEdadCliente) {
     )].forEach(m => addOption(selMarca, m, m));
   });
 
-  selMarca.addEventListener("change", () => {
+  selMarca?.addEventListener("change", () => {
     resetSelect(selModelo);
     appState.marca = selMarca.value;
 
     vehicles
-      .filter(v =>
-        v.TipoVehiculo === appState.tipoVehiculo &&
-        v.Marca === appState.marca
-      )
+      .filter(v => v.TipoVehiculo === appState.tipoVehiculo && v.Marca === appState.marca)
       .forEach(v => addOption(selModelo, v.Modelo, v.Modelo));
   });
 
-  selModelo.addEventListener("change", () => {
+  selModelo?.addEventListener("change", () => {
     resetSelect(selTasa);
     resetSelect(selPlazo);
+
     appState.modelo = selModelo.value;
 
     const veh = vehicles.find(v =>
@@ -341,16 +277,16 @@ if (inputFechaNacimiento && inputEdadCliente) {
       v.Modelo === appState.modelo
     );
 
-    document.getElementById("pvp").textContent =
-      veh ? Number(veh.PVP).toFixed(2) : "0.00";
+    getEl("pvp").textContent = veh ? Number(veh.PVP).toFixed(2) : "0.00";
 
-    rates.forEach(r =>
-      addOption(selTasa, r.IdTasa, `${r.TasaAnual}%`)
-    );
+    rates.forEach(r => addOption(selTasa, r.IdTasa, `${r.TasaAnual}%`));
   });
 
-  /* ===== Tasa ===== */
-  selTasa.addEventListener("change", () => {
+  /* =================================================
+     TASA / PLAZO
+  ================================================= */
+
+  selTasa?.addEventListener("change", () => {
     resetSelect(selPlazo);
     appState.tasa = selTasa.value;
 
@@ -358,43 +294,36 @@ if (inputFechaNacimiento && inputEdadCliente) {
     tasaObj?.Plazos.forEach(p =>
       addOption(selPlazo, p.VPlazo, `${p.VPlazo} meses`)
     );
-
-    if (appState.incluyeDispositivo) {
-      cargarPlanesDispositivo();
-    }
   });
 
-  /* ===== Plazo ===== */
-  selPlazo.addEventListener("change", () => {
+  selPlazo?.addEventListener("change", () => {
     appState.plazo = Number(selPlazo.value);
     actualizarValorDispositivo();
   });
 
-  /* ===== Seguro ===== */
-  chkSeguro.addEventListener("change", () => {
+  /* =================================================
+     SEGURO / LUCRO / DISPOSITIVO (UI)
+  ================================================= */
+
+  chkSeguro?.addEventListener("change", () => {
     appState.incluyeSeguro = chkSeguro.checked;
-    inpSeguro.disabled = !chkSeguro.checked;
-    if (!chkSeguro.checked) inpSeguro.value = "";
+    inputSeguro.disabled = !chkSeguro.checked;
+    if (!chkSeguro.checked) inputSeguro.value = "";
   });
 
-  /* ===== Lucro cesante ===== */
-  chkLucroCesante.addEventListener("change", () => {
+  chkLucroCesante?.addEventListener("change", () => {
     appState.incluyeLucroCesante = chkLucroCesante.checked;
     inputLucroCesante.disabled = !chkLucroCesante.checked;
     if (!chkLucroCesante.checked) inputLucroCesante.value = "";
   });
 
-  /* ===== Dispositivo ===== */
-  chkDispositivo.addEventListener("change", () => {
+  chkDispositivo?.addEventListener("change", () => {
     appState.incluyeDispositivo = chkDispositivo.checked;
     deviceContainer.style.display = chkDispositivo.checked ? "block" : "none";
-
-    chkDispositivo.checked
-      ? cargarPlanesDispositivo()
-      : limpiarDispositivo();
+    chkDispositivo.checked ? cargarPlanesDispositivo() : limpiarDispositivo();
   });
 
-  selDevicePlan.addEventListener("change", () => {
+  selDevicePlan?.addEventListener("change", () => {
     appState.dispositivo =
       devicePlans.find(p => p.codigo === selDevicePlan.value) || null;
 
@@ -404,58 +333,49 @@ if (inputFechaNacimiento && inputEdadCliente) {
     actualizarValorDispositivo();
   });
 
-  btnCalcular.addEventListener("click", () => {
+  btnCalcular?.addEventListener("click", () => {
     alert("Motor financiero pendiente (siguiente iteración)");
   });
 }
 
-/* =============================
-   DISPOSITIVO – REGLAS DE NEGOCIO
-============================= */
+/* =================================================
+   DISPOSITIVO – REGLAS
+================================================= */
+
 function cargarPlanesDispositivo() {
-  const sel = document.getElementById("selectDevicePlan");
+  const sel = getEl("selectDevicePlan");
   sel.options.length = 0;
   addOption(sel, "", "Seleccione plan");
 
   if (!appState.tasa) return;
 
-  const tasaCredito = rates.find(r => r.IdTasa === appState.tasa)?.TasaAnual;
+  const tasaCredito =
+    rates.find(r => r.IdTasa === appState.tasa)?.TasaAnual;
 
-  let planes = devicePlans
-    .filter(p =>
-      p.activo === true &&
-      p.tipoCliente === appState.tipoCliente
-    )
-    .map(p => ({
-      ...p,
-      coincideTasa: p.tasaDispositivo === tasaCredito
-    }))
-    .sort((a, b) => {
-      if (a.coincideTasa !== b.coincideTasa) {
-        return a.coincideTasa ? -1 : 1;
-      }
-      return a.prioridad - b.prioridad;
-    });
-
-  planes.forEach(p => {
-    addOption(
-      sel,
-      p.codigo,
-      `${p.proveedor} – ${p.tipoPlan} – ${p.tasaDispositivo}%`
+  const planes = devicePlans
+    .filter(p => p.activo && p.tipoCliente === appState.tipoCliente)
+    .map(p => ({ ...p, coincideTasa: p.tasaDispositivo === tasaCredito }))
+    .sort((a, b) =>
+      a.coincideTasa !== b.coincideTasa
+        ? a.coincideTasa ? -1 : 1
+        : a.prioridad - b.prioridad
     );
-  });
+
+  planes.forEach(p =>
+    addOption(sel, p.codigo, `${p.proveedor} – ${p.tipoPlan} – ${p.tasaDispositivo}%`)
+  );
 
   const auto = planes.find(p => p.coincideTasa);
   if (auto) {
     sel.value = auto.codigo;
     appState.dispositivo = auto;
-    document.getElementById("deviceProvider").textContent = auto.proveedor;
+    getEl("deviceProvider").textContent = auto.proveedor;
     actualizarValorDispositivo();
   }
 }
 
 function actualizarValorDispositivo() {
-  const lbl = document.getElementById("deviceValueDisplay");
+  const lbl = getEl("deviceValueDisplay");
 
   if (!appState.dispositivo || !appState.plazo) {
     lbl.textContent = "-";
@@ -463,78 +383,37 @@ function actualizarValorDispositivo() {
   }
 
   const anios = appState.plazo / 12;
-  const valor = appState.dispositivo.valoresPorAnio?.[anios];
-
-  lbl.textContent = valor
-    ? Number(valor).toFixed(2)
-    : "-";
+  const val = appState.dispositivo.valoresPorAnio?.[anios];
+  lbl.textContent = val ? Number(val).toFixed(2) : "-";
 }
 
 function limpiarDispositivo() {
-  const sel = document.getElementById("selectDevicePlan");
+  const sel = getEl("selectDevicePlan");
   sel.options.length = 0;
-  document.getElementById("deviceProvider").textContent = "";
-  document.getElementById("deviceValueDisplay").textContent = "-";
+  getEl("deviceProvider").textContent = "";
+  getEl("deviceValueDisplay").textContent = "-";
   appState.dispositivo = null;
 }
 
-/* =============================
-   UTILS
-============================= */
+/* =================================================
+   HELPERS
+================================================= */
+
 function resetAll() {
   ["selectMarca", "selectModelo", "selectTasa", "selectPlazo"]
-    .forEach(id => resetSelect(document.getElementById(id)));
+    .forEach(id => resetSelect(getEl(id)));
 }
 
 function resetSelect(sel) {
+  if (!sel) return;
   sel.options.length = 0;
   addOption(sel, "", "Seleccione");
 }
 
 function addOption(sel, value, text) {
+  if (!sel) return;
   const o = document.createElement("option");
   o.value = value;
   o.textContent = text;
   sel.appendChild(o);
 }
-
-/* ==========================
-   Tabs - Inputs izquierda
-   ========================== */
-document.addEventListener("DOMContentLoaded", () => {
-  const tabButtons = document.querySelectorAll(".tab-btn");
-  const tabPanels = document.querySelectorAll(".tab-panel");
-
-  tabButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const targetTab = btn.dataset.tab;
-
-      // Botones
-      tabButtons.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      // Paneles
-      tabPanels.forEach(panel => {
-        panel.classList.toggle(
-          "active",
-          panel.id === targetTab
-        );
-      });
-    });
-  });
-});
-
-document.querySelectorAll(".tab-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-
-    document.querySelectorAll(".tab-btn")
-      .forEach(b => b.classList.remove("active"));
-
-    document.querySelectorAll(".tab-panel")
-      .forEach(p => p.classList.remove("active"));
-
-    btn.classList.add("active");
-    document.getElementById(btn.dataset.tab)
-      .classList.add("active");
-  });
-});
