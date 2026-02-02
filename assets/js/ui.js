@@ -157,17 +157,24 @@ if (selTipoPersona && inputIdentificacion) {
 
 /* ===== Entrada (% y valor) ligada a Tasa ===== */
 
-// Obtiene PVP actual desde la UI
-function getPVPActual() {
+/* PVP base (solo lectura desde UI) */
+function getPVPBase() {
   const el = document.getElementById("pvp");
   if (!el) return 0;
   return parseFloat(el.textContent.replace(/[^0-9.]/g, "")) || 0;
 }
 
+/* PVP efectivo (PVP - descuento). 
+   Si aún no existe, usa PVP base */
 function getPVPEfectivo() {
   const el = document.getElementById("inputPvpFinal");
-  if (!el) return 0;
-  return parseFloat(el.value) || 0;
+  const pvpFinal = el ? parseFloat(el.value) : NaN;
+
+  if (!isNaN(pvpFinal) && pvpFinal > 0) {
+    return pvpFinal;
+  }
+
+  return getPVPBase();
 }
 
 function round2(v) {
@@ -186,23 +193,20 @@ if (selectTasa && inputEntradaPorcentaje && inputEntrada) {
     const pvp = getPVPEfectivo();
     const porcentaje = parseFloat(tasa.PerEntrada);
 
-    if (isNaN(porcentaje)) return;
+    if (isNaN(porcentaje) || pvp <= 0) return;
 
     inputEntradaPorcentaje.value = porcentaje;
-
-    if (pvp > 0) {
-      inputEntrada.value = round2((pvp * porcentaje) / 100);
-    }
+    inputEntrada.value = round2((pvp * porcentaje) / 100);
   });
 }
 
 /* Si cambia el % → recalcula valor */
 if (inputEntradaPorcentaje && inputEntrada) {
   inputEntradaPorcentaje.addEventListener("input", () => {
-    const pvp = getPVPActual();
+    const pvp = getPVPEfectivo();
     const porcentaje = parseFloat(inputEntradaPorcentaje.value);
 
-    if (!pvp || isNaN(porcentaje)) return;
+    if (isNaN(porcentaje) || pvp <= 0) return;
 
     inputEntrada.value = round2((pvp * porcentaje) / 100);
   });
@@ -211,15 +215,15 @@ if (inputEntradaPorcentaje && inputEntrada) {
 /* Si cambia el valor → recalcula % */
 if (inputEntrada && inputEntradaPorcentaje) {
   inputEntrada.addEventListener("input", () => {
-    const pvp = getPVPActual();
+    const pvp = getPVPEfectivo();
     const valor = parseFloat(inputEntrada.value);
 
-    if (!pvp || isNaN(valor)) return;
+    if (isNaN(valor) || pvp <= 0) return;
 
     inputEntradaPorcentaje.value = round2((valor / pvp) * 100);
   });
 }
-  
+
 
   // Estado inicial coherente
   selTipoPersona.dispatchEvent(new Event("change"));
