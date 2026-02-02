@@ -67,6 +67,52 @@ function initUI() {
 
   const btnCalcular = document.getElementById("btnCalcular");
 
+  /* logica de calculo de porcentaje de descuento */
+  const inputDescPorcentaje = document.getElementById("inputDescPorcentaje");
+  const inputValorDesc = document.getElementById("inputValorDesc"); 
+  const inputPvpFinal = document.getElementById("inputPvpFinal");
+  const spanPvp = document.getElementById("pvp");
+
+  function getPvpBase() {
+  const value = parseFloat(spanPvp.textContent.replace(",", ""));
+  return isNaN(value) ? 0 : value;
+  }
+
+  inputDescPorcentaje.addEventListener("input", () => {
+  const pvpBase = getPvpBase();
+  const porcentaje = parseFloat(inputDescPorcentaje.value);
+
+  if (!pvpBase || isNaN(porcentaje)) {
+    inputValorDesc.value = "";
+    inputPvpFinal.value = "";
+    return;
+  }
+
+  const valorDescuento = pvpBase * (porcentaje / 100);
+  const pvpFinal = pvpBase - valorDescuento;
+
+  inputValorDesc.value = valorDescuento.toFixed(2);
+  inputPvpFinal.value = pvpFinal.toFixed(2);
+  });
+
+  inputValorDesc.addEventListener("input", () => {
+  const pvpBase = getPvpBase();
+  const valorDescuento = parseFloat(inputValorDesc.value);
+
+  if (!pvpBase || isNaN(valorDescuento)) {
+    inputDescPorcentaje.value = "";
+    inputPvpFinal.value = "";
+    return;
+  }
+
+  const porcentaje = (valorDescuento / pvpBase) * 100;
+  const pvpFinal = pvpBase - valorDescuento;
+
+  inputDescPorcentaje.value = porcentaje.toFixed(2);
+  inputPvpFinal.value = pvpFinal.toFixed(2);
+  });
+
+
 /* ===== Identificación: Cédula / RUC ===== */
 if (selTipoPersona && inputIdentificacion) {
 
