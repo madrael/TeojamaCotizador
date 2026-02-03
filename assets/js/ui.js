@@ -112,36 +112,43 @@ function initUI() {
 
 function recalcularDesdeDescuento() {
   const pvpBase = getPVPBase();
-  if (!pvpBase) return;
 
-  const activo = document.activeElement;
+  if (!pvpBase) {
+    inputValorDesc.value = "";
+    inputPvpFinal.value = "";
+    return;
+  }
 
-  // Usuario escribe % descuento
-  if (activo === inputDescPorcentaje) {
-    const txt = inputDescPorcentaje.value.trim();
-    if (txt === "" || txt === "." || txt === "-") return;
+  const porcRaw = inputDescPorcentaje.value;
+  const valRaw  = inputValorDesc.value;
 
-    const porc = parseFloat(txt);
-    if (isNaN(porc)) return;
+  const porc = parseFloat(porcRaw);
+  const val  = parseFloat(valRaw);
 
+  // CASO CLAVE: si ambos están vacíos → reset total
+  if (porcRaw === "" && valRaw === "") {
+    inputValorDesc.value = "";
+    inputPvpFinal.value = pvpBase.toFixed(2);
+    return;
+  }
+
+  // % → recalcula valor
+  if (!isNaN(porc)) {
     const desc = pvpBase * (porc / 100);
     inputValorDesc.value = desc.toFixed(2);
     inputPvpFinal.value = (pvpBase - desc).toFixed(2);
     return;
   }
 
-  // Usuario escribe valor descuento
-  if (activo === inputValorDesc) {
-    const txt = inputValorDesc.value.trim();
-    if (txt === "" || txt === "." || txt === "-") return;
-
-    const val = parseFloat(txt);
-    if (isNaN(val)) return;
-
+  // valor → recalcula %
+  if (!isNaN(val)) {
     inputDescPorcentaje.value = round2((val / pvpBase) * 100);
     inputPvpFinal.value = (pvpBase - val).toFixed(2);
     return;
   }
+
+  // fallback seguro
+  inputPvpFinal.value = pvpBase.toFixed(2);
 }
 
 inputDescPorcentaje?.addEventListener("input", () => {
