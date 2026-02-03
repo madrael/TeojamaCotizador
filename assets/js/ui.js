@@ -106,80 +106,109 @@ function initUI() {
   const inputEdadCliente = getEl("inputEdadCliente");
 
   /* =================================================
-     DESCUENTO (PVP → PVP EFECTIVO)
-  ================================================= */
+   DESCUENTO (PVP → PVP EFECTIVO)
+   FIX: no romper decimales ni pisar campos activos
+================================================= */
 
-  function recalcularDesdeDescuento() {
-    const pvpBase = getPVPBase();
+function recalcularDesdeDescuento() {
+  const pvpBase = getPVPBase();
+  if (!pvpBase) return;
 
-    if (!pvpBase) {
-      inputValorDesc.value = "";
-      inputPvpFinal.value = "";
-      return;
-    }
+  const activo = document.activeElement;
 
-    const porc = parseFloat(inputDescPorcentaje.value);
-    const val = parseFloat(inputValorDesc.value);
+  // Usuario escribe % descuento
+  if (activo === inputDescPorcentaje) {
+    const txt = inputDescPorcentaje.value.trim();
+    if (txt === "" || txt === "." || txt === "-") return;
 
-    if (!isNaN(porc)) {
-      const desc = pvpBase * (porc / 100);
-      inputValorDesc.value = desc.toFixed(2);
-      inputPvpFinal.value = (pvpBase - desc).toFixed(2);
-    }
+    const porc = parseFloat(txt);
+    if (isNaN(porc)) return;
 
-    if (!isNaN(val)) {
-      inputDescPorcentaje.value = round2((val / pvpBase) * 100);
-      inputPvpFinal.value = (pvpBase - val).toFixed(2);
-    }
+    const desc = pvpBase * (porc / 100);
+    inputValorDesc.value = desc.toFixed(2);
+    inputPvpFinal.value = (pvpBase - desc).toFixed(2);
+    return;
   }
 
-  inputDescPorcentaje?.addEventListener("input", recalcularDesdeDescuento);
-  inputValorDesc?.addEventListener("input", recalcularDesdeDescuento);
+  // Usuario escribe valor descuento
+  if (activo === inputValorDesc) {
+    const txt = inputValorDesc.value.trim();
+    if (txt === "" || txt === "." || txt === "-") return;
 
-  /* =================================================
-     ENTRADA (% y valor) – basada en PVP EFECTIVO
-  ================================================= */
+    const val = parseFloat(txt);
+    if (isNaN(val)) return;
 
-  function recalcularEntradaDesdePVPEfectivo() {
-    if (!selTasa.value) {
-      inputEntrada.value = "";
-      inputEntradaPorcentaje.value = "";
-      return;
-    }
+    inputDescPorcentaje.value = round2((val / pvpBase) * 100);
+    inputPvpFinal.value = (pvpBase - val).toFixed(2);
+    return;
+  }
+}
 
-    const tasa = rates.find(r => String(r.IdTasa) === String(selTasa.value));
-    if (!tasa || tasa.PerEntrada == null) return;
+inputDescPorcentaje?.addEventListener("input", () => {
+  recalcularDesdeDescuento();
+  recalcularValorEntradaDesdePVPEfectivo();
+});
 
-    const pvp = getPVPEfectivo();
-    const porc = parseFloat(tasa.PerEntrada);
+inputValorDesc?.addEventListener("input", () => {
+  recalcularDesdeDescuento();
+  recalcularValorEntradaDesdePVPEfectivo();
+});
 
-    if (pvp <= 0 || isNaN(porc)) return;
+/* =================================================
+   ENTRADA – basada en PVP EFECTIVO
+   Regla: descuento NO pisa % entrada
+================================================= */
 
-    inputEntradaPorcentaje.value = porc;
+function recalcularEntradaDesdePVPEfectivo() {
+  if (!selTasa.value) {
+    inputEntrada.value = "";
+    inputEntradaPorcentaje.value = "";
+    return;
+  }
+
+  const tasa = rates.find(r => String(r.IdTasa) === String(selTasa.value));
+  if (!tasa || tasa.PerEntrada == null) return;
+
+  const pvp = getPVPEfectivo();
+  const porc = parseFloat(tasa.PerEntrada);
+
+  if (pvp <= 0 || isNaN(porc)) return;
+
+  inputEntradaPorcentaje.value = porc;
+  inputEntrada.value = round2((pvp * porc) / 100);
+}
+
+function recalcularValorEntradaDesdePVPEfectivo() {
+  const pvp = getPVPEfectivo();
+  const porc = parseFloat(inputEntradaPorcentaje.value);
+
+  if (!pvp || isNaN(porc)) return;
+
+  inputEntrada.value = round2((pvp * porc) / 100);
+}
+
+inputEntradaPorcentaje?.addEventListener("input", () => {
+  const pvp = getPVPEfectivo();
+  const porc = parseFloat(inputEntradaPorcentaje.value);
+  if (!isNaN(porc) && pvp > 0) {
     inputEntrada.value = round2((pvp * porc) / 100);
   }
+});
 
-  inputEntradaPorcentaje?.addEventListener("input", () => {
-    const pvp = getPVPEfectivo();
-    const porc = parseFloat(inputEntradaPorcentaje.value);
-    if (!isNaN(porc) && pvp > 0) {
-      inputEntrada.value = round2((pvp * porc) / 100);
-    }
-  });
+inputEntrada?.addEventListener("input", () => {
+  const pvp = getPVPEfectivo();
+  const val = parseFloat(inputEntrada.value);
+  if (!isNaN(val) && pvp > 0) {
+    inputEntradaPorcentaje.value = round2((val / pvp) * 100);
+  }
+});
 
-  inputEntrada?.addEventListener("input", () => {
-    const pvp = getPVPEfectivo();
-    const val = parseFloat(inputEntrada.value);
-    if (!isNaN(val) && pvp > 0) {
-      inputEntradaPorcentaje.value = round2((val / pvp) * 100);
-    }
-  });
+inputPvpFinal?.addEventListener("input", () => {
+  recalcularValorEntradaDesdePVPEfectivo();
+});
 
-  inputDescPorcentaje?.addEventListener("input", recalcularEntradaDesdePVPEfectivo);
-  inputValorDesc?.addEventListener("input", recalcularEntradaDesdePVPEfectivo);
-  inputPvpFinal?.addEventListener("input", recalcularEntradaDesdePVPEfectivo);
+selTasa?.addEventListener("change", recalcularEntradaDesdePVPEfectivo);
 
-  selTasa?.addEventListener("change", recalcularEntradaDesdePVPEfectivo);
 
   /* =================================================
      IDENTIFICACIÓN – CÉDULA / RUC
