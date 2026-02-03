@@ -112,12 +112,9 @@ function initUI() {
 
 function recalcularDesdeDescuento() {
   const pvpBase = getPVPBase();
+  if (!pvpBase) return;
 
-  if (!pvpBase) {
-    inputValorDesc.value = "";
-    inputPvpFinal.value = "";
-    return;
-  }
+  const active = document.activeElement;
 
   const porcRaw = inputDescPorcentaje.value;
   const valRaw  = inputValorDesc.value;
@@ -125,41 +122,29 @@ function recalcularDesdeDescuento() {
   const porc = parseFloat(porcRaw);
   const val  = parseFloat(valRaw);
 
-  // CASO CLAVE: si ambos están vacíos → reset total
+  // Si ambos están vacíos → reset limpio
   if (porcRaw === "" && valRaw === "") {
     inputValorDesc.value = "";
     inputPvpFinal.value = pvpBase.toFixed(2);
     return;
   }
 
-  // % → recalcula valor
-  if (!isNaN(porc)) {
+  // Usuario edita % → solo calculamos VALOR
+  if (active === inputDescPorcentaje && !isNaN(porc)) {
     const desc = pvpBase * (porc / 100);
     inputValorDesc.value = desc.toFixed(2);
     inputPvpFinal.value = (pvpBase - desc).toFixed(2);
     return;
   }
 
-  // valor → recalcula %
-  if (!isNaN(val)) {
+  // Usuario edita VALOR → solo calculamos %
+  if (active === inputValorDesc && !isNaN(val)) {
     inputDescPorcentaje.value = round2((val / pvpBase) * 100);
     inputPvpFinal.value = (pvpBase - val).toFixed(2);
     return;
   }
-
-  // fallback seguro
-  inputPvpFinal.value = pvpBase.toFixed(2);
 }
 
-inputDescPorcentaje?.addEventListener("input", () => {
-  recalcularDesdeDescuento();
-  recalcularValorEntradaDesdePVPEfectivo();
-});
-
-inputValorDesc?.addEventListener("input", () => {
-  recalcularDesdeDescuento();
-  recalcularValorEntradaDesdePVPEfectivo();
-});
 
 /* =================================================
    ENTRADA – basada en PVP EFECTIVO
