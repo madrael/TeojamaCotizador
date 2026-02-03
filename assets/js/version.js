@@ -7,7 +7,7 @@
  Descripción   : Control centralizado de versión de la app
 ========================================================= */
 
-const APP_VERSION = "V 2.0 · Compilación 1.68";
+const APP_VERSION = "V 2.0 · Compilación 1.69";
 
 /* Inyecta versión en todos los elementos .app-version */
 document.addEventListener("DOMContentLoaded", () => {
