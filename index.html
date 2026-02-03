@@ -193,12 +193,28 @@
                             <select id="selectMarca"></select>
                         </div>
 
-                        <!-- Modelo -->
-                        <div style="margin-top:10px;">
-                            <label>Modelo</label>
-                            <br />
-                            <select id="selectModelo"></select>                        
-                        </div>
+<!-- Año y Modelo -->
+<div style="margin-top:10px;">
+  <label>Año / Modelo</label>
+  <br />
+
+  <div class="entrada-row">
+    <!-- Año del vehículo -->
+    <input
+      type="number"
+      id="inputAnioModelo"
+      placeholder="Año"
+      min="1990"
+      max="2099"
+      step="1"
+      style="width:90px;"
+    />
+
+    <!-- Modelo -->
+    <select id="selectModelo"></select>
+  </div>
+</div>
+
 
 <!-- PVP base (informativo) -->
 <div style="margin-top:6px;">
