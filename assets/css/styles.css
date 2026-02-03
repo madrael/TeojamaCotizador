@@ -362,6 +362,7 @@ p {
 }
 
 /* Inputs porcentaje */
+.app-left .tabs #inputAnioModelo,
 .app-left .tabs #inputEntradaPorcentaje,
 .app-left .tabs #inputDescPorcentaje {
   width: 100%;
