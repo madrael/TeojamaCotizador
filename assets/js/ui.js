@@ -122,28 +122,30 @@ function recalcularDesdeDescuento() {
   const porc = parseFloat(porcRaw);
   const val  = parseFloat(valRaw);
 
-  // Si ambos están vacíos → reset limpio
-  if (porcRaw === "" && valRaw === "") {
+  // Si el usuario borra completamente → reset
+  if (
+    (active === inputDescPorcentaje && porcRaw === "") ||
+    (active === inputValorDesc && valRaw === "")
+  ) {
     inputValorDesc.value = "";
     inputPvpFinal.value = pvpBase.toFixed(2);
     return;
   }
 
-  // Usuario edita % → solo calculamos VALOR
+  // % → valor
   if (active === inputDescPorcentaje && !isNaN(porc)) {
     const desc = pvpBase * (porc / 100);
-    inputValorDesc.value = desc.toFixed(2);
-    inputPvpFinal.value = (pvpBase - desc).toFixed(2);
-    return;
+    inputValorDesc.value = round2(desc).toFixed(2);
+    inputPvpFinal.value = round2(pvpBase - desc).toFixed(2);
   }
 
-  // Usuario edita VALOR → solo calculamos %
+  // valor → %
   if (active === inputValorDesc && !isNaN(val)) {
     inputDescPorcentaje.value = round2((val / pvpBase) * 100);
-    inputPvpFinal.value = (pvpBase - val).toFixed(2);
-    return;
+    inputPvpFinal.value = round2(pvpBase - val).toFixed(2);
   }
 }
+
 
 
 /* =================================================
