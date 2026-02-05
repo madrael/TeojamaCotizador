@@ -105,87 +105,72 @@ function initUI() {
   const inputFechaNacimiento = getEl("inputFechaNacimiento");
   const inputEdadCliente = getEl("inputEdadCliente");
 
-    /* =================================================
-     DESCUENTO (PVP → PVP EFECTIVO)
-     FIX: no romper decimales, permitir borrar y recalcular
-  ================================================= */
+/* =================================================
+   DESCUENTO (PVP → PVP EFECTIVO)
+   FIX: no romper decimales, permitir borrar y recalcular
+================================================= */
 
-  function resetDescuentoToBase() {
-    const pvpBase = getPVPBase();
-    if (!pvpBase) return;
+function resetDescuentoToBase() {
+  const pvpBase = getPVPBase();
+  if (!pvpBase) return;
 
-    if (inputDescPorcentaje) inputDescPorcentaje.value = "";
-    if (inputValorDesc) inputValorDesc.value = "";
-    if (inputPvpFinal) inputPvpFinal.value = pvpBase.toFixed(2);
-  }
+  inputDescPorcentaje.value = "";
+  inputValorDesc.value = "";
+  inputPvpFinal.value = pvpBase.toFixed(2);
+  recalcularValorEntradaDesdePVPEfectivo();
+}
 
-  function recalcularDesdeDescuento() {
-    const pvpBase = getPVPBase();
-    if (!pvpBase) return;
+function recalcularDesdeDescuento() {
+  const pvpBase = getPVPBase();
+  if (!pvpBase) return;
 
-    const active = document.activeElement;
+  const active = document.activeElement;
+  const porcRaw = inputDescPorcentaje.value.trim();
+  const valRaw  = inputValorDesc.value.trim();
 
-    const porcRaw = inputDescPorcentaje ? inputDescPorcentaje.value.trim() : "";
-    const valRaw  = inputValorDesc ? inputValorDesc.value.trim() : "";
-
+  /* ---- BORRADO COMPLETO → RESET ---- */
   if (active === inputDescPorcentaje && porcRaw === "") {
     inputValorDesc.value = "";
-    inputDescPorcentaje.value = "";
     inputPvpFinal.value = pvpBase.toFixed(2);
     recalcularValorEntradaDesdePVPEfectivo();
     return;
   }
 
   if (active === inputValorDesc && valRaw === "") {
-    inputValorDesc.value = "";
     inputDescPorcentaje.value = "";
     inputPvpFinal.value = pvpBase.toFixed(2);
     recalcularValorEntradaDesdePVPEfectivo();
     return;
-  }     
-    // % -> valor descuento / pvp final
-    if (active === inputDescPorcentaje) {
-      const porc = parseFloat(porcRaw);
-      if (isNaN(porc)) return;
-
-      const desc = pvpBase * (porc / 100);
-      if (inputValorDesc) inputValorDesc.value = round2(desc).toFixed(2);
-      if (inputPvpFinal)  inputPvpFinal.value  = round2(pvpBase - desc).toFixed(2);
-      return;
-    }
-
-if (active === inputDescPorcentaje && !isNaN(porc)) {
-  const desc = pvpBase * (porc / 100);
-  inputValorDesc.value = round2(desc).toFixed(2);
-  inputPvpFinal.value = round2(pvpBase - desc).toFixed(2);
-  recalcularValorEntradaDesdePVPEfectivo();
-}
-
-     if (active === inputValorDesc && !isNaN(val)) {
-  inputDescPorcentaje.value = round2((val / pvpBase) * 100);
-  inputPvpFinal.value = round2(pvpBase - val).toFixed(2);
-  recalcularValorEntradaDesdePVPEfectivo();
-}
-
-
-     
-    // valor -> % / pvp final
-    if (active === inputValorDesc) {
-      const val = parseFloat(valRaw);
-      if (isNaN(val)) return;
-
-      if (inputDescPorcentaje) inputDescPorcentaje.value = round2((val / pvpBase) * 100);
-      if (inputPvpFinal)       inputPvpFinal.value       = round2(pvpBase - val).toFixed(2);
-      return;
-    }
   }
 
-  // LISTENERS (esto es lo que te falta ahora)
-  inputDescPorcentaje?.addEventListener("input", recalcularDesdeDescuento);
-  inputValorDesc?.addEventListener("input", recalcularDesdeDescuento);
+  /* ---- % → VALOR DESCUENTO ---- */
+  if (active === inputDescPorcentaje) {
+    const porc = parseFloat(porcRaw);
+    if (isNaN(porc)) return;
 
+    const desc = pvpBase * (porc / 100);
+    inputValorDesc.value = round2(desc).toFixed(2);
+    inputPvpFinal.value  = round2(pvpBase - desc).toFixed(2);
+    recalcularValorEntradaDesdePVPEfectivo();
+    return;
+  }
 
+  /* ---- VALOR → % DESCUENTO ---- */
+  if (active === inputValorDesc) {
+    const val = parseFloat(valRaw);
+    if (isNaN(val)) return;
 
+    inputDescPorcentaje.value = round2((val / pvpBase) * 100);
+    inputPvpFinal.value       = round2(pvpBase - val).toFixed(2);
+    recalcularValorEntradaDesdePVPEfectivo();
+  }
+}
+
+/* LISTENERS */
+inputDescPorcentaje?.addEventListener("input", recalcularDesdeDescuento);
+inputValorDesc?.addEventListener("input", recalcularDesdeDescuento);
+
+   
 /* =================================================
    ENTRADA – basada en PVP EFECTIVO
    Regla: descuento NO pisa % entrada
