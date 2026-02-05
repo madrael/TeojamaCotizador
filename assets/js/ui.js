@@ -105,6 +105,13 @@ function initUI() {
   const inputFechaNacimiento = getEl("inputFechaNacimiento");
   const inputEdadCliente = getEl("inputEdadCliente");
 
+  /* año modelo */
+  const inputAnioModelo = getEl("inputAnioModelo");
+
+  if (inputAnioModelo && !inputAnioModelo.value) {
+  inputAnioModelo.value = new Date().getFullYear();
+  }
+   
 /* =================================================
    DESCUENTO (PVP → PVP EFECTIVO)
    FIX: no romper decimales, permitir borrar y recalcular
