@@ -315,7 +315,8 @@ selTasa?.addEventListener("change", recalcularEntradaDesdePVPEfectivo);
     );
 
     getEl("pvp").textContent = veh ? Number(veh.PVP).toFixed(2) : "0.00";
-
+    resetDescuentoToBase();
+    
     rates.forEach(r => addOption(selTasa, r.IdTasa, `${r.TasaAnual}%`));
   });
 
