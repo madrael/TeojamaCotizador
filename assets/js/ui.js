@@ -147,7 +147,6 @@ function recalcularDesdeDescuento() {
 }
 
 
-
 /* =================================================
    ENTRADA – basada en PVP EFECTIVO
    Regla: descuento NO pisa % entrada
