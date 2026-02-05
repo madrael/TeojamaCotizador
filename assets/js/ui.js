@@ -128,15 +128,21 @@ function initUI() {
     const porcRaw = inputDescPorcentaje ? inputDescPorcentaje.value.trim() : "";
     const valRaw  = inputValorDesc ? inputValorDesc.value.trim() : "";
 
-    // Si el usuario borra completamente el campo activo -> vuelve a PVP base
-    if (
-      (active === inputDescPorcentaje && porcRaw === "") ||
-      (active === inputValorDesc && valRaw === "")
-    ) {
-      resetDescuentoToBase();
-      return;
-    }
+  if (active === inputDescPorcentaje && porcRaw === "") {
+    inputValorDesc.value = "";
+    inputDescPorcentaje.value = "";
+    inputPvpFinal.value = pvpBase.toFixed(2);
+    recalcularValorEntradaDesdePVPEfectivo();
+    return;
+  }
 
+  if (active === inputValorDesc && valRaw === "") {
+    inputValorDesc.value = "";
+    inputDescPorcentaje.value = "";
+    inputPvpFinal.value = pvpBase.toFixed(2);
+    recalcularValorEntradaDesdePVPEfectivo();
+    return;
+  }     
     // % -> valor descuento / pvp final
     if (active === inputDescPorcentaje) {
       const porc = parseFloat(porcRaw);
@@ -148,6 +154,21 @@ function initUI() {
       return;
     }
 
+if (active === inputDescPorcentaje && !isNaN(porc)) {
+  const desc = pvpBase * (porc / 100);
+  inputValorDesc.value = round2(desc).toFixed(2);
+  inputPvpFinal.value = round2(pvpBase - desc).toFixed(2);
+  recalcularValorEntradaDesdePVPEfectivo();
+}
+
+     if (active === inputValorDesc && !isNaN(val)) {
+  inputDescPorcentaje.value = round2((val / pvpBase) * 100);
+  inputPvpFinal.value = round2(pvpBase - val).toFixed(2);
+  recalcularValorEntradaDesdePVPEfectivo();
+}
+
+
+     
     // valor -> % / pvp final
     if (active === inputValorDesc) {
       const val = parseFloat(valRaw);
