@@ -105,46 +105,64 @@ function initUI() {
   const inputFechaNacimiento = getEl("inputFechaNacimiento");
   const inputEdadCliente = getEl("inputEdadCliente");
 
-  /* =================================================
-   DESCUENTO (PVP → PVP EFECTIVO)
-   FIX: no romper decimales ni pisar campos activos
-================================================= */
+    /* =================================================
+     DESCUENTO (PVP → PVP EFECTIVO)
+     FIX: no romper decimales, permitir borrar y recalcular
+  ================================================= */
 
-function recalcularDesdeDescuento() {
-  const pvpBase = getPVPBase();
-  if (!pvpBase) return;
+  function resetDescuentoToBase() {
+    const pvpBase = getPVPBase();
+    if (!pvpBase) return;
 
-  const active = document.activeElement;
-
-  const porcRaw = inputDescPorcentaje.value;
-  const valRaw  = inputValorDesc.value;
-
-  const porc = parseFloat(porcRaw);
-  const val  = parseFloat(valRaw);
-
-  // Si el usuario borra completamente → reset
-  if (
-    (active === inputDescPorcentaje && porcRaw === "") ||
-    (active === inputValorDesc && valRaw === "")
-  ) {
-    inputValorDesc.value = "";
-    inputPvpFinal.value = pvpBase.toFixed(2);
-    return;
+    if (inputDescPorcentaje) inputDescPorcentaje.value = "";
+    if (inputValorDesc) inputValorDesc.value = "";
+    if (inputPvpFinal) inputPvpFinal.value = pvpBase.toFixed(2);
   }
 
-  // % → valor
-  if (active === inputDescPorcentaje && !isNaN(porc)) {
-    const desc = pvpBase * (porc / 100);
-    inputValorDesc.value = round2(desc).toFixed(2);
-    inputPvpFinal.value = round2(pvpBase - desc).toFixed(2);
+  function recalcularDesdeDescuento() {
+    const pvpBase = getPVPBase();
+    if (!pvpBase) return;
+
+    const active = document.activeElement;
+
+    const porcRaw = inputDescPorcentaje ? inputDescPorcentaje.value.trim() : "";
+    const valRaw  = inputValorDesc ? inputValorDesc.value.trim() : "";
+
+    // Si el usuario borra completamente el campo activo -> vuelve a PVP base
+    if (
+      (active === inputDescPorcentaje && porcRaw === "") ||
+      (active === inputValorDesc && valRaw === "")
+    ) {
+      resetDescuentoToBase();
+      return;
+    }
+
+    // % -> valor descuento / pvp final
+    if (active === inputDescPorcentaje) {
+      const porc = parseFloat(porcRaw);
+      if (isNaN(porc)) return;
+
+      const desc = pvpBase * (porc / 100);
+      if (inputValorDesc) inputValorDesc.value = round2(desc).toFixed(2);
+      if (inputPvpFinal)  inputPvpFinal.value  = round2(pvpBase - desc).toFixed(2);
+      return;
+    }
+
+    // valor -> % / pvp final
+    if (active === inputValorDesc) {
+      const val = parseFloat(valRaw);
+      if (isNaN(val)) return;
+
+      if (inputDescPorcentaje) inputDescPorcentaje.value = round2((val / pvpBase) * 100);
+      if (inputPvpFinal)       inputPvpFinal.value       = round2(pvpBase - val).toFixed(2);
+      return;
+    }
   }
 
-  // valor → %
-  if (active === inputValorDesc && !isNaN(val)) {
-    inputDescPorcentaje.value = round2((val / pvpBase) * 100);
-    inputPvpFinal.value = round2(pvpBase - val).toFixed(2);
-  }
-}
+  // LISTENERS (esto es lo que te falta ahora)
+  inputDescPorcentaje?.addEventListener("input", recalcularDesdeDescuento);
+  inputValorDesc?.addEventListener("input", recalcularDesdeDescuento);
+
 
 
 /* =================================================
