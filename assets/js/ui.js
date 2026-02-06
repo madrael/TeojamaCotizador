@@ -173,9 +173,41 @@ function recalcularDesdeDescuento() {
   }
 }
 
+function recalcularDesdePVPEfectivo() {
+  const pvpBase = getPVPBase();
+  if (!pvpBase) return;
+
+  const pvpFinal = parseFloat(inputPvpFinal.value);
+  if (isNaN(pvpFinal) || pvpFinal <= 0) return;
+
+  // Si no hay descuento
+  if (pvpFinal >= pvpBase) {
+    inputDescPorcentaje.value = "";
+    inputValorDesc.value = "";
+    inputPvpFinal.value = pvpBase.toFixed(2);
+    recalcularValorEntradaDesdePVPEfectivo();
+    return;
+  }
+
+  const desc = pvpBase - pvpFinal;
+  const porc = (desc / pvpBase) * 100;
+
+  inputValorDesc.value = round2(desc).toFixed(2);
+  inputDescPorcentaje.value = round2(porc);
+  inputPvpFinal.value = round2(pvpFinal).toFixed(2);
+
+  recalcularValorEntradaDesdePVPEfectivo();
+}  
+
 /* LISTENERS */
 inputDescPorcentaje?.addEventListener("input", recalcularDesdeDescuento);
 inputValorDesc?.addEventListener("input", recalcularDesdeDescuento);
+
+inputPvpFinal?.addEventListener("input", () => {
+  // Evita loop cuando el cambio viene del descuento
+  if (document.activeElement !== inputPvpFinal) return;
+  recalcularDesdePVPEfectivo();
+});
 
    
 /* =================================================
