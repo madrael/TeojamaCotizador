@@ -203,11 +203,10 @@ function recalcularDesdePVPEfectivo() {
 inputDescPorcentaje?.addEventListener("input", recalcularDesdeDescuento);
 inputValorDesc?.addEventListener("input", recalcularDesdeDescuento);
 
-inputPvpFinal?.addEventListener("input", () => {
-  // Evita loop cuando el cambio viene del descuento
-  if (document.activeElement !== inputPvpFinal) return;
+inputPvpFinal?.addEventListener("blur", () => {
   recalcularDesdePVPEfectivo();
 });
+
 
    
 /* =================================================
