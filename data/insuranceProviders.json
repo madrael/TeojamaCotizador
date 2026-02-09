@@ -1,11 +1,11 @@
 [
   {
-    "providerId": "TECS001",
+    "providerId": "PRV001",
     "providerName": "TECNISEGUROS",
     "active": true
   },
   {
-    "providerId": "ORLS001",
+    "providerId": "PRV002",
     "providerName": "ORLANDO ESPINOZA",
     "active": true
   }
