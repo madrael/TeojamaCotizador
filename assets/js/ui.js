@@ -137,6 +137,7 @@ function recalcularDesdeDescuento() {
 
   /* ---- BORRADO COMPLETO → RESET ---- */
   if (active === inputDescPorcentaje && porcRaw === "") {
+    inputDescPorcentaje.value = "";   // FIX: limpiar explícitamente
     inputValorDesc.value = "";
     inputPvpFinal.value = pvpBase.toFixed(2);
     recalcularValorEntradaDesdePVPEfectivo();
@@ -144,6 +145,7 @@ function recalcularDesdeDescuento() {
   }
 
   if (active === inputValorDesc && valRaw === "") {
+    inputValorDesc.value = "";        // FIX: limpiar explícitamente
     inputDescPorcentaje.value = "";
     inputPvpFinal.value = pvpBase.toFixed(2);
     recalcularValorEntradaDesdePVPEfectivo();
@@ -197,7 +199,7 @@ function recalcularDesdePVPEfectivo() {
   inputPvpFinal.value = round2(pvpFinal).toFixed(2);
 
   recalcularValorEntradaDesdePVPEfectivo();
-}  
+}
 
 /* LISTENERS */
 inputDescPorcentaje?.addEventListener("input", recalcularDesdeDescuento);
@@ -206,7 +208,6 @@ inputValorDesc?.addEventListener("input", recalcularDesdeDescuento);
 inputPvpFinal?.addEventListener("blur", () => {
   recalcularDesdePVPEfectivo();
 });
-
 
    
 /* =================================================
