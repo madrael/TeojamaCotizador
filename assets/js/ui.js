@@ -208,7 +208,6 @@ inputValorDesc?.addEventListener("input", recalcularDesdeDescuento);
 inputPvpFinal?.addEventListener("blur", () => {
   recalcularDesdePVPEfectivo();
 });
-
    
 /* =================================================
    ENTRADA – basada en PVP EFECTIVO
@@ -241,30 +240,44 @@ function recalcularValorEntradaDesdePVPEfectivo() {
   if (!pvp || isNaN(porc)) return;
 
   inputEntrada.value = round2((pvp * porc) / 100);
+
+  // Si hay tasa seleccionada, la tasa gobierna el % base
+  if (selTasa.value) {
+    recalcularEntradaDesdePVPEfectivo();
+  }
 }
 
+/* ---- LISTENERS ---- */
+
+// Usuario edita % de entrada (manual)
 inputEntradaPorcentaje?.addEventListener("input", () => {
   const pvp = getPVPEfectivo();
   const porc = parseFloat(inputEntradaPorcentaje.value);
+
   if (!isNaN(porc) && pvp > 0) {
     inputEntrada.value = round2((pvp * porc) / 100);
   }
 });
 
+// Usuario edita valor de entrada (manual)
 inputEntrada?.addEventListener("input", () => {
   const pvp = getPVPEfectivo();
   const val = parseFloat(inputEntrada.value);
+
   if (!isNaN(val) && pvp > 0) {
     inputEntradaPorcentaje.value = round2((val / pvp) * 100);
   }
 });
 
-inputPvpFinal?.addEventListener("input", () => {
+// Cambio de PVP efectivo (por descuento o edición directa)
+inputPvpFinal?.addEventListener("blur", () => {
   recalcularValorEntradaDesdePVPEfectivo();
 });
 
-selTasa?.addEventListener("change", recalcularEntradaDesdePVPEfectivo);
-
+// Cambio de tasa
+selTasa?.addEventListener("change", () => {
+  recalcularEntradaDesdePVPEfectivo();
+});
 
   /* =================================================
      IDENTIFICACIÓN – CÉDULA / RUC
