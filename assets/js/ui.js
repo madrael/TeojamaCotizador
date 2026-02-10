@@ -521,18 +521,6 @@ function limpiarDispositivo() {
   appState.dispositivo = null;
 }
 
-/* carga lista seguro */
-async function loadInsuranceProviders() {
-  try {
-    const res = await fetch("assets/data/insuranceProviders.json");
-    insuranceProviders = await res.json();
-  } catch (err) {
-    console.error("Error cargando insuranceProviders.json", err);
-    insuranceProviders = [];
-  }
-}
-
-
 /* =================================================
    HELPERS
 ================================================= */
