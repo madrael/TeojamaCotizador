@@ -13,6 +13,7 @@
 let vehicles = [];
 let rates = [];
 let devicePlans = [];
+let insuranceProviders = [];
 
 const appState = {
   tipoVehiculo: null,
