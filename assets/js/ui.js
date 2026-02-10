@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   vehicles = await loadVehicles();
   rates = await loadRates();
   devicePlans = await loadDevicePlans();
+  await loadInsuranceProviders(); 
   initUI();
 });
 
@@ -519,6 +520,18 @@ function limpiarDispositivo() {
   getEl("deviceValueDisplay").textContent = "-";
   appState.dispositivo = null;
 }
+
+/* carga lista seguro */
+async function loadInsuranceProviders() {
+  try {
+    const res = await fetch("assets/data/insuranceProviders.json");
+    insuranceProviders = await res.json();
+  } catch (err) {
+    console.error("Error cargando insuranceProviders.json", err);
+    insuranceProviders = [];
+  }
+}
+
 
 /* =================================================
    HELPERS
