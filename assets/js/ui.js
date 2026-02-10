@@ -402,10 +402,38 @@ selTasa?.addEventListener("change", () => {
   ================================================= */
 
   chkSeguro?.addEventListener("change", () => {
-    appState.incluyeSeguro = chkSeguro.checked;
-    inputSeguro.disabled = !chkSeguro.checked;
-    if (!chkSeguro.checked) inputSeguro.value = "";
-  });
+
+  // Validación mínima: modelo seleccionado
+  if (!appState.modelo) {
+    alert("Debe seleccionar los datos del vehículo");
+    chkSeguro.checked = false;
+    return;
+  }
+
+  appState.incluyeSeguro = chkSeguro.checked;
+
+  const insuranceContainer = getEl("insuranceContainer");
+
+  // Mostrar / ocultar contenedor
+  insuranceContainer.style.display = chkSeguro.checked ? "block" : "none";
+
+  // Input póliza
+  inputSeguro.disabled = !chkSeguro.checked;
+
+  if (!chkSeguro.checked) {
+    inputSeguro.value = "";
+
+    // Lucro cesante depende del seguro
+    chkLucroCesante.checked = false;
+    chkLucroCesante.disabled = true;
+
+    inputLucroCesante.value = "";
+    inputLucroCesante.disabled = true;
+  } else {
+    chkLucroCesante.disabled = false;
+  }
+});
+
 
   chkLucroCesante?.addEventListener("change", () => {
     appState.incluyeLucroCesante = chkLucroCesante.checked;
