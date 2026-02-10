@@ -14,7 +14,8 @@
 const cache = {
   vehicles: null,
   rates: null,
-  devicePlans: null
+  devicePlans: null,
+  insuranceProviders: null
 };
 
 /**
@@ -49,16 +50,13 @@ async function loadRates() {
 }
 
 /**
- * carga lista seguro 
+ * Proveedores de seguro
  */
 async function loadInsuranceProviders() {
-  try {
-    const res = await fetch("data/insuranceProviders.json");
-    insuranceProviders = await res.json();
-  } catch (err) {
-    console.error("Error cargando insuranceProviders.json", err);
-    insuranceProviders = [];
+  if (!cache.insuranceProviders) {
+    cache.insuranceProviders = await loadJson("data/insuranceProviders.json");
   }
+  return cache.insuranceProviders;
 }
 
 /**
