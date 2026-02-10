@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   vehicles = await loadVehicles();
   rates = await loadRates();
   devicePlans = await loadDevicePlans();
-  await loadInsuranceProviders(); 
+  insuranceProviders = await loadInsuranceProviders();
   initUI();
 });
 
