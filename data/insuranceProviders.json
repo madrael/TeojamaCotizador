@@ -3,24 +3,25 @@
     "providerId": "PRV001",
     "providerName": "TECNISEGUROS",
     "active": true,
-    "aplicaTipoVehiculo": ["Liviano"],
-    "PrioridadLivianos": 1,
-    "PrioridadPesados": 0
+    "aplicaTipoVehiculo": [
+      { "TipoLinea": "Liviano", "Prioridad": 1 }
+    ]
   },
   {
     "providerId": "PRV002",
     "providerName": "ORLANDO ESPINOZA",
     "active": true,
-    "aplicaTipoVehiculo": ["Pesado"],
-    "PrioridadLivianos": 0,
-    "PrioridadPesados": 1
+    "aplicaTipoVehiculo": [
+      { "TipoLinea": "Pesado", "Prioridad": 1 }
+    ]
   },
   {
     "providerId": "PRV003",
     "providerName": "PROV TEST",
     "active": true,
-    "aplicaTipoVehiculo": ["Liviano", "Pesado"],
-    "PrioridadLivianos": 2,
-    "PrioridadPesados": 2
+    "aplicaTipoVehiculo": [
+      { "TipoLinea": "Liviano", "Prioridad": 2 },
+      { "TipoLinea": "Pesado", "Prioridad": 2 }
+    ]
   }
 ]
