@@ -199,6 +199,15 @@ body {
   border-radius: 6px;
 }
 
+/* Seguro */
+.insurance-container {
+  background: #f6f8fa;
+  border: 1px solid #d0d7de;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+
 .form-check {
   margin-top: 10px;
 }
