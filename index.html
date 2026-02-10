@@ -312,49 +312,77 @@
                         <h1>Dispositivo y seguro</h1>
                         <p>Configuración para TECNISEGUROS y ORLANDO ESPINOZA</p>
 
-                        <!-- Seguro -->
-                        <div style="margin-top:10px;">
-                            <div class="form-check">
-                                <label class="check-inline">
-                                    <input type="checkbox" id="chkSeguro" />
-                                    <span>Incluir seguro</span>
-                                </label>
-                            </div>
-                            <input type="number" id="inputSeguro" placeholder="Valor póliza" disabled />
-                        </div>
+<!-- Seguro -->
+<div style="margin-top:10px;">
 
-                        <!-- Lucro Cesante -->
-                        <div style="margin-top:10px;">
-                            <div class="form-check">
-                                <label class="check-inline">
-                                    <input type="checkbox" id="chkLucroCesante" />
-                                    <span>Incluir lucro cesante</span>
-                                </label>
-                            </div>
-                            <input type="number" id="inputLucroCesante" placeholder="Valor LucroCesante" disabled />
-                        </div>
-                     
-                        <!-- Dispositivo -->
-                        <div style="margin-top:10px;">
+    <div class="form-check">
+        <label class="check-inline">
+            <input type="checkbox" id="chkSeguro" />
+            <span>Incluir seguro</span>
+        </label>
+    </div>
 
-                            <div class="form-check">
-                                <label class="check-inline">
-                                    <input type="checkbox" id="chkDispositivo" />
-                                    <span>Incluir dispositivo</span>
-                                </label>
-                            </div>
+    <!-- Contenedor Seguro -->
+    <div id="insuranceContainer" style="display:none; margin-top:8px;">
 
-                            <div id="deviceContainer" style="display:none;">
-                                <label>Plan de dispositivo</label>
-                                <br />
-                                <select id="selectDevicePlan"></select>
+        <!-- Proveedor de Seguro -->
+        <label>Proveedor de seguro</label>
+        <br />
+        <select id="selectInsuranceProvider"></select>
 
-                                <div style="margin-top:8px;">
-                                    <div>Proveedor: <span id="deviceProvider">-</span></div>
-                                    <div>Valor: $<span id="deviceValueDisplay">-</span></div>
-                                </div>
-                            </div>
-                        </div>
+        <!-- Valor póliza -->
+        <div style="margin-top:8px;">
+            <input
+                type="number"
+                id="inputSeguro"
+                placeholder="Valor póliza (sugerido)"
+                disabled
+            />
+        </div>
+
+        <!-- Lucro Cesante (dependiente del seguro) -->
+        <div style="margin-top:10px;">
+
+            <div class="form-check">
+                <label class="check-inline">
+                    <input type="checkbox" id="chkLucroCesante" disabled />
+                    <span>Incluir lucro cesante</span>
+                </label>
+            </div>
+
+            <input
+                type="number"
+                id="inputLucroCesante"
+                placeholder="Valor lucro cesante"
+                disabled
+            />
+        </div>
+
+    </div>
+</div>
+
+<!-- Dispositivo (SIN CAMBIOS) -->
+<div style="margin-top:10px;">
+
+    <div class="form-check">
+        <label class="check-inline">
+            <input type="checkbox" id="chkDispositivo" />
+            <span>Incluir dispositivo</span>
+        </label>
+    </div>
+
+    <div id="deviceContainer" style="display:none;">
+        <label>Plan de dispositivo</label>
+        <br />
+        <select id="selectDevicePlan"></select>
+
+        <div style="margin-top:8px;">
+            <div>Proveedor: <span id="deviceProvider">-</span></div>
+            <div>Valor: $<span id="deviceValueDisplay">-</span></div>
+        </div>
+    </div>
+</div>
+                       
 
                     </div> <!-- Cierra PANEL3 -->
                </div> <!-- cierre .tabs -->
