@@ -49,6 +49,19 @@ async function loadRates() {
 }
 
 /**
+ * carga lista seguro 
+ */
+async function loadInsuranceProviders() {
+  try {
+    const res = await fetch("data/insuranceProviders.json");
+    insuranceProviders = await res.json();
+  } catch (err) {
+    console.error("Error cargando insuranceProviders.json", err);
+    insuranceProviders = [];
+  }
+}
+
+/**
  * Dispositivos
  */
 async function loadDevicePlans() {
