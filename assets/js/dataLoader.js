@@ -76,4 +76,6 @@ function clearCache() {
   cache.vehicles = null;
   cache.rates = null;
   cache.devicePlans = null;
+  cache.insuranceProviders = null;
 }
+
