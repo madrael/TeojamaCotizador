@@ -433,6 +433,7 @@ selTasa?.addEventListener("change", () => {
     inputLucroCesante.disabled = true;
   } else {
     chkLucroCesante.disabled = false;
+    cargarProveedoresSeguro(); 
   }
 });
 
@@ -463,6 +464,45 @@ selTasa?.addEventListener("change", () => {
     alert("Motor financiero pendiente (siguiente iteración)");
   });
 }
+
+/* SEGURO – Funcnion CARGA DE PROVEEDORES */
+
+function cargarProveedoresSeguro() {
+
+  const select = getEl("selectInsuranceProvider");
+  select.options.length = 0;
+
+  if (!insuranceProviders || !insuranceProviders.length) return;
+  if (!appState.tipoVehiculo) return;
+
+  const proveedores = insuranceProviders
+    .filter(p => p.active)
+    .map(p => {
+      const linea = p.aplicaTipoVehiculo.find(
+        l => l.TipoLinea === appState.tipoVehiculo
+      );
+      if (!linea) return null;
+      return {
+        id: p.providerId,
+        nombre: p.providerName,
+        prioridad: linea.Prioridad
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.prioridad - b.prioridad);
+
+  proveedores.forEach(p => {
+    const opt = document.createElement("option");
+    opt.value = p.id;
+    opt.textContent = p.nombre;
+    select.appendChild(opt);
+  });
+
+  if (proveedores.length) {
+    select.value = proveedores[0].id;
+  }
+}
+
 
 /* =================================================
    DISPOSITIVO – REGLAS
