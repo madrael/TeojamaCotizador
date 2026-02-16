@@ -15,7 +15,9 @@ const cache = {
   vehicles: null,
   rates: null,
   devicePlans: null,
-  insuranceProviders: null
+  insuranceProviders: null,
+  brokerProducts: null,
+  lucroCesanteConfig: null
 };
 
 /**
@@ -70,6 +72,16 @@ async function loadDevicePlans() {
 }
 
 /**
+ * Lucro Cesante
+ */
+async function loadLucroCesanteConfig() {
+  if (!cache.lucroCesanteConfig) {
+    cache.lucroCesanteConfig = await loadJson("data/lucroCesanteConfig.json");
+  }
+  return cache.lucroCesanteConfig;
+}
+
+/**
  * Limpia cache (debug)
  */
 function clearCache() {
@@ -78,4 +90,3 @@ function clearCache() {
   cache.devicePlans = null;
   cache.insuranceProviders = null;
 }
-
