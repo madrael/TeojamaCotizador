@@ -4,7 +4,7 @@
 	"productId": "PRV001LC01",
     "productName": "Tecniseguro - Lucro Cesante",
     "active": true,
-    "aplicaTipoVehiculo": ["Pesado"],
+    "aplicaTipoVehiculo": ["Liviano"],
     "edadMinima": 30,
     "edadMaxima": 65,	
     "valorCoberturasAnual": [180,200,300],
@@ -16,11 +16,23 @@
     "productId": "PRV002LC01",
 	"productName": "Orlando Espinoza - Lucro Cesante",
     "active": true,
-    "aplicaTipoVehiculo": ["Pesado","Liviano"],
+    "aplicaTipoVehiculo": ["Pesado"],
     "edadMinima": 30,
     "edadMaxima": 65,	
     "valorCoberturasAnual": [180,200,300],
 	"CoberturaAnualPorDefecto": 180,
     "editable": false
-  }  
+  },
+  {    
+    "providerId": "PRV003",
+    "productId": "PRV002LC01",
+	"productName": "Test - Lucro Cesante",
+    "active": true,
+    "aplicaTipoVehiculo": ["Liviano","Pesado"],
+    "edadMinima": 30,
+    "edadMaxima": 65,	
+    "valorCoberturasAnual": [180,200,300],
+	"CoberturaAnualPorDefecto": 180,
+    "editable": false
+  }   
 ]
