@@ -437,12 +437,44 @@ selTasa?.addEventListener("change", () => {
   }
 });
 
+ /* lucro cesante */
+ chkLucroCesante?.addEventListener("change", () => {
 
-  chkLucroCesante?.addEventListener("change", () => {
-    appState.incluyeLucroCesante = chkLucroCesante.checked;
-    inputLucroCesante.disabled = !chkLucroCesante.checked;
-    if (!chkLucroCesante.checked) inputLucroCesante.value = "";
-  });
+  if (!chkLucroCesante.checked) {
+    inputLucroCesante.value = "";
+    inputLucroCesante.disabled = true;
+    appState.incluyeLucroCesante = false;
+    return;
+  }
+
+  const providerId = getEl("selectInsuranceProvider").value;
+  const tipoVehiculo = appState.tipoVehiculo;
+  const edad = parseInt(getEl("inputEdadCliente").value);
+
+  const config = lucroCesanteConfig.find(c =>
+    c.active &&
+    c.providerId === providerId &&
+    c.aplicaTipoVehiculo.includes(tipoVehiculo)
+  );
+
+  if (!config) {
+    alert("Lucro cesante no disponible para este proveedor");
+    chkLucroCesante.checked = false;
+    return;
+  }
+
+  if (!edad || edad < config.edadMinima || edad > config.edadMaxima) {
+    alert(`Lucro cesante aplica entre ${config.edadMinima} y ${config.edadMaxima} años`);
+    chkLucroCesante.checked = false;
+    return;
+  }
+
+  inputLucroCesante.value = config.CoberturaAnualPorDefecto;
+  inputLucroCesante.disabled = !config.editable;
+
+  appState.incluyeLucroCesante = true;
+});
+
 
   chkDispositivo?.addEventListener("change", () => {
     appState.incluyeDispositivo = chkDispositivo.checked;
