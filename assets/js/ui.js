@@ -14,6 +14,7 @@ let vehicles = [];
 let rates = [];
 let devicePlans = [];
 let insuranceProviders = [];
+let lucroCesanteConfig = [];
 
 const appState = {
   tipoVehiculo: null,
@@ -40,6 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   rates = await loadRates();
   devicePlans = await loadDevicePlans();
   insuranceProviders = await loadInsuranceProviders();
+  lucroCesanteConfig = await loadLucroCesanteConfig();
   initUI();
 });
 
@@ -440,16 +442,18 @@ selTasa?.addEventListener("change", () => {
  /* lucro cesante */
  chkLucroCesante?.addEventListener("change", () => {
 
+  const select = getEl("selectLucroCesante");
+
   if (!chkLucroCesante.checked) {
-    inputLucroCesante.value = "";
-    inputLucroCesante.disabled = true;
+    select.innerHTML = "";
+    select.disabled = true;
     appState.incluyeLucroCesante = false;
     return;
   }
 
   const providerId = getEl("selectInsuranceProvider").value;
   const tipoVehiculo = appState.tipoVehiculo;
-  const edad = parseInt(getEl("inputEdadCliente").value);
+  const edad = parseInt(getEl("inputEdadCliente")?.value || 0);
 
   const config = lucroCesanteConfig.find(c =>
     c.active &&
@@ -463,19 +467,31 @@ selTasa?.addEventListener("change", () => {
     return;
   }
 
-  if (!edad || edad < config.edadMinima || edad > config.edadMaxima) {
+  if (edad < config.edadMinima || edad > config.edadMaxima) {
     alert(`Lucro cesante aplica entre ${config.edadMinima} y ${config.edadMaxima} años`);
     chkLucroCesante.checked = false;
     return;
   }
 
-  inputLucroCesante.value = config.CoberturaAnualPorDefecto;
-  inputLucroCesante.disabled = !config.editable;
+  // Llenar combo
+  select.innerHTML = "";
+
+  config.valorCoberturasAnual.forEach(valor => {
+    const opt = document.createElement("option");
+    opt.value = valor;
+    opt.textContent = valor;
+    select.appendChild(opt);
+  });
+
+  // Seleccionar valor por defecto
+  select.value = config.CoberturaAnualPorDefecto;
+
+  select.disabled = !config.editable;
 
   appState.incluyeLucroCesante = true;
 });
 
-
+/* Selecciona Dispositivo */
   chkDispositivo?.addEventListener("change", () => {
     appState.incluyeDispositivo = chkDispositivo.checked;
     deviceContainer.style.display = chkDispositivo.checked ? "block" : "none";
