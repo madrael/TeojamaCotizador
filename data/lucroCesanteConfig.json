@@ -8,7 +8,7 @@
     "edadMinima": 30,
     "edadMaxima": 65,	
     "valorCoberturasAnual": [180,200,300],
-	"CoberturaAnualPorDefecto": 200
+	"CoberturaAnualPorDefecto": 200,
     "editable": false
   },
   {    
@@ -20,7 +20,7 @@
     "edadMinima": 30,
     "edadMaxima": 65,	
     "valorCoberturasAnual": [180,200,300],
-	"CoberturaAnualPorDefecto": 180
+	"CoberturaAnualPorDefecto": 180,
     "editable": false
   }  
 ]
