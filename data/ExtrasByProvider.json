@@ -1,0 +1,76 @@
+[
+  {
+    "providerId": "PRV002",
+    "aplicaTipoVehiculo": ["Pesado"],
+    "active": true
+    "extrasDisponibles": [
+      {
+        "extraId": "E01",
+        "descripcion": "CAJON",
+        "valor": 2000,
+        "editable": false
+      },
+      {
+        "extraId": "E02",
+        "descripcion": "FURGON",
+        "valor": 6000,
+        "editable": false
+      },
+      {
+        "extraId": "E03",
+        "descripcion": "FURGON TERMOKING",
+        "valor": 9000,
+        "editable": false
+      },
+      {
+        "extraId": "E04",
+        "descripcion": "TANQUES",
+        "valor": 10000,
+        "editable": false
+      },
+      {
+        "extraId": "E05",
+        "descripcion": "OTROS",
+        "valor": 5000,
+        "editable": true
+      }
+    ]
+  },
+  {
+    "providerId": "PRV001",
+    "aplicaTipoVehiculo": ["Liviano"],
+    "active": true
+    "extrasDisponibles": [
+      {
+        "extraId": "E01",
+        "descripcion": "Radio Doble DIM",
+        "valor": 500,
+        "editable": false
+      },
+      {
+        "extraId": "E02",
+        "descripcion": "Laminas Seguridad",
+        "valor": 600,
+        "editable": false
+      },
+      {
+        "extraId": "E03",
+        "descripcion": "Sistema de Audio",
+        "valor": 900,
+        "editable": false
+      },
+      {
+        "extraId": "E04",
+        "descripcion": "Alarma y bloqueo central",
+        "valor": 1000,
+        "editable": false
+      },
+      {
+        "extraId": "E05",
+        "descripcion": "OTROS",
+        "valor": 500,
+        "editable": true
+      }
+    ]
+  }
+]
