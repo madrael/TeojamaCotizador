@@ -1,1 +1,168 @@
+[
+  {
+    "componentId": "TLVCLV01",
+    "descripcion": "TOLVA DE 8M3",
+    "valorPVP": 10350,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "TLVCLV02",
+    "descripcion": "TOLVA DE 10M3",
+    "valorPVP": 13800,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "TLVCLV03",
+    "descripcion": "TOLVA DE 11M3",
+    "valorPVP": 14145,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "TLVCLV04",
+    "descripcion": "TOLVA DE 12M3",
+    "valorPVP": 14950,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "TLVHRS01",
+    "descripcion": "TOLVA DE 8M3 STD",
+    "valorPVP": 12999.6,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "TLVHRS02",
+    "descripcion": "TOLVA DE 8M3 SUP",
+    "valorPVP": 15999.95,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "TLVHRS03",
+    "descripcion": "TOLVA DE 10M3",
+    "valorPVP": 17299.45,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "TLVHRS04",
+    "descripcion": "TOLVA DE 11M3",
+    "valorPVP": 17299.45,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "TLVHRS05",
+    "descripcion": "TOLVA DE 12M3-STD",
+    "valorPVP": 15999.95,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "TLVHRS06",
+    "descripcion": "TOLVA DE 12M3-SUP",
+    "valorPVP": 17499.55,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "TLVHRS07",
+    "descripcion": "TOLVA DE 14M3 STD",
+    "valorPVP": 16500.2,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "TLVHRS08",
+    "descripcion": "TOLVA DE 14M3 SUP",
+    "valorPVP": 17999.8,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "TLVMLZ01",
+    "descripcion": "TOLVA DE 8M3",
+    "valorPVP": 10350,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "TLVMLZ02",
+    "descripcion": "TOLVA DE 10M3",
+    "valorPVP": 12995,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "TLVMLZ03",
+    "descripcion": "TOLVA DE 12M3",
+    "valorPVP": 14375,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "activo": true
+  },
+  {
+    "componentId": "CAR019",
+    "descripcion": "CARROCERIA PICOSA PARA BUS INTRAPROVINCIAL 2 PUERTAS LADO DERECHO, MODELO ATHOS I, 42 ASIENTOS INCLUIDO CONDUCTOR",
+    "valorPVP": 64995.54,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "codigoCoberturaSeguro": "E05",
+    "activo": true
+  },
+  {
+    "componentId": "TAN001",
+    "descripcion": "TANQUERO DE 6000 GLS",
+    "valorPVP": 17250,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "codigoCoberturaSeguro": "E04",
+    "activo": true
+  },
+  {
+    "componentId": "TAN002",
+    "descripcion": "TANQUERO ESPECIAL 4000 GLS",
+    "valorPVP": 28750,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "financiable": true,
+    "asegurable": true,
+    "codigoCoberturaSeguro": "E04",
+    "activo": true
+  }
+]
 
