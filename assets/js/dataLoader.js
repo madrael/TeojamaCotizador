@@ -1,7 +1,7 @@
 /*************************************************
  * Archivo: dataLoader.js
  * Proyecto: Cotizador Vehículos Teojama
- * Versión: V 1.0 · Compilación 3.03
+ * Versión: V 1.0 · Compilación 2.90
  * Cambio: Corrección carga de Rates / DevicePlans
  *************************************************/
 
@@ -17,7 +17,8 @@ const cache = {
   devicePlans: null,
   insuranceProviders: null,
   brokerProducts: null,
-  lucroCesanteConfig: null
+  lucroCesanteConfig: null,
+  additionalComponents: null
 };
 
 /**
@@ -82,6 +83,16 @@ async function loadLucroCesanteConfig() {
 }
 
 /**
+ * Componentes adicionales
+ */
+async function loadAdditionalComponents() {
+  if (!cache.additionalComponents) {
+    cache.additionalComponents = await loadJson("data/AdditionalComponents.json");
+  }
+  return cache.additionalComponents;
+}
+
+/**
  * Limpia cache (debug)
  */
 function clearCache() {
@@ -89,4 +100,5 @@ function clearCache() {
   cache.rates = null;
   cache.devicePlans = null;
   cache.insuranceProviders = null;
+  cache.additionalComponents = null;
 }
