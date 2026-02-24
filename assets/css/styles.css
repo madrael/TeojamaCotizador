@@ -257,15 +257,15 @@ p {
 }
 
 /* =================================================
-   TABS (AISLADO)
+   TABS (HORIZONTAL FIX)
 ================================================= */
 
 .tabs {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* ← evita salto de línea */
   width: 100%;
   background: #e5e5e5;
-  box-shadow: 0 48px 80px -32px rgba(0,0,0,0.3);
+  border-bottom: 1px solid #ccc;
 }
 
 /* Radio oculto */
@@ -274,39 +274,30 @@ p {
   opacity: 0;
 }
 
-/* Etiquetas */
+/* Labels */
 .tabs .label {
-  width: 100%;
-  padding: 20px 30px;
+  flex: 0 0 auto; /* ← evita que ocupen 100% */
+  padding: 15px 25px;
   background: #e5e5e5;
   cursor: pointer;
   font-weight: bold;
   color: #7f7f7f;
-  transition: background 0.1s, color 0.1s;
+  transition: background 0.15s, color 0.15s;
+  border-right: 1px solid #d0d0d0;
+}
+
+.tabs .label:last-of-type {
+  border-right: none;
 }
 
 .tabs .label:hover {
   background: #d8d8d8;
 }
 
-.tabs .label:active {
-  background: #ccc;
-}
-
-.tabs .input:focus + .label {
-  z-index: 1;
-}
-
 .tabs .input:checked + .label {
   background: #fff;
   color: #000;
-}
-
-/* Labels horizontales en desktop */
-@media (min-width: 600px) {
-  .tabs .label {
-    width: auto;
-  }
+  border-bottom: 2px solid #2e7d32; /* línea verde activa */
 }
 
 /* Panel */
@@ -317,28 +308,8 @@ p {
   background: #fff;
 }
 
-@media (min-width: 600px) {
-  .tabs .panel {
-    order: 99;
-  }
-}
-
 .tabs .input:checked + .label + .panel {
   display: block;
-}
-
-/* Tipografía interna (AISLADA) */
-.app-left .tabs .panel h1 {
-  margin: 0;
-  font-family: 'Bree Serif', serif;
-  font-size: 20px;
-}
-
-.app-left .tabs .panel p {
-  margin-top: 20px;
-  margin-bottom: 0;
-  padding: 0;
-  line-height: 1.5;
 }
 
 /* =================================================
