@@ -15,6 +15,7 @@ let rates = [];
 let devicePlans = [];
 let insuranceProviders = [];
 let lucroCesanteConfig = [];
+let additionalComponents = [];
 
 const appState = {
   tipoVehiculo: null,
@@ -28,7 +29,7 @@ const appState = {
   incluyeSeguro: false,
   incluyeLucroCesante: false,
   incluyeDispositivo: false,
-
+  
   dispositivo: null
 };
 
@@ -42,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   devicePlans = await loadDevicePlans();
   insuranceProviders = await loadInsuranceProviders();
   lucroCesanteConfig = await loadLucroCesanteConfig();
+  additionalComponents = await loadAdditionalComponents(); 
   initUI();
 });
 
