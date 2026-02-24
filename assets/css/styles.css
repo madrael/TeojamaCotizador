@@ -262,7 +262,7 @@ p {
 
 .tabs {
   display: flex;
-  flex-wrap: nowrap; /* ← evita salto de línea */
+  flex-wrap: wrap;   /* ← IMPORTANTE mantener wrap */
   width: 100%;
   background: #e5e5e5;
   border-bottom: 1px solid #ccc;
@@ -274,16 +274,17 @@ p {
   opacity: 0;
 }
 
-/* Labels */
+/* Labels horizontales */
 .tabs .label {
-  flex: 0 0 auto; /* ← evita que ocupen 100% */
+  width: auto;       /* ← quita el width:100% */
+  flex: 0 0 auto;    /* ← evita que crezcan */
   padding: 15px 25px;
   background: #e5e5e5;
   cursor: pointer;
   font-weight: bold;
   color: #7f7f7f;
-  transition: background 0.15s, color 0.15s;
   border-right: 1px solid #d0d0d0;
+  transition: background 0.15s, color 0.15s;
 }
 
 .tabs .label:last-of-type {
@@ -297,14 +298,15 @@ p {
 .tabs .input:checked + .label {
   background: #fff;
   color: #000;
-  border-bottom: 2px solid #2e7d32; /* línea verde activa */
+  border-bottom: 2px solid #2e7d32;
 }
 
 /* Panel */
 .tabs .panel {
+  order: 99;         /* ← fuerza a que bajen debajo */
+  width: 100%;
   display: none;
   padding: 20px 30px 30px;
-  width: 100%;
   background: #fff;
 }
 
