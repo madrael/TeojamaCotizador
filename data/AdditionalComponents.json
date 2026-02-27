@@ -181,6 +181,39 @@
     "asegurable": true,
     "codigoCoberturaSeguro": "E04",
     "activo": true
+  },
+  {
+    "componentId": "R2D001",
+    "descripcion": "RADIO PIONEER 5055 DOBLE DIN",
+    "valorPVP": 650,
+    "aplicaTipoVehiculo": ["Liviano"],
+    "grupoComponente": "Infoentretenimiento",
+    "financiable": true,
+    "asegurable": true,
+    "codigoCoberturaSeguro": "",
+    "activo": true
+  },
+  {
+    "componentId": "ALR001",
+    "descripcion": "ALARMA CON BLOQUEO CENTRAL",
+    "valorPVP": 850,
+    "aplicaTipoVehiculo": ["Liviano","Pesado"],
+    "grupoComponente": "Seguridad",
+    "financiable": true,
+    "asegurable": true,
+    "codigoCoberturaSeguro": "",
+    "activo": true
+  },
+  {
+    "componentId": "LAS001",
+    "descripcion": "LAMINA DE SEGURIDAD 8mm",
+    "valorPVP": 500,
+    "aplicaTipoVehiculo": ["Liviano","Pesado"],
+    "grupoComponente": "Seguridad",
+    "financiable": true,
+    "asegurable": true,
+    "codigoCoberturaSeguro": "",
+    "activo": true
   }
 ]
 
