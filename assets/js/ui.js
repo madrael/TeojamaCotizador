@@ -2,7 +2,7 @@
  * Archivo: ui.js
  * Proyecto: Cotizador Vehículos Teojama
  * Versión: V 2.0
- * Compilación: 1.81
+ * Compilación: 1.94
  * Estado: REORGANIZADO (sin cambios funcionales)
  *************************************************/
 
