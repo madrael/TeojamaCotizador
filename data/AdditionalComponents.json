@@ -1,6 +1,7 @@
 [
   {
     "componentId": "TLVCLV01",
+    "ProveedorMarca": "CALVA",
     "descripcion": "TOLVA CALVA DE 8M3",
     "valorPVP": 10350,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -11,6 +12,7 @@
   },
   {
     "componentId": "TLVCLV02",
+    "ProveedorMarca": "CALVA",
     "descripcion": "TOLVA CALVA DE 10M3",
     "valorPVP": 13800,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -21,6 +23,7 @@
   },
   {
     "componentId": "TLVCLV03",
+    "ProveedorMarca": "CALVA",
     "descripcion": "TOLVA CALVA DE 11M3",
     "valorPVP": 14145,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -31,6 +34,7 @@
   },
   {
     "componentId": "TLVCLV04",
+    "ProveedorMarca": "CALVA",
     "descripcion": "TOLVA CALVA DE 12M3",
     "valorPVP": 14950,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -41,6 +45,7 @@
   },
   {
     "componentId": "TLVHRS01",
+    "ProveedorMarca": "HERAS",
     "descripcion": "TOLVA HERAS DE 8M3 STD",
     "valorPVP": 12999.6,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -51,6 +56,7 @@
   },
   {
     "componentId": "TLVHRS02",
+    "ProveedorMarca": "HERAS",
     "descripcion": "TOLVA HERAS DE 8M3 SUP",
     "valorPVP": 15999.95,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -61,6 +67,7 @@
   },
   {
     "componentId": "TLVHRS03",
+    "ProveedorMarca": "HERAS",
     "descripcion": "TOLVA HERAS DE 10M3",
     "valorPVP": 17299.45,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -71,6 +78,7 @@
   },
   {
     "componentId": "TLVHRS04",
+    "ProveedorMarca": "HERAS",
     "descripcion": "TOLVA HERAS DE 11M3",
     "valorPVP": 17299.45,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -81,6 +89,7 @@
   },
   {
     "componentId": "TLVHRS05",
+    "ProveedorMarca": "HERAS",
     "descripcion": "TOLVA HERAS DE 12M3-STD",
     "valorPVP": 15999.95,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -91,6 +100,7 @@
   },
   {
     "componentId": "TLVHRS06",
+    "ProveedorMarca": "HERAS",
     "descripcion": "TOLVA HERAS DE 12M3-SUP",
     "valorPVP": 17499.55,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -101,6 +111,7 @@
   },
   {
     "componentId": "TLVHRS07",
+    "ProveedorMarca": "HERAS",
     "descripcion": "TOLVA HERAS DE 14M3 STD",
     "valorPVP": 16500.2,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -111,6 +122,7 @@
   },
   {
     "componentId": "TLVHRS08",
+    "ProveedorMarca": "HERAS",
     "descripcion": "TOLVA HERAS DE 14M3 SUP",
     "valorPVP": 17999.8,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -121,6 +133,7 @@
   },
   {
     "componentId": "TLVMLZ01",
+    "ProveedorMarca": "HERAS",
     "descripcion": "TOLVA MALIZA DE 8M3",
     "valorPVP": 10350,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -131,6 +144,7 @@
   },
   {
     "componentId": "TLVMLZ02",
+    "ProveedorMarca": "MALIZA",    
     "descripcion": "TOLVA MALIZA DE 10M3",
     "valorPVP": 12995,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -141,6 +155,7 @@
   },
   {
     "componentId": "TLVMLZ03",
+    "ProveedorMarca": "MALIZA", 
     "descripcion": "TOLVA MALIZA DE 12M3",
     "valorPVP": 14375,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -151,6 +166,7 @@
   },
   {
     "componentId": "CAR019",
+    "ProveedorMarca": "PICOSA",     
     "descripcion": "CARROCERIA PICOSA PARA BUS INTRAPROVINCIAL 2 PUERTAS LADO DERECHO, MODELO ATHOS I, 42 ASIENTOS INCLUIDO CONDUCTOR",
     "valorPVP": 64995.54,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -162,6 +178,7 @@
   },
   {
     "componentId": "TAN001",
+    "ProveedorMarca": "TANQUERO",     
     "descripcion": "TANQUERO DE 6000 GLS",
     "valorPVP": 17250,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -173,6 +190,7 @@
   },
   {
     "componentId": "TAN002",
+    "ProveedorMarca": "TANQUERO",    
     "descripcion": "TANQUERO ESPECIAL 4000 GLS",
     "valorPVP": 28750,
     "aplicaTipoVehiculo": ["Pesado"],
@@ -184,6 +202,7 @@
   },
   {
     "componentId": "R2D001",
+    "ProveedorMarca": "PIONEER",    
     "descripcion": "RADIO PIONEER 5055 DOBLE DIN",
     "valorPVP": 650,
     "aplicaTipoVehiculo": ["Liviano"],
@@ -195,6 +214,7 @@
   },
   {
     "componentId": "ALR001",
+    "ProveedorMarca": "ALARMAS",     
     "descripcion": "ALARMA CON BLOQUEO CENTRAL",
     "valorPVP": 850,
     "aplicaTipoVehiculo": ["Liviano","Pesado"],
@@ -206,6 +226,7 @@
   },
   {
     "componentId": "LAS001",
+    "ProveedorMarca": "LAMINAS",     
     "descripcion": "LAMINA DE SEGURIDAD 8mm",
     "valorPVP": 500,
     "aplicaTipoVehiculo": ["Liviano","Pesado"],
