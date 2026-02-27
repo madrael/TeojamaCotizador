@@ -639,71 +639,87 @@ function renderComponentes() {
     return;
   }
 
-  // 🔹 Agrupar por grupoComponente
-  const grupos = {};
+  // 🔹 Agrupación doble: grupoComponente → ProveedorMarca
+  const estructura = {};
 
   disponibles.forEach(comp => {
-    const grupo = comp.grupoComponente || "Otros";
 
-    if (!grupos[grupo]) {
-      grupos[grupo] = [];
+    const grupo = comp.grupoComponente || "Otros";
+    const proveedor = comp.ProveedorMarca || "General";
+
+    if (!estructura[grupo]) {
+      estructura[grupo] = {};
     }
 
-    grupos[grupo].push(comp);
+    if (!estructura[grupo][proveedor]) {
+      estructura[grupo][proveedor] = [];
+    }
+
+    estructura[grupo][proveedor].push(comp);
   });
 
-  Object.keys(grupos).forEach((nombreGrupo, index) => {
+  Object.keys(estructura).forEach((nombreGrupo, indexGrupo) => {
 
-    const details = document.createElement("details");
-    details.className = "component-group";
+    const detailsGrupo = document.createElement("details");
+    detailsGrupo.className = "component-group";
 
-    // abrir el primer grupo por defecto
-    if (index === 0) {
-      details.open = true;
-    }
+    if (indexGrupo === 0) detailsGrupo.open = true;
 
-    const summary = document.createElement("summary");
-    summary.textContent = nombreGrupo;
+    const summaryGrupo = document.createElement("summary");
+    summaryGrupo.textContent = nombreGrupo;
 
-    details.appendChild(summary);
+    detailsGrupo.appendChild(summaryGrupo);
 
-    grupos[nombreGrupo].forEach(comp => {
+    Object.keys(estructura[nombreGrupo]).forEach(nombreProveedor => {
 
-      const wrapper = document.createElement("div");
-      wrapper.className = "component-item";
+      const detailsProveedor = document.createElement("details");
+      detailsProveedor.className = "component-subgroup";
 
-      const checked = appState.componentesSeleccionados
-        .some(c => c.componentId === comp.componentId);
+      const summaryProveedor = document.createElement("summary");
+      summaryProveedor.textContent = nombreProveedor;
 
-      wrapper.innerHTML = `
-        <label style="display:flex; justify-content:space-between; width:100%;">
-          <span>${comp.descripcion} — $${comp.valorPVP.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-          <input type="checkbox" value="${comp.componentId}" ${checked ? "checked" : ""} />
-        </label>
-      `;
+      detailsProveedor.appendChild(summaryProveedor);
 
-      const checkbox = wrapper.querySelector("input");
+      estructura[nombreGrupo][nombreProveedor].forEach(comp => {
 
-      checkbox.addEventListener("change", () => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "component-item";
 
-        if (checkbox.checked) {
-          if (!appState.componentesSeleccionados.some(c => c.componentId === comp.componentId)) {
-            appState.componentesSeleccionados.push(comp);
+        const checked = appState.componentesSeleccionados
+          .some(c => c.componentId === comp.componentId);
+
+        wrapper.innerHTML = `
+          <label style="display:flex; justify-content:space-between; width:100%;">
+            <span>${comp.descripcion} — $${comp.valorPVP.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+            <input type="checkbox" value="${comp.componentId}" ${checked ? "checked" : ""} />
+          </label>
+        `;
+
+        const checkbox = wrapper.querySelector("input");
+
+        checkbox.addEventListener("change", () => {
+
+          if (checkbox.checked) {
+            if (!appState.componentesSeleccionados.some(c => c.componentId === comp.componentId)) {
+              appState.componentesSeleccionados.push(comp);
+            }
+          } else {
+            appState.componentesSeleccionados =
+              appState.componentesSeleccionados.filter(
+                c => c.componentId !== comp.componentId
+              );
           }
-        } else {
-          appState.componentesSeleccionados =
-            appState.componentesSeleccionados.filter(
-              c => c.componentId !== comp.componentId
-            );
-        }
 
-        recalcularPVPConComponentes();
+          recalcularPVPConComponentes();
+        });
+
+        detailsProveedor.appendChild(wrapper);
       });
 
-      details.appendChild(wrapper);
+      detailsGrupo.appendChild(detailsProveedor);
     });
 
-    container.appendChild(details);
+    container.appendChild(detailsGrupo);
   });
 }
 
