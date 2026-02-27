@@ -30,7 +30,8 @@ const appState = {
   incluyeLucroCesante: false,
   incluyeDispositivo: false,
   
-  dispositivo: null
+  dispositivo: null,
+  componentesSeleccionados: []
 };
 
 /* =================================================
@@ -349,6 +350,8 @@ selTasa?.addEventListener("change", () => {
   selTipoVehiculo?.addEventListener("change", () => {
     resetAll();
     appState.tipoVehiculo = selTipoVehiculo.value;
+    appState.componentesSeleccionados = [];
+    renderComponentes();
 
     [...new Set(
       vehicles
@@ -609,6 +612,82 @@ function limpiarDispositivo() {
   getEl("deviceProvider").textContent = "";
   getEl("deviceValueDisplay").textContent = "-";
   appState.dispositivo = null;
+}
+
+/* =================================================
+   COMPONENTES ADICIONALES
+================================================= */
+
+function renderComponentes() {
+
+  const container = getEl("componentsContainer");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  if (!appState.tipoVehiculo) {
+    container.innerHTML = "<p>Seleccione primero un tipo de vehículo.</p>";
+    return;
+  }
+
+  const disponibles = additionalComponents
+    .filter(c => c.activo)
+    .filter(c => c.aplicaTipoVehiculo.includes(appState.tipoVehiculo));
+
+  if (!disponibles.length) {
+    container.innerHTML = "<p>No existen componentes disponibles.</p>";
+    return;
+  }
+
+  disponibles.forEach(comp => {
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "component-item";
+
+    wrapper.innerHTML = `
+      <label>
+        <input type="checkbox" value="${comp.componentId}" />
+        ${comp.descripcion} — $${comp.valorPVP.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+      </label>
+    `;
+
+    const checkbox = wrapper.querySelector("input");
+
+    checkbox.addEventListener("change", () => {
+
+      if (checkbox.checked) {
+        appState.componentesSeleccionados.push(comp);
+      } else {
+        appState.componentesSeleccionados =
+          appState.componentesSeleccionados.filter(
+            c => c.componentId !== comp.componentId
+          );
+      }
+
+      recalcularPVPConComponentes();
+    });
+
+    container.appendChild(wrapper);
+  });
+}
+
+/* Funcion para recalcular el pvp con componentes */
+function recalcularPVPConComponentes() {
+
+  const base = getPVPEfectivo();
+
+  const totalComponentes = appState.componentesSeleccionados
+    .filter(c => c.financiable)
+    .reduce((acc, c) => acc + c.valorPVP, 0);
+
+  const nuevoTotal = base + totalComponentes;
+
+  const lbl = getEl("pvpTotalConComponentes"); // este ID debes tenerlo en HTML
+
+  if (lbl) {
+    lbl.textContent =
+      `$${nuevoTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+  }
 }
 
 /* =================================================
