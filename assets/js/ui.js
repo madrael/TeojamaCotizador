@@ -639,35 +639,71 @@ function renderComponentes() {
     return;
   }
 
+  // 🔹 Agrupar por grupoComponente
+  const grupos = {};
+
   disponibles.forEach(comp => {
+    const grupo = comp.grupoComponente || "Otros";
 
-    const wrapper = document.createElement("div");
-    wrapper.className = "component-item";
+    if (!grupos[grupo]) {
+      grupos[grupo] = [];
+    }
 
-    wrapper.innerHTML = `
-      <label>
-        <input type="checkbox" value="${comp.componentId}" />
-        ${comp.descripcion} — $${comp.valorPVP.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-      </label>
-    `;
+    grupos[grupo].push(comp);
+  });
 
-    const checkbox = wrapper.querySelector("input");
+  Object.keys(grupos).forEach((nombreGrupo, index) => {
 
-    checkbox.addEventListener("change", () => {
+    const details = document.createElement("details");
+    details.className = "component-group";
 
-      if (checkbox.checked) {
-        appState.componentesSeleccionados.push(comp);
-      } else {
-        appState.componentesSeleccionados =
-          appState.componentesSeleccionados.filter(
-            c => c.componentId !== comp.componentId
-          );
-      }
+    // abrir el primer grupo por defecto
+    if (index === 0) {
+      details.open = true;
+    }
 
-      recalcularPVPConComponentes();
+    const summary = document.createElement("summary");
+    summary.textContent = nombreGrupo;
+
+    details.appendChild(summary);
+
+    grupos[nombreGrupo].forEach(comp => {
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "component-item";
+
+      const checked = appState.componentesSeleccionados
+        .some(c => c.componentId === comp.componentId);
+
+      wrapper.innerHTML = `
+        <label style="display:flex; justify-content:space-between; width:100%;">
+          <span>${comp.descripcion} — $${comp.valorPVP.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+          <input type="checkbox" value="${comp.componentId}" ${checked ? "checked" : ""} />
+        </label>
+      `;
+
+      const checkbox = wrapper.querySelector("input");
+
+      checkbox.addEventListener("change", () => {
+
+        if (checkbox.checked) {
+          if (!appState.componentesSeleccionados.some(c => c.componentId === comp.componentId)) {
+            appState.componentesSeleccionados.push(comp);
+          }
+        } else {
+          appState.componentesSeleccionados =
+            appState.componentesSeleccionados.filter(
+              c => c.componentId !== comp.componentId
+            );
+        }
+
+        recalcularPVPConComponentes();
+      });
+
+      details.appendChild(wrapper);
     });
 
-    container.appendChild(wrapper);
+    container.appendChild(details);
   });
 }
 
