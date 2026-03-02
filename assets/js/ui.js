@@ -663,7 +663,7 @@ function renderComponentes() {
     const detailsGrupo = document.createElement("details");
     detailsGrupo.className = "component-group";
 
-    if (indexGrupo === 0) detailsGrupo.open = true;
+    /*if (indexGrupo === 0) detailsGrupo.open = true;*/
 
     const summaryGrupo = document.createElement("summary");
     summaryGrupo.textContent = nombreGrupo;
