@@ -5,23 +5,19 @@
     "subClasses": [
       {
         "subClassID": "S",
-        "subClassDesc": "Sedán",
-        "riskId": "R01"
+        "subClassDesc": "Sedán"
       },
       {
         "subClassID": "HB",
-        "subClassDesc": "Hatchback",
-        "riskId": "R02"
+        "subClassDesc": "Hatchback"
       },
       {
         "subClassID": "SV",
-        "subClassDesc": "SUV / Crossover",
-        "riskId": "R03"
+        "subClassDesc": "SUV / Crossover"
       },
       {
         "subClassID": "SM",
-        "subClassDesc": "Smart / Compacto",
-        "riskId": "R04"
+        "subClassDesc": "Smart / Compacto"
       }
     ]
   },
@@ -31,8 +27,7 @@
     "subClasses": [
       {
         "subClassID": "DC",
-        "subClassDesc": "Doble Cabina",
-        "riskId": "R05"
+        "subClassDesc": "Doble Cabina"
       }
     ]
   },
@@ -42,8 +37,7 @@
     "subClasses": [
       {
         "subClassID": "C",
-        "subClassDesc": "Camión",
-        "riskId": "R06"
+        "subClassDesc": "Camión"
       }
     ]
   },
@@ -53,8 +47,7 @@
     "subClasses": [
       {
         "subClassID": "CA",
-        "subClassDesc": "Cabezal",
-        "riskId": "R07"
+        "subClassDesc": "Cabezal"
       }
     ]
   },
@@ -64,8 +57,7 @@
     "subClasses": [
       {
         "subClassID": "O",
-        "subClassDesc": "Ómnibus",
-        "riskId": "R08"
+        "subClassDesc": "Ómnibus"
       }
     ]
   },
@@ -75,8 +67,7 @@
     "subClasses": [
       {
         "subClassID": "BA",
-        "subClassDesc": "Buseta",
-        "riskId": "R09"
+        "subClassDesc": "Buseta"
       }
     ]
   }
