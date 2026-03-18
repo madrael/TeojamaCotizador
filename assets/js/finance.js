@@ -326,5 +326,61 @@ function bindFinance() {
 
 document.addEventListener("DOMContentLoaded", bindFinance);
 
+// =========================================
+// QUOTE ENGINE (ORQUESTADOR)
+// =========================================
+
+function calculateQuote(input, data) {
+
+    // 1. VEHÍCULO
+    const vehicle = data.vehiclesByCode[input.vehicleCode];
+    const vehiclePrice = vehicle.price;
+
+    // 2. ENTRADA
+    const entry = input.entry || 0;
+
+    // 3. BASE
+    const baseAmount = vehiclePrice - entry;
+
+    // 4. COMPONENTES (placeholder)
+    let additionalTotal = 0;
+
+    if (input.devicePlan) {
+        const plan = data.devicePlansById[input.devicePlan];
+        additionalTotal += plan.price;
+    }
+
+    // 5. SEGURO (placeholder)
+    let insuranceTotal = 0;
+
+    if (input.insuranceSelected) {
+        insuranceTotal = baseAmount * 0.03; // temporal
+    }
+
+    // 6. MONTO FINANCIADO
+    const financedAmount =
+        baseAmount +
+        additionalTotal +
+        insuranceTotal;
+
+    // 7. FINANCIAMIENTO
+    const financeResult = calculateFinance({
+        amount: financedAmount,
+        rate: input.rate,
+        term: input.term
+    });
+
+    return {
+        breakdown: {
+            vehiclePrice,
+            entry,
+            baseAmount,
+            additionalTotal,
+            insuranceTotal,
+            financedAmount
+        },
+        finance: financeResult
+    };
+}
 
 
