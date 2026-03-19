@@ -424,6 +424,6 @@ function calculateQuote(input, data) {
     }
   };
 }
-}
+
 
 
