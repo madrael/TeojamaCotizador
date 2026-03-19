@@ -41,6 +41,16 @@ async function loadVehicles() {
   }
   return cache.vehicles;
 }
+/**
+ * Indexación
+ */
+function indexBy(array, key) {
+    const result = {};
+    array.forEach(item => {
+        result[item[key]] = item;
+    });
+    return result;
+}
 
 /**
  * Tasas
@@ -101,4 +111,26 @@ function clearCache() {
   cache.devicePlans = null;
   cache.insuranceProviders = null;
   cache.additionalComponents = null;
+}
+
+// =========================================
+// CARGA COMPLETA DEL SISTEMA
+// =========================================
+async function loadAllData() {
+
+  const vehicles = await loadVehicles();
+  const devicePlans = await loadDevicePlans();
+
+  const data = {
+    vehicles,
+    devicePlans
+  };
+
+  // =====================================
+  // INDEXACIÓN
+  // =====================================
+  data.vehiclesByCode = indexBy(vehicles, "code");
+  data.devicePlansById = indexBy(devicePlans, "id");
+
+  return data;
 }
