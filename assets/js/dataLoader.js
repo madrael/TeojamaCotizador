@@ -129,8 +129,8 @@ async function loadAllData() {
   // =====================================
   // INDEXACIÓN
   // =====================================
-  data.vehiclesByCode = indexBy(vehicles, "code");
-  data.devicePlansById = indexBy(devicePlans, "id");
+   data.vehiclesByCode = indexBy(vehicles, "ItemCode");
+   data.devicePlansById = indexBy(devicePlans, "idPlan");
 
   return data;
 }
