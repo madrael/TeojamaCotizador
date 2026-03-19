@@ -329,58 +329,101 @@ document.addEventListener("DOMContentLoaded", bindFinance);
 // =========================================
 // QUOTE ENGINE (ORQUESTADOR)
 // =========================================
-
 function calculateQuote(input, data) {
 
-    // 1. VEHÍCULO
-    const vehicle = data.vehiclesByCode[input.vehicleCode];
-    const vehiclePrice = vehicle.price;
+  // 1. VEHÍCULO
+  const vehicle = data?.vehiclesByCode?.[input.vehicleCode];
+  if (!vehicle) {
+    throw new Error(`No se encontró el vehículo con código: ${input.vehicleCode}`);
+  }
 
-    // 2. ENTRADA
-    const entry = input.entry || 0;
+  const vehiclePrice = Number(vehicle.PVP) || 0;
 
-    // 3. BASE
-    const baseAmount = vehiclePrice - entry;
+  // 2. ENTRADA
+  const entry = Number(input.entry) || 0;
 
-    // 4. COMPONENTES (placeholder)
-    let additionalTotal = 0;
+  // 3. BASE
+  const baseAmount = Math.max(vehiclePrice - entry, 0);
 
-    if (input.devicePlan) {
-        const plan = data.devicePlansById[input.devicePlan];
-        additionalTotal += plan.price;
+  // 4. COMPONENTES
+  let additionalTotal = 0;
+
+  // 4.1 Dispositivo
+  if (input.devicePlan) {
+    const plan = data?.devicePlansById?.[input.devicePlan];
+
+    if (plan && plan.valoresPorAnio) {
+      const years = String(Math.ceil((Number(input.term) || 0) / 12));
+      additionalTotal += Number(plan.valoresPorAnio[years]) || 0;
     }
+  }
 
-    // 5. SEGURO (placeholder)
-    let insuranceTotal = 0;
+  // 4.2 Componentes adicionales financiables
+  if (Array.isArray(input.additionalComponents)) {
+    additionalTotal += input.additionalComponents.reduce((acc, item) => {
+      return acc + (Number(item.valorPVP) || 0);
+    }, 0);
+  }
 
-    if (input.insuranceSelected) {
-        insuranceTotal = baseAmount * 0.03; // temporal
+  // 5. SEGURO
+  let insuranceTotal = 0;
+
+  // Caso 1: ya viene el total calculado
+  if (Number(input.insuranceTotal) > 0) {
+    insuranceTotal = Number(input.insuranceTotal);
+  }
+
+  // Caso 2: vienen primas anuales y se suman
+  if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
+    insuranceTotal = input.insuranceAnnuals.reduce((acc, val) => {
+      return acc + (Number(val) || 0);
+    }, 0);
+  }
+
+  // Placeholder temporal si solo se marcó seguro y todavía no existe motor real
+  if (input.insuranceSelected && insuranceTotal === 0) {
+    insuranceTotal = 0;
+  }
+
+  // 6. MONTO FINANCIADO
+  const financedAmount = baseAmount + additionalTotal + insuranceTotal;
+
+  // 7. FINANCIAMIENTO
+  const rate = Number(input.rate) || 0;
+  const term = Number(input.term) || 0;
+
+  const monthlyPayment = cuotaFrancesa(financedAmount, rate, term);
+  const totalPayable = monthlyPayment * term;
+  const totalInterest = totalPayable - financedAmount;
+
+  return {
+    vehicle: {
+      itemCode: vehicle.ItemCode,
+      modelo: vehicle.Modelo,
+      versionModelo: vehicle.VersionModelo || vehicle["Version Modelo"] || "",
+      marca: vehicle.Marca,
+      tipoVehiculo: vehicle.TipoVehiculo,
+      pvp: vehiclePrice,
+      idClase: vehicle.IdClase,
+      idSubClase: vehicle.IdSubClase
+    },
+    breakdown: {
+      vehiclePrice,
+      entry,
+      baseAmount,
+      additionalTotal,
+      insuranceTotal,
+      financedAmount
+    },
+    finance: {
+      rate,
+      term,
+      monthlyPayment,
+      totalInterest,
+      totalPayable
     }
-
-    // 6. MONTO FINANCIADO
-    const financedAmount =
-        baseAmount +
-        additionalTotal +
-        insuranceTotal;
-
-    // 7. FINANCIAMIENTO
-    const financeResult = calculateFinance({
-        amount: financedAmount,
-        rate: input.rate,
-        term: input.term
-    });
-
-    return {
-        breakdown: {
-            vehiclePrice,
-            entry,
-            baseAmount,
-            additionalTotal,
-            insuranceTotal,
-            financedAmount
-        },
-        finance: financeResult
-    };
+  };
+}
 }
 
 
