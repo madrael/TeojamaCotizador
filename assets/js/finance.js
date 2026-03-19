@@ -365,25 +365,23 @@ function calculateQuote(input, data) {
     }, 0);
   }
 
-  // 5. SEGURO
-  let insuranceTotal = 0;
+  // 5. SEGURO (CONTROLADO - SIN MOTOR SAP AÚN)
+let insuranceTotal = 0;
 
-  // Caso 1: ya viene el total calculado
-  if (Number(input.insuranceTotal) > 0) {
-    insuranceTotal = Number(input.insuranceTotal);
-  }
+// Prioridad 1: valor total directo (ya calculado externamente)
+if (Number(input.insuranceTotal) > 0) {
+  insuranceTotal = Number(input.insuranceTotal);
+}
 
-  // Caso 2: vienen primas anuales y se suman
-  if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
-    insuranceTotal = input.insuranceAnnuals.reduce((acc, val) => {
-      return acc + (Number(val) || 0);
-    }, 0);
-  }
+// Prioridad 2: primas anuales acumuladas
+else if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
+  insuranceTotal = input.insuranceAnnuals.reduce((acc, val) => {
+    return acc + (Number(val) || 0);
+  }, 0);
+}
 
-  // Placeholder temporal si solo se marcó seguro y todavía no existe motor real
-  if (input.insuranceSelected && insuranceTotal === 0) {
-    insuranceTotal = 0;
-  }
+// Caso base: sin seguro o aún no implementado
+// TODO: implementar cálculo real de póliza según lógica SAP B1
 
   // 6. MONTO FINANCIADO
   const financedAmount = baseAmount + additionalTotal + insuranceTotal;
