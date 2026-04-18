@@ -513,9 +513,54 @@ selTasa?.addEventListener("change", () => {
     actualizarValorDispositivo();
   });
 
-  btnCalcular?.addEventListener("click", () => {
-    alert("Motor financiero pendiente (siguiente iteración)");
-  });
+btnCalcular?.addEventListener("click", async () => {
+  try {
+    const veh = vehicles.find(v =>
+      v.TipoVehiculo === appState.tipoVehiculo &&
+      v.Marca === appState.marca &&
+      v.Modelo === appState.modelo
+    );
+
+    if (!veh) {
+      alert("No se encontró el vehículo seleccionado.");
+      return;
+    }
+
+    if (!appState.tasa) {
+      alert("Debe seleccionar una tasa.");
+      return;
+    }
+
+    if (!appState.plazo) {
+      alert("Debe seleccionar un plazo.");
+      return;
+    }
+
+    const tasaObj = rates.find(r => r.IdTasa === appState.tasa);
+    const tasaAnual = tasaObj ? Number(tasaObj.TasaAnual) / 100 : 0;
+
+    const input = {
+      vehicle: veh,
+      entry: Number(inputEntrada?.value) || 0,
+      rate: tasaAnual,
+      term: Number(appState.plazo) || 0,
+      devicePlan: appState.dispositivo ? appState.dispositivo.idPlan : null,
+      additionalComponents: appState.componentesSeleccionados || [],
+      insuranceSelected: !!appState.incluyeSeguro,
+      insuranceTotal: Number(inputSeguro?.value) || 0
+    };
+
+    const data = await loadAllData();
+    const result = calculateQuote(input, data);
+
+    console.log("Resultado quoteEngine:", result);
+
+    await renderTablaFinanciamiento();
+  } catch (error) {
+    console.error("Error al calcular cotización:", error);
+    alert("Ocurrió un error al calcular la cotización. Revise consola.");
+  }
+});
 }
 
 /* SEGURO – Funcnion CARGA DE PROVEEDORES */
