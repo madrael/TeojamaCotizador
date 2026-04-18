@@ -334,7 +334,7 @@ function calculateQuote(input, data) {
   // 1. VEHÍCULO
   const vehicle = data?.vehiclesByCode?.[input.vehicle?.ItemCode];
   if (!vehicle) {
-    throw new Error(`No se encontró el vehículo con código: ${input..ItemCode}`);
+    throw new Error(`No se encontró el vehículo con código: ${input.vehicle?.ItemCode}`);
   }
 
   const vehiclePrice = Number(vehicle.PVP) || 0;
