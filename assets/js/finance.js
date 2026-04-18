@@ -2,7 +2,7 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : finance.js
  Versión       : V 2.0
- Compilación   : 1.46
+ Compilación   : 1.47
  Estado        : AJUSTE MODELO FINANCIERO (SEGURO FINANCIADO)
  Descripción   :
    - Seguro anual se financia
@@ -386,13 +386,50 @@ else if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length 
   // 6. MONTO FINANCIADO
   const financedAmount = baseAmount + additionalTotal + insuranceTotal;
 
-  // 7. FINANCIAMIENTO
-  const rate = Number(input.rate) || 0;
-  const term = Number(input.term) || 0;
+// 7. FINANCIAMIENTO
+const rate = Number(input.rate) || 0;
+const term = Number(input.term) || 0;
+const years = Math.ceil(term / 12);
 
-  const monthlyPayment = cuotaFrancesa(financedAmount, rate, term);
-  const totalPayable = monthlyPayment * term;
-  const totalInterest = totalPayable - financedAmount;
+const cuotaVehiculoMensual = cuotaFrancesa(baseAmount, rate, term);
+const cuotaDispositivoMensual = cuotaFrancesa(additionalTotal, rate, term);
+
+// Seguro mensual por año (fase 1)
+// Si ya viene insuranceAnnuals, usamos cada valor anual / 12
+// Si solo viene insuranceTotal, distribuimos promedio por año
+let segurosAnuales = [];
+
+if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
+  segurosAnuales = input.insuranceAnnuals.map(v => Number(v) || 0);
+} else if (insuranceTotal > 0 && years > 0) {
+  const promedioAnual = insuranceTotal / years;
+  segurosAnuales = Array.from({ length: years }, () => promedioAnual);
+} else {
+  segurosAnuales = Array.from({ length: years }, () => 0);
+}
+
+const yearlySummary = [];
+
+for (let y = 1; y <= years; y++) {
+  const seguroAnual = Number(segurosAnuales[y - 1]) || 0;
+  const cuotaSeguroMensual = seguroAnual / 12;
+  const cuotaTotalMensual =
+    cuotaVehiculoMensual +
+    cuotaDispositivoMensual +
+    cuotaSeguroMensual;
+
+  yearlySummary.push({
+    year: y,
+    cuotaVehiculo: cuotaVehiculoMensual,
+    cuotaDispositivo: cuotaDispositivoMensual,
+    cuotaSeguro: cuotaSeguroMensual,
+    cuotaTotalMensual
+  });
+}
+
+const monthlyPayment = cuotaFrancesa(financedAmount, rate, term);
+const totalPayable = monthlyPayment * term;
+const totalInterest = totalPayable - financedAmount;
 
   return {
     vehicle: {
@@ -414,12 +451,14 @@ else if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length 
       financedAmount
     },
     finance: {
-      rate,
-      term,
-      monthlyPayment,
-      totalInterest,
-      totalPayable
-    }
+  rate,
+  term,
+  years,
+  monthlyPayment,
+  totalInterest,
+  totalPayable
+},
+yearlySummary
   };
 }
 
