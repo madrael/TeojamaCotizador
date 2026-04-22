@@ -11,7 +11,7 @@
    - Cuota francesa se calcula sobre el total financiado
 ========================================================= */
 
-const PLAZOS_FIJOS = [12, 24, 36, 48, 60];
+const PLAZOS_FIJOS = [12, 24, 36, 48, 60, 72];
 
 /* =========================
    Utilidades
@@ -199,8 +199,8 @@ function renderResumenCredito({
   };
 
   setText("summary-cuota", money(cuota));
-  setText("summary-tasa", `${(tasaAnual * 100).toFixed(2)}%`);
-  setText("summary-tasa-detail", `${(tasaAnual * 100).toFixed(2)}%`);
+  setText("summary-tasa", `${(tasaAnual * 100).toFixed(5)}%`);
+  setText("summary-tasa-detail", `${(tasaAnual * 100).toFixed(5)}%`);
   setText("summary-plazo", `${plazo} meses`);
   setText("summary-capital", money(montoFinanciar));
   setText("summary-seguro", money(seguroAnual));
