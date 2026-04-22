@@ -64,6 +64,10 @@ function round2(v) {
   return Math.round(v * 100) / 100;
 }
 
+function round5(v) {
+  return Math.round(v * 100000) / 100000;
+}
+
 function getPVPBase() {
   const el = getEl("pvp");
   return el ? parseFloat(el.textContent.replace(/[^0-9.]/g, "")) || 0 : 0;
@@ -144,7 +148,7 @@ function recalcularDesdeDescuento() {
 
   /* ---- BORRADO COMPLETO → RESET ---- */
   if (active === inputDescPorcentaje && porcRaw === "") {
-    inputDescPorcentaje.value = "";   // FIX: limpiar explícitamente
+    inputDescPorcentaje.value = "";
     inputValorDesc.value = "";
     inputPvpFinal.value = pvpBase.toFixed(2);
     recalcularValorEntradaDesdePVPEfectivo();
@@ -152,7 +156,7 @@ function recalcularDesdeDescuento() {
   }
 
   if (active === inputValorDesc && valRaw === "") {
-    inputValorDesc.value = "";        // FIX: limpiar explícitamente
+    inputValorDesc.value = "";
     inputDescPorcentaje.value = "";
     inputPvpFinal.value = pvpBase.toFixed(2);
     recalcularValorEntradaDesdePVPEfectivo();
@@ -176,7 +180,7 @@ function recalcularDesdeDescuento() {
     const val = parseFloat(valRaw);
     if (isNaN(val)) return;
 
-    inputDescPorcentaje.value = round2((val / pvpBase) * 100);
+    inputDescPorcentaje.value = round5((val / pvpBase) * 100).toFixed(5);
     inputPvpFinal.value       = round2(pvpBase - val).toFixed(2);
     recalcularValorEntradaDesdePVPEfectivo();
   }
@@ -202,7 +206,7 @@ function recalcularDesdePVPEfectivo() {
   const porc = (desc / pvpBase) * 100;
 
   inputValorDesc.value = round2(desc).toFixed(2);
-  inputDescPorcentaje.value = round2(porc);
+  inputDescPorcentaje.value = round2(porc).toFixed(5);;
   inputPvpFinal.value = round2(pvpFinal).toFixed(2);
 
   recalcularValorEntradaDesdePVPEfectivo();
@@ -236,8 +240,8 @@ function recalcularEntradaDesdePVPEfectivo() {
 
   if (pvp <= 0 || isNaN(porc)) return;
 
-  inputEntradaPorcentaje.value = porc;
-  inputEntrada.value = round2((pvp * porc) / 100);
+  inputEntradaPorcentaje.value = round5(porc).toFixed(5);
+  inputEntrada.value = round2((pvp * porc) / 100).toFixed(2);
 }
 
 function recalcularValorEntradaDesdePVPEfectivo() {
@@ -245,8 +249,7 @@ function recalcularValorEntradaDesdePVPEfectivo() {
   const porc = parseFloat(inputEntradaPorcentaje.value);
 
   if (!pvp || isNaN(porc)) return;
-
-  inputEntrada.value = round2((pvp * porc) / 100);
+   inputEntrada.value = round2((pvp * porc) / 100).toFixed(2);
 
   // Si hay tasa seleccionada, la tasa gobierna el % base
   if (selTasa.value) {
@@ -262,7 +265,7 @@ inputEntradaPorcentaje?.addEventListener("input", () => {
   const porc = parseFloat(inputEntradaPorcentaje.value);
 
   if (!isNaN(porc) && pvp > 0) {
-    inputEntrada.value = round2((pvp * porc) / 100);
+    inputEntrada.value = round2((pvp * porc) / 100).toFixed(2);
   }
 });
 
@@ -272,7 +275,7 @@ inputEntrada?.addEventListener("input", () => {
   const val = parseFloat(inputEntrada.value);
 
   if (!isNaN(val) && pvp > 0) {
-    inputEntradaPorcentaje.value = round2((val / pvp) * 100);
+    inputEntradaPorcentaje.value = round5((val / pvp) * 100).toFixed(5);
   }
 });
 
