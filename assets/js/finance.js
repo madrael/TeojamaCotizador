@@ -2,7 +2,7 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : finance.js
  Versión       : V 2.0
- Compilación   : 1.48
+ Compilación   : 1.49
  Estado        : AJUSTE MODELO FINANCIERO (SEGURO FINANCIADO)
  Descripción   :
    - Seguro anual se financia
@@ -210,6 +210,75 @@ function renderResumenCredito({
 }
 
 /* =========================
+   Render resumen por año
+========================= */
+
+function renderResumenPorAnio(yearlySummary, term) {
+  const container = document.getElementById("creditSummaryByYear");
+  if (!container) return;
+
+  if (!Array.isArray(yearlySummary) || yearlySummary.length === 0) {
+    container.innerHTML = "<p>No hay información para mostrar.</p>";
+    return;
+  }
+
+  const years = Math.ceil((Number(term) || 0) / 12);
+
+  let headers = "";
+  let rowVehiculo = "";
+  let rowDispositivo = "";
+  let rowSeguro = "";
+  let rowTotal = "";
+
+  for (let i = 0; i < years; i++) {
+    const item = yearlySummary[i] || {
+      cuotaVehiculo: 0,
+      cuotaDispositivo: 0,
+      cuotaSeguro: 0,
+      cuotaTotalMensual: 0
+    };
+
+    headers += `<th>${i + 1}er año</th>`;
+    rowVehiculo += `<td>${money(item.cuotaVehiculo)}</td>`;
+    rowDispositivo += `<td>${money(item.cuotaDispositivo)}</td>`;
+    rowSeguro += `<td>${money(item.cuotaSeguro)}</td>`;
+    rowTotal += `<td><strong>${money(item.cuotaTotalMensual)}</strong></td>`;
+  }
+
+  container.innerHTML = `
+    <table class="finance-table">
+      <thead>
+        <tr>
+          <th>Concepto</th>
+          ${headers}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="concepto">Cuota fija vehículo</td>
+          ${rowVehiculo}
+        </tr>
+        <tr>
+          <td class="concepto">Rastreo Satelital</td>
+          ${rowDispositivo}
+        </tr>
+        <tr>
+          <td class="concepto">Seguro</td>
+          ${rowSeguro}
+        </tr>
+        <tr class="finance-separator">
+          <td colspan="${years + 1}"></td>
+        </tr>
+        <tr>
+          <td class="concepto"><strong>Cuota Total Mensual</strong></td>
+          ${rowTotal}
+        </tr>
+      </tbody>
+    </table>
+  `;
+}
+
+/* =========================
    Render tabla
 ========================= */
 
@@ -222,19 +291,20 @@ async function renderTablaFinanciamiento() {
   const plazoSeleccionado =
     Number(document.getElementById("selectPlazo")?.value) || 0;
 
+  let quoteResult = null;
+
+  if (window.lastQuoteResult) {
+    quoteResult = window.lastQuoteResult;
+  }
+
   limpiarPlazoActivo();
 
   for (const plazo of PLAZOS_FIJOS) {
     const dispositivo = await getValorDispositivoPorPlazo(plazo);
 
-    // 🔹 MODELO FINANCIERO CORREGIDO
+    // 🔹 MODELO FINANCIERO TABLA SUPERIOR
     const montoTotal = pvp + seguroAnual + dispositivo;
     const montoFinanciar = Math.max(montoTotal - entrada, 0);
-    const cuota = cuotaFrancesa(montoFinanciar, tasaAnual, plazo);
-
-    // 🔹 Prorrateo informativo
-    const cuotaSeguro = seguroAnual / plazo;
-    const cuotaDispositivo = dispositivo / plazo; // ahora se renderiza en UI
 
     const set = (id, val) => {
       const el = document.getElementById(id);
@@ -248,35 +318,17 @@ async function renderTablaFinanciamiento() {
 
     set(`pvp-${plazo}`, pvp);
 
-    // ✅ NUEVO: Seguro anual TOTAL (fila "Seguro anual")
+    // Seguro anual total
     set(`seguro-total-${plazo}`, seguroAnual > 0 ? seguroAnual : "—");
 
     set(`device-${plazo}`, dispositivo);
     set(`total-${plazo}`, montoTotal);
     set(`entrada-${plazo}`, entrada);
     set(`fin-${plazo}`, montoFinanciar);
-    set(`cuota-${plazo}`, cuota);
 
-    // ⚠️ mismo ID existente: ahora es cuota mensual del seguro
-    set(`seguro-${plazo}`, seguroAnual > 0 ? cuotaSeguro : "—");
-
-    // ✅ NUEVO: Cuota dispositivo
-    set(`device-cuota-${plazo}`, dispositivo > 0 ? cuotaDispositivo : "—");
-
-    // ✅ NUEVO: Total cuota mensual = cuota crédito + cuota seguro + cuota dispositivo
-    const totalCuota = cuota + cuotaSeguro + cuotaDispositivo;
-    set(`total-cuota-${plazo}`, totalCuota);
-
-    // === NUEVO: Resumen tipo banco (solo para plazo seleccionado) ===
-    if (plazo === plazoSeleccionado) {
-      renderResumenCredito({
-        plazo,
-        tasaAnual,
-        cuota,
-        montoFinanciar,
-        seguroAnual,
-        dispositivoTotal: dispositivo
-      });
+    // Resumen inferior por año
+    if (plazo === plazoSeleccionado && quoteResult) {
+      renderResumenPorAnio(quoteResult.yearlySummary, quoteResult.finance.term);
     }
   }
 
