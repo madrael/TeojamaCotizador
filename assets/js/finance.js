@@ -366,70 +366,82 @@ function calculateQuote(input, data) {
   }
 
   // 5. SEGURO (CONTROLADO - SIN MOTOR SAP AÚN)
-let insuranceTotal = 0;
+  let insuranceTotal = 0;
 
-// Prioridad 1: valor total directo (ya calculado externamente)
-if (Number(input.insuranceTotal) > 0) {
-  insuranceTotal = Number(input.insuranceTotal);
-}
+  // Prioridad 1: valor total directo (ya calculado externamente)
+  if (Number(input.insuranceTotal) > 0) {
+    insuranceTotal = Number(input.insuranceTotal);
+  }
 
-// Prioridad 2: primas anuales acumuladas
-else if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
-  insuranceTotal = input.insuranceAnnuals.reduce((acc, val) => {
-    return acc + (Number(val) || 0);
-  }, 0);
-}
+  // Prioridad 2: primas anuales acumuladas
+  else if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
+    insuranceTotal = input.insuranceAnnuals.reduce((acc, val) => {
+      return acc + (Number(val) || 0);
+    }, 0);
+  }
 
-// Caso base: sin seguro o aún no implementado
-// TODO: implementar cálculo real de póliza según lógica SAP B1
+  // Caso base: sin seguro o aún no implementado
+  // TODO: implementar cálculo real de póliza según lógica SAP B1
 
-  // 6. MONTO FINANCIADO
+  // 6. MONTO FINANCIADO TOTAL
   const financedAmount = baseAmount + additionalTotal + insuranceTotal;
 
-// 7. FINANCIAMIENTO
-const rate = Number(input.rate) || 0;
-const term = Number(input.term) || 0;
-const years = Math.ceil(term / 12);
+  // 7. FINANCIAMIENTO
+  const rate = Number(input.rate) || 0;
+  const term = Number(input.term) || 0;
+  const years = Math.ceil(term / 12);
 
-const cuotaVehiculoMensual = cuotaFrancesa(baseAmount, rate, term);
-const cuotaDispositivoMensual = cuotaFrancesa(additionalTotal, rate, term);
+  // 7.1 Financiamiento separado por componente
+  const cuotaVehiculoMensual = cuotaFrancesa(baseAmount, rate, term);
+  const totalVehiculoPayable = cuotaVehiculoMensual * term;
+  const interesVehiculo = totalVehiculoPayable - baseAmount;
 
-// Seguro mensual por año (fase 1)
-// Si ya viene insuranceAnnuals, usamos cada valor anual / 12
-// Si solo viene insuranceTotal, distribuimos promedio por año
-let segurosAnuales = [];
+  const cuotaDispositivoMensual = cuotaFrancesa(additionalTotal, rate, term);
+  const totalDispositivoPayable = cuotaDispositivoMensual * term;
+  const interesDispositivo = totalDispositivoPayable - additionalTotal;
 
-if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
-  segurosAnuales = input.insuranceAnnuals.map(v => Number(v) || 0);
-} else if (insuranceTotal > 0 && years > 0) {
-  const promedioAnual = insuranceTotal / years;
-  segurosAnuales = Array.from({ length: years }, () => promedioAnual);
-} else {
-  segurosAnuales = Array.from({ length: years }, () => 0);
-}
+  const cuotaSeguroMensualBase = cuotaFrancesa(insuranceTotal, rate, term);
+  const totalSeguroPayable = cuotaSeguroMensualBase * term;
+  const interesSeguro = totalSeguroPayable - insuranceTotal;
 
-const yearlySummary = [];
+  // 7.2 Seguro mensual por año (fase 1)
+  // Si ya viene insuranceAnnuals, usamos cada valor anual / 12
+  // Si solo viene insuranceTotal, distribuimos promedio por año
+  let segurosAnuales = [];
 
-for (let y = 1; y <= years; y++) {
-  const seguroAnual = Number(segurosAnuales[y - 1]) || 0;
-  const cuotaSeguroMensual = seguroAnual / 12;
-  const cuotaTotalMensual =
-    cuotaVehiculoMensual +
-    cuotaDispositivoMensual +
-    cuotaSeguroMensual;
+  if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
+    segurosAnuales = input.insuranceAnnuals.map(v => Number(v) || 0);
+  } else if (insuranceTotal > 0 && years > 0) {
+    const promedioAnual = insuranceTotal / years;
+    segurosAnuales = Array.from({ length: years }, () => promedioAnual);
+  } else {
+    segurosAnuales = Array.from({ length: years }, () => 0);
+  }
 
-  yearlySummary.push({
-    year: y,
-    cuotaVehiculo: cuotaVehiculoMensual,
-    cuotaDispositivo: cuotaDispositivoMensual,
-    cuotaSeguro: cuotaSeguroMensual,
-    cuotaTotalMensual
-  });
-}
+  const yearlySummary = [];
 
-const monthlyPayment = cuotaFrancesa(financedAmount, rate, term);
-const totalPayable = monthlyPayment * term;
-const totalInterest = totalPayable - financedAmount;
+  for (let y = 1; y <= years; y++) {
+    const seguroAnual = Number(segurosAnuales[y - 1]) || 0;
+    const cuotaSeguroMensual = seguroAnual / 12;
+
+    const cuotaTotalMensual =
+      cuotaVehiculoMensual +
+      cuotaDispositivoMensual +
+      cuotaSeguroMensual;
+
+    yearlySummary.push({
+      year: y,
+      cuotaVehiculo: cuotaVehiculoMensual,
+      cuotaDispositivo: cuotaDispositivoMensual,
+      cuotaSeguro: cuotaSeguroMensual,
+      cuotaTotalMensual
+    });
+  }
+
+  // 7.3 Totales globales
+  const monthlyPayment = cuotaVehiculoMensual + cuotaDispositivoMensual + cuotaSeguroMensualBase;
+  const totalPayable = totalVehiculoPayable + totalDispositivoPayable + totalSeguroPayable;
+  const totalInterest = interesVehiculo + interesDispositivo + interesSeguro;
 
   return {
     vehicle: {
@@ -451,16 +463,31 @@ const totalInterest = totalPayable - financedAmount;
       financedAmount
     },
     finance: {
-  rate,
-  term,
-  years,
-  monthlyPayment,
-  totalInterest,
-  totalPayable
-},
-yearlySummary
+      rate,
+      term,
+      years,
+      monthlyPayment,
+      totalInterest,
+      totalPayable,
+
+      vehicle: {
+        monthly: cuotaVehiculoMensual,
+        total: totalVehiculoPayable,
+        interest: interesVehiculo
+      },
+
+      device: {
+        monthly: cuotaDispositivoMensual,
+        total: totalDispositivoPayable,
+        interest: interesDispositivo
+      },
+
+      insurance: {
+        monthly: cuotaSeguroMensualBase,
+        total: totalSeguroPayable,
+        interest: interesSeguro
+      }
+    },
+    yearlySummary
   };
 }
-
-
-
