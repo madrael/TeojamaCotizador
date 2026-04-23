@@ -206,7 +206,7 @@ function recalcularDesdePVPEfectivo() {
   const porc = (desc / pvpBase) * 100;
 
   inputValorDesc.value = round2(desc).toFixed(2);
-  inputDescPorcentaje.value = round2(porc).toFixed(5);;
+  inputDescPorcentaje.value = round5(porc).toFixed(5);;
   inputPvpFinal.value = round2(pvpFinal).toFixed(2);
 
   recalcularValorEntradaDesdePVPEfectivo();
