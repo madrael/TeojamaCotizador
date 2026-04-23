@@ -553,12 +553,12 @@ btnCalcular?.addEventListener("click", async () => {
       insuranceTotal: Number(inputSeguro?.value) || 0
     };
 
-    const data = await loadAllData();
-    const result = calculateQuote(input, data);
-
-    console.log("Resultado quoteEngine:", result);
-
-    await renderTablaFinanciamiento();
+      const data = await loadAllData();
+      const result = calculateQuote(input, data);
+      window.lastQuoteResult = result;
+      console.log("Resultado quoteEngine:", result);
+      await renderTablaFinanciamiento();
+     
   } catch (error) {
     console.error("Error al calcular cotización:", error);
     alert("Ocurrió un error al calcular la cotización. Revise consola.");
