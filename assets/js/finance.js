@@ -2,7 +2,7 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : finance.js
  Versión       : V 2.0
- Compilación   : 1.59
+ Compilación   : 1.60
  Estado        : AJUSTE MODELO FINANCIERO (SEGURO FINANCIADO)
  Descripción   :
    - Seguro anual se financia
@@ -348,8 +348,7 @@ async function renderTablaFinanciamiento() {
         Number(quoteResult.yearlySummary[yearIndex]?.seguroAnualBase) || 0;
     }
 
-set(`seguro-total-${plazo}`, seguroAnualPlazo > 0 ? seguroAnualPlazo : "$0.00");
-
+    set(`seguro-total-${plazo}`, seguroAnualPlazo);
     set(`device-${plazo}`, dispositivo);
     set(`total-${plazo}`, montoTotal);
     set(`entrada-${plazo}`, entrada);
