@@ -2,7 +2,7 @@
  * Archivo: ui.js
  * Proyecto: Cotizador Vehículos Teojama
  * Versión: V 2.0
- * Compilación: 1.94
+ * Compilación: 1.95
  * Estado: REORGANIZADO (sin cambios funcionales)
  *************************************************/
 
@@ -102,9 +102,11 @@ function initUI() {
 
   /* Seguro / Lucro / Dispositivo */
   const chkSeguro = getEl("chkSeguro");
-  const inputSeguro = getEl("inputSeguro");
+   
+  /*const inputSeguro = getEl("inputSeguro");*/
+  /*const inputLucroCesante = getEl("inputLucroCesante");*/
+
   const chkLucroCesante = getEl("chkLucroCesante");
-  const inputLucroCesante = getEl("inputLucroCesante");
   const chkDispositivo = getEl("chkDispositivo");
   const deviceContainer = getEl("deviceContainer");
   const selDevicePlan = getEl("selectDevicePlan");
@@ -409,13 +411,12 @@ selTasa?.addEventListener("change", () => {
     actualizarValorDispositivo();
   });
 
-  /* =================================================
-     SEGURO / LUCRO / DISPOSITIVO (UI)
-  ================================================= */
+/* =================================================
+   SEGURO / LUCRO / DISPOSITIVO (UI)
+================================================= */
 
-  chkSeguro?.addEventListener("change", () => {
+chkSeguro?.addEventListener("change", () => {
 
-  // Validación mínima: modelo seleccionado
   if (!appState.modelo) {
     alert("Debe seleccionar los datos del vehículo");
     chkSeguro.checked = false;
@@ -425,26 +426,23 @@ selTasa?.addEventListener("change", () => {
   appState.incluyeSeguro = chkSeguro.checked;
 
   const insuranceContainer = getEl("insuranceContainer");
+  const selectLucro = getEl("selectLucroCesante");
 
-  // Mostrar / ocultar contenedor
   insuranceContainer.style.display = chkSeguro.checked ? "block" : "none";
 
-  // Input póliza
-  inputSeguro.disabled = !chkSeguro.checked;
-
   if (!chkSeguro.checked) {
-    inputSeguro.value = "";
-
-    // Lucro cesante depende del seguro
     chkLucroCesante.checked = false;
     chkLucroCesante.disabled = true;
 
-    inputLucroCesante.value = "";
-    inputLucroCesante.disabled = true;
-  } else {
-    chkLucroCesante.disabled = false;
-    cargarProveedoresSeguro(); 
+    selectLucro.innerHTML = "";
+    selectLucro.disabled = true;
+
+    appState.incluyeLucroCesante = false;
+    return;
   }
+
+  cargarProveedoresSeguro();
+  evaluarLucroCesantePorProveedor();
 });
 
  /* lucro cesante */
@@ -607,6 +605,44 @@ function cargarProveedoresSeguro() {
   }
 }
 
+function evaluarLucroCesantePorProveedor() {
+  const chkLucro = getEl("chkLucroCesante");
+  const select = getEl("selectLucroCesante");
+  const providerId = getEl("selectInsuranceProvider")?.value;
+  const tipoVehiculo = appState.tipoVehiculo;
+  const edad = parseInt(getEl("inputEdadCliente")?.value || 0);
+
+  chkLucro.checked = false;
+  chkLucro.disabled = true;
+  select.innerHTML = "";
+  select.disabled = true;
+  appState.incluyeLucroCesante = false;
+
+  const config = lucroCesanteConfig.find(c =>
+    c.active &&
+    c.providerId === providerId &&
+    c.aplicaTipoVehiculo.includes(tipoVehiculo)
+  );
+
+  if (!config) return;
+
+  chkLucro.disabled = false;
+
+  if (edad >= config.edadMinima && edad <= config.edadMaxima) {
+    config.valorCoberturasAnual.forEach(valor => {
+      const opt = document.createElement("option");
+      opt.value = valor;
+      opt.textContent = valor;
+      select.appendChild(opt);
+    });
+
+    select.value = config.CoberturaAnualPorDefecto;
+    select.disabled = !config.editable;
+
+    chkLucro.checked = true;
+    appState.incluyeLucroCesante = true;
+  }
+}
 
 /* =================================================
    DISPOSITIVO – REGLAS
