@@ -2,7 +2,7 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : finance.js
  Versión       : V 2.0
- Compilación   : 1.50
+ Compilación   : 1.51
  Estado        : AJUSTE MODELO FINANCIERO (SEGURO FINANCIADO)
  Descripción   :
    - Seguro anual se financia
@@ -411,48 +411,27 @@ function calculateQuote(input, data) {
     }, 0);
   }
 
-  // 5. SEGURO (CONTROLADO - SIN MOTOR SAP AÚN)
+  // 5. SEGURO / LUCRO CESANTE
   let insuranceTotal = 0;
 
-  // Prioridad 1: valor total directo (ya calculado externamente)
+  const lucroCesanteAnnual =
+    input.lucroCesanteSelected
+      ? Number(input.lucroCesanteAnnual) || 0
+      : 0;
+
   if (Number(input.insuranceTotal) > 0) {
     insuranceTotal = Number(input.insuranceTotal);
-  }
-
-  // Prioridad 2: primas anuales acumuladas
-  else if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
+  } else if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
     insuranceTotal = input.insuranceAnnuals.reduce((acc, val) => {
       return acc + (Number(val) || 0);
     }, 0);
   }
 
-  // Caso base: sin seguro o aún no implementado
-  // TODO: implementar cálculo real de póliza según lógica SAP B1
-
-  // 6. MONTO FINANCIADO TOTAL
-  const financedAmount = baseAmount + additionalTotal + insuranceTotal;
-
-  // 7. FINANCIAMIENTO
+  // 6. FINANCIAMIENTO
   const rate = Number(input.rate) || 0;
   const term = Number(input.term) || 0;
   const years = Math.ceil(term / 12);
 
-  // 7.1 Financiamiento separado por componente
-  const cuotaVehiculoMensual = cuotaFrancesa(baseAmount, rate, term);
-  const totalVehiculoPayable = cuotaVehiculoMensual * term;
-  const interesVehiculo = totalVehiculoPayable - baseAmount;
-
-  const cuotaDispositivoMensual = cuotaFrancesa(additionalTotal, rate, term);
-  const totalDispositivoPayable = cuotaDispositivoMensual * term;
-  const interesDispositivo = totalDispositivoPayable - additionalTotal;
-
-  const cuotaSeguroMensualBase = cuotaFrancesa(insuranceTotal, rate, term);
-  const totalSeguroPayable = cuotaSeguroMensualBase * term;
-  const interesSeguro = totalSeguroPayable - insuranceTotal;
-
-  // 7.2 Seguro mensual por año (fase 1)
-  // Si ya viene insuranceAnnuals, usamos cada valor anual / 12
-  // Si solo viene insuranceTotal, distribuimos promedio por año
   let segurosAnuales = [];
 
   if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
@@ -464,10 +443,29 @@ function calculateQuote(input, data) {
     segurosAnuales = Array.from({ length: years }, () => 0);
   }
 
+  const insuranceTotalWithLucro =
+    segurosAnuales.reduce((acc, val) => acc + (Number(val) || 0), 0) +
+    (lucroCesanteAnnual * years);
+
+  const financedAmount = baseAmount + additionalTotal + insuranceTotalWithLucro;
+
+  const cuotaVehiculoMensual = cuotaFrancesa(baseAmount, rate, term);
+  const totalVehiculoPayable = cuotaVehiculoMensual * term;
+  const interesVehiculo = totalVehiculoPayable - baseAmount;
+
+  const cuotaDispositivoMensual = cuotaFrancesa(additionalTotal, rate, term);
+  const totalDispositivoPayable = cuotaDispositivoMensual * term;
+  const interesDispositivo = totalDispositivoPayable - additionalTotal;
+
+  const cuotaSeguroMensualBase = cuotaFrancesa(insuranceTotalWithLucro, rate, term);
+  const totalSeguroPayable = cuotaSeguroMensualBase * term;
+  const interesSeguro = totalSeguroPayable - insuranceTotalWithLucro;
+
   const yearlySummary = [];
 
   for (let y = 1; y <= years; y++) {
-    const seguroAnual = Number(segurosAnuales[y - 1]) || 0;
+    const seguroAnualBase = Number(segurosAnuales[y - 1]) || 0;
+    const seguroAnual = seguroAnualBase + lucroCesanteAnnual;
     const cuotaSeguroMensual = seguroAnual / 12;
 
     const cuotaTotalMensual =
@@ -477,6 +475,9 @@ function calculateQuote(input, data) {
 
     yearlySummary.push({
       year: y,
+      seguroAnualBase,
+      lucroCesanteAnnual,
+      seguroAnual,
       cuotaVehiculo: cuotaVehiculoMensual,
       cuotaDispositivo: cuotaDispositivoMensual,
       cuotaSeguro: cuotaSeguroMensual,
@@ -484,7 +485,6 @@ function calculateQuote(input, data) {
     });
   }
 
-  // 7.3 Totales globales
   const monthlyPayment = cuotaVehiculoMensual + cuotaDispositivoMensual + cuotaSeguroMensualBase;
   const totalPayable = totalVehiculoPayable + totalDispositivoPayable + totalSeguroPayable;
   const totalInterest = interesVehiculo + interesDispositivo + interesSeguro;
@@ -505,7 +505,8 @@ function calculateQuote(input, data) {
       entry,
       baseAmount,
       additionalTotal,
-      insuranceTotal,
+      insuranceTotal: insuranceTotalWithLucro,
+      lucroCesanteTotal: lucroCesanteAnnual * years,
       financedAmount
     },
     finance: {
@@ -515,19 +516,16 @@ function calculateQuote(input, data) {
       monthlyPayment,
       totalInterest,
       totalPayable,
-
       vehicle: {
         monthly: cuotaVehiculoMensual,
         total: totalVehiculoPayable,
         interest: interesVehiculo
       },
-
       device: {
         monthly: cuotaDispositivoMensual,
         total: totalDispositivoPayable,
         interest: interesDispositivo
       },
-
       insurance: {
         monthly: cuotaSeguroMensualBase,
         total: totalSeguroPayable,
