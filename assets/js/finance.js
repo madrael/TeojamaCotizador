@@ -2,7 +2,7 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : finance.js
  Versión       : V 2.0
- Compilación   : 1.51
+ Compilación   : 1.52
  Estado        : AJUSTE MODELO FINANCIERO (SEGURO FINANCIADO)
  Descripción   :
    - Seguro anual se financia
@@ -230,20 +230,22 @@ function renderResumenPorAnio(yearlySummary, term) {
   let rowSeguro = "";
   let rowTotal = "";
 
-  for (let i = 0; i < years; i++) {
-    const item = yearlySummary[i] || {
-      cuotaVehiculo: 0,
-      cuotaDispositivo: 0,
-      cuotaSeguro: 0,
-      cuotaTotalMensual: 0
-    };
+for (let i = 0; i < years; i++) {
+  const item = yearlySummary[i] || {
+    cuotaVehiculo: 0,
+    cuotaDispositivo: 0,
+    cuotaSeguro: 0,
+    cuotaTotalMensual: 0
+  };
 
-    headers += `<th>${i + 1}er año</th>`;
-    rowVehiculo += `<td>${money(item.cuotaVehiculo)}</td>`;
-    rowDispositivo += `<td>${money(item.cuotaDispositivo)}</td>`;
-    rowSeguro += `<td>${money(item.cuotaSeguro)}</td>`;
-    rowTotal += `<td><strong>${money(item.cuotaTotalMensual)}</strong></td>`;
-  }
+  const monthsInYear = (i === years - 1 && term % 12 !== 0) ? term % 12 : 12;
+
+  headers += `<th>${i + 1}er año<br><small>${monthsInYear} meses</small></th>`;
+  rowVehiculo += `<td>${money(item.cuotaVehiculo)}</td>`;
+  rowDispositivo += `<td>${money(item.cuotaDispositivo)}</td>`;
+  rowSeguro += `<td>${money(item.cuotaSeguro)}</td>`;
+  rowTotal += `<td><strong>${money(item.cuotaTotalMensual)}</strong></td>`;
+}
 
   container.innerHTML = `
     <table class="finance-table">
