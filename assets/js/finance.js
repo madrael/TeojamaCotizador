@@ -2,7 +2,7 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : finance.js
  Versión       : V 2.0
- Compilación   : 1.55
+ Compilación   : 1.56
  Estado        : AJUSTE MODELO FINANCIERO (SEGURO FINANCIADO)
  Descripción   :
    - Seguro anual se financia
@@ -237,7 +237,6 @@ function renderResumenPorAnio(yearlySummary, term) {
   let rowLucroCesante = "";
   let rowSeguroTotal = "";
   let rowTotal = "";
-  let rowPrimaAnual = "";
 
   for (let i = 0; i < years; i++) {
     const item = yearlySummary[i] || {
@@ -252,8 +251,7 @@ function renderResumenPorAnio(yearlySummary, term) {
     const monthsInYear = (i === years - 1 && term % 12 !== 0) ? term % 12 : 12;
     const cuotaSeguroBase = (Number(item.seguroAnualBase) || 0) / 12;
     const cuotaLucroCesante = (Number(item.lucroCesanteAnnual) || 0) / 12;
-    const primaAnual = Number(item.seguroAnualBase) || 0;
-
+    
     headers += `<th>${i + 1}er año<br><small>${monthsInYear} meses</small></th>`;
     rowVehiculo += `<td>${money(item.cuotaVehiculo)}</td>`;
     rowDispositivo += `<td>${money(item.cuotaDispositivo)}</td>`;
@@ -261,7 +259,6 @@ function renderResumenPorAnio(yearlySummary, term) {
     rowLucroCesante += `<td>${money(cuotaLucroCesante)}</td>`;
     rowSeguroTotal += `<td>${money(item.cuotaSeguro)}</td>`;
     rowTotal += `<td><strong>${money(item.cuotaTotalMensual)}</strong></td>`;
-    rowPrimaAnual += `<td>${money(primaAnual)}</td>`;
   }
 
   container.innerHTML = `
@@ -280,10 +277,6 @@ function renderResumenPorAnio(yearlySummary, term) {
         <tr>
           <td class="concepto">Rastreo Satelital</td>
           ${rowDispositivo}
-        </tr>
-        <tr>
-          <td class="concepto">Prima anual seguro</td>
-          ${rowPrimaAnual}
         </tr>
         <tr>
           <td class="concepto">Seguro mensual</td>
@@ -350,7 +343,15 @@ async function renderTablaFinanciamiento() {
     set(`pvp-${plazo}`, pvp);
 
     // Seguro anual total
-    set(`seguro-total-${plazo}`, seguroAnual > 0 ? seguroAnual : "—");
+    let seguroAnualPlazo = 0;
+
+    if (quoteResult?.yearlySummary && plazo <= plazoSeleccionado) {
+      const yearIndex = Math.ceil(plazo / 12) - 1;
+      seguroAnualPlazo =
+        Number(quoteResult.yearlySummary[yearIndex]?.seguroAnualBase) || 0;
+    }
+
+set(`seguro-total-${plazo}`, seguroAnualPlazo > 0 ? seguroAnualPlazo : "$0.00");
 
     set(`device-${plazo}`, dispositivo);
     set(`total-${plazo}`, montoTotal);
