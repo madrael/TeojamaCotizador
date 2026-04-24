@@ -550,7 +550,9 @@ btnCalcular?.addEventListener("click", async () => {
       devicePlan: appState.dispositivo ? appState.dispositivo.idPlan : null,
       additionalComponents: appState.componentesSeleccionados || [],
       insuranceSelected: !!appState.incluyeSeguro,
-      insuranceTotal: Number(inputSeguro?.value) || 0
+      insuranceTotal: Number(inputSeguro?.value) || 0,
+      lucroCesanteSelected: !!appState.incluyeLucroCesante,
+      lucroCesanteAnnual: Number(getEl("selectLucroCesante")?.value) || 0
     };
 
       const data = await loadAllData();
@@ -563,7 +565,8 @@ btnCalcular?.addEventListener("click", async () => {
     console.error("Error al calcular cotización:", error);
     alert("Ocurrió un error al calcular la cotización. Revise consola.");
   }
-});
+}
+);
 }
 
 /* SEGURO – Funcnion CARGA DE PROVEEDORES */
