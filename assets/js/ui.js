@@ -2,7 +2,7 @@
  * Archivo: ui.js
  * Proyecto: Cotizador Vehículos Teojama
  * Versión: V 2.0
- * Compilación: 1.95
+ * Compilación: 1.96
  * Estado: REORGANIZADO (sin cambios funcionales)
  *************************************************/
 
@@ -602,6 +602,46 @@ function cargarProveedoresSeguro() {
 
   if (proveedores.length) {
     select.value = proveedores[0].id;
+  }
+}
+
+function evaluarLucroCesantePorProveedor() {
+  const chkLucro = getEl("chkLucroCesante");
+  const select = getEl("selectLucroCesante");
+  const providerId = getEl("selectInsuranceProvider")?.value;
+  const tipoVehiculo = appState.tipoVehiculo;
+  const edad = parseInt(getEl("inputEdadCliente")?.value || 0);
+
+  chkLucro.checked = false;
+  chkLucro.disabled = true;
+  select.innerHTML = "";
+  select.disabled = true;
+  appState.incluyeLucroCesante = false;
+
+  const config = lucroCesanteConfig.find(c =>
+    c.active &&
+    c.providerId === providerId &&
+    c.aplicaTipoVehiculo.includes(tipoVehiculo)
+  );
+
+  if (!config) return;
+
+  chkLucro.disabled = false;
+
+  if (edad >= config.edadMinima && edad <= config.edadMaxima) {
+
+    config.valorCoberturasAnual.forEach(valor => {
+      const opt = document.createElement("option");
+      opt.value = valor;
+      opt.textContent = valor;
+      select.appendChild(opt);
+    });
+
+    select.value = config.CoberturaAnualPorDefecto;
+    select.disabled = !config.editable;
+
+    chkLucro.checked = true;
+    appState.incluyeLucroCesante = true;
   }
 }
 
