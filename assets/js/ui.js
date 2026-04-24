@@ -2,7 +2,7 @@
  * Archivo: ui.js
  * Proyecto: Cotizador Vehículos Teojama
  * Versión: V 2.0
- * Compilación: 1.98
+ * Compilación: 1.99
  * Estado: REORGANIZADO (sin cambios funcionales)
  *************************************************/
 
@@ -495,6 +495,10 @@ chkSeguro?.addEventListener("change", () => {
   select.disabled = !config.editable;
 
   appState.incluyeLucroCesante = true;
+});
+   
+getEl("selectInsuranceProvider")?.addEventListener("change", () => {
+  evaluarLucroCesantePorProveedor();
 });
 
 /* Selecciona Dispositivo */
