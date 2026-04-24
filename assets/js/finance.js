@@ -2,7 +2,7 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : finance.js
  Versión       : V 2.0
- Compilación   : 1.52
+ Compilación   : 1.53
  Estado        : AJUSTE MODELO FINANCIERO (SEGURO FINANCIADO)
  Descripción   :
    - Seguro anual se financia
@@ -227,25 +227,33 @@ function renderResumenPorAnio(yearlySummary, term) {
   let headers = "";
   let rowVehiculo = "";
   let rowDispositivo = "";
-  let rowSeguro = "";
+  let rowSeguroBase = "";
+  let rowLucroCesante = "";
+  let rowSeguroTotal = "";
   let rowTotal = "";
 
-for (let i = 0; i < years; i++) {
-  const item = yearlySummary[i] || {
-    cuotaVehiculo: 0,
-    cuotaDispositivo: 0,
-    cuotaSeguro: 0,
-    cuotaTotalMensual: 0
-  };
+  for (let i = 0; i < years; i++) {
+    const item = yearlySummary[i] || {
+      cuotaVehiculo: 0,
+      cuotaDispositivo: 0,
+      seguroAnualBase: 0,
+      lucroCesanteAnnual: 0,
+      cuotaSeguro: 0,
+      cuotaTotalMensual: 0
+    };
 
-  const monthsInYear = (i === years - 1 && term % 12 !== 0) ? term % 12 : 12;
+    const monthsInYear = (i === years - 1 && term % 12 !== 0) ? term % 12 : 12;
+    const cuotaSeguroBase = (Number(item.seguroAnualBase) || 0) / 12;
+    const cuotaLucroCesante = (Number(item.lucroCesanteAnnual) || 0) / 12;
 
-  headers += `<th>${i + 1}er año<br><small>${monthsInYear} meses</small></th>`;
-  rowVehiculo += `<td>${money(item.cuotaVehiculo)}</td>`;
-  rowDispositivo += `<td>${money(item.cuotaDispositivo)}</td>`;
-  rowSeguro += `<td>${money(item.cuotaSeguro)}</td>`;
-  rowTotal += `<td><strong>${money(item.cuotaTotalMensual)}</strong></td>`;
-}
+    headers += `<th>${i + 1}er año<br><small>${monthsInYear} meses</small></th>`;
+    rowVehiculo += `<td>${money(item.cuotaVehiculo)}</td>`;
+    rowDispositivo += `<td>${money(item.cuotaDispositivo)}</td>`;
+    rowSeguroBase += `<td>${money(cuotaSeguroBase)}</td>`;
+    rowLucroCesante += `<td>${money(cuotaLucroCesante)}</td>`;
+    rowSeguroTotal += `<td>${money(item.cuotaSeguro)}</td>`;
+    rowTotal += `<td><strong>${money(item.cuotaTotalMensual)}</strong></td>`;
+  }
 
   container.innerHTML = `
     <table class="finance-table">
@@ -265,8 +273,16 @@ for (let i = 0; i < years; i++) {
           ${rowDispositivo}
         </tr>
         <tr>
-          <td class="concepto">Seguro</td>
-          ${rowSeguro}
+          <td class="concepto">Seguro base</td>
+          ${rowSeguroBase}
+        </tr>
+        <tr>
+          <td class="concepto">Lucro cesante</td>
+          ${rowLucroCesante}
+        </tr>
+        <tr>
+          <td class="concepto"><strong>Total seguro mensual</strong></td>
+          ${rowSeguroTotal}
         </tr>
         <tr class="finance-separator">
           <td colspan="${years + 1}"></td>
