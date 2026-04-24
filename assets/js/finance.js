@@ -2,7 +2,7 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : finance.js
  Versión       : V 2.0
- Compilación   : 1.54
+ Compilación   : 1.55
  Estado        : AJUSTE MODELO FINANCIERO (SEGURO FINANCIADO)
  Descripción   :
    - Seguro anual se financia
@@ -224,6 +224,12 @@ function renderResumenPorAnio(yearlySummary, term) {
 
   const years = Math.ceil((Number(term) || 0) / 12);
 
+  const title = document.getElementById("creditSummaryTitle");
+  if (title) {
+      title.textContent = `Resumen del crédito a ${term} meses`;
+  }
+  
+
   let headers = "";
   let rowVehiculo = "";
   let rowDispositivo = "";
@@ -231,6 +237,7 @@ function renderResumenPorAnio(yearlySummary, term) {
   let rowLucroCesante = "";
   let rowSeguroTotal = "";
   let rowTotal = "";
+  let rowPrimaAnual = "";
 
   for (let i = 0; i < years; i++) {
     const item = yearlySummary[i] || {
@@ -239,12 +246,13 @@ function renderResumenPorAnio(yearlySummary, term) {
       seguroAnualBase: 0,
       lucroCesanteAnnual: 0,
       cuotaSeguro: 0,
-      cuotaTotalMensual: 0
+      cuotaTotalMensual: 0     
     };
 
     const monthsInYear = (i === years - 1 && term % 12 !== 0) ? term % 12 : 12;
     const cuotaSeguroBase = (Number(item.seguroAnualBase) || 0) / 12;
     const cuotaLucroCesante = (Number(item.lucroCesanteAnnual) || 0) / 12;
+    const primaAnual = Number(item.seguroAnualBase) || 0;
 
     headers += `<th>${i + 1}er año<br><small>${monthsInYear} meses</small></th>`;
     rowVehiculo += `<td>${money(item.cuotaVehiculo)}</td>`;
@@ -253,6 +261,7 @@ function renderResumenPorAnio(yearlySummary, term) {
     rowLucroCesante += `<td>${money(cuotaLucroCesante)}</td>`;
     rowSeguroTotal += `<td>${money(item.cuotaSeguro)}</td>`;
     rowTotal += `<td><strong>${money(item.cuotaTotalMensual)}</strong></td>`;
+    rowPrimaAnual += `<td>${money(primaAnual)}</td>`;
   }
 
   container.innerHTML = `
@@ -273,7 +282,11 @@ function renderResumenPorAnio(yearlySummary, term) {
           ${rowDispositivo}
         </tr>
         <tr>
-          <td class="concepto">Seguro base</td>
+          <td class="concepto">Prima anual seguro</td>
+          ${rowPrimaAnual}
+        </tr>
+        <tr>
+          <td class="concepto">Seguro mensual</td>
           ${rowSeguroBase}
         </tr>
         <tr>
