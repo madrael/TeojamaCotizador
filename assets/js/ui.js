@@ -2,7 +2,7 @@
  * Archivo: ui.js
  * Proyecto: Cotizador Vehículos Teojama
  * Versión: V 2.0
- * Compilación: 1.99
+ * Compilación: 2.00
  * Estado: REORGANIZADO (sin cambios funcionales)
  *************************************************/
 
@@ -546,6 +546,7 @@ btnCalcular?.addEventListener("click", async () => {
 
     const input = {
       vehicle: veh,
+      vehiclePrice: getPVPEfectivo(),  // 👈 AGREGAR ESTA LÍNEA
       entry: Number(inputEntrada?.value) || 0,
       rate: tasaAnual,
       term: Number(appState.plazo) || 0,
