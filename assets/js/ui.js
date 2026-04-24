@@ -2,7 +2,7 @@
  * Archivo: ui.js
  * Proyecto: Cotizador Vehículos Teojama
  * Versión: V 2.0
- * Compilación: 1.96
+ * Compilación: 1.97
  * Estado: REORGANIZADO (sin cambios funcionales)
  *************************************************/
 
@@ -548,7 +548,7 @@ btnCalcular?.addEventListener("click", async () => {
       devicePlan: appState.dispositivo ? appState.dispositivo.idPlan : null,
       additionalComponents: appState.componentesSeleccionados || [],
       insuranceSelected: !!appState.incluyeSeguro,
-      insuranceTotal: Number(inputSeguro?.value) || 0,
+      insuranceTotal: 0,
       lucroCesanteSelected: !!appState.incluyeLucroCesante,
       lucroCesanteAnnual: Number(getEl("selectLucroCesante")?.value) || 0
     };
