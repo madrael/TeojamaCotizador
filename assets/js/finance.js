@@ -2,7 +2,7 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : finance.js
  Versión       : V 2.0
- Compilación   : 1.57
+ Compilación   : 1.58
  Estado        : AJUSTE MODELO FINANCIERO (SEGURO FINANCIADO)
  Descripción   :
    - Seguro anual se financia
@@ -443,21 +443,19 @@ function calculateQuote(input, data) {
     }, 0);
   }
 
-  // 5. SEGURO / LUCRO CESANTE
-  let insuranceTotal = 0;
+// 5. SEGURO / LUCRO CESANTE
+let insuranceTotal = 0;
 
-  const lucroCesanteAnnual =
-    input.lucroCesanteSelected
-      ? Number(input.lucroCesanteAnnual) || 0
-      : 0;
+const lucroCesanteAnnual =
+  input.insuranceSelected && input.lucroCesanteSelected
+    ? Number(input.lucroCesanteAnnual) || 0
+    : 0;
 
-  if (Number(input.insuranceTotal) > 0) {
-    insuranceTotal = Number(input.insuranceTotal);
-  } else if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
-    insuranceTotal = input.insuranceAnnuals.reduce((acc, val) => {
-      return acc + (Number(val) || 0);
-    }, 0);
-  }
+if (input.insuranceSelected && Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
+  insuranceTotal = input.insuranceAnnuals.reduce((acc, val) => {
+    return acc + (Number(val) || 0);
+  }, 0);
+}
 
   // 6. FINANCIAMIENTO
   const rate = Number(input.rate) || 0;
