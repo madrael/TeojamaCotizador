@@ -2,7 +2,7 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : index.html
  Versión       : V 2.0
- Compilación   : 2.00
+ Compilación   : 2.02
  Estado        : ESTABLE
  Descripción   : Línea base estable del cotizador con color y versión dinámica.
                  Versionado desacoplado vía assets/js/version.js
@@ -419,7 +419,7 @@
                     <table class="finance-table" id="financeTable">
                         <thead>
                             <tr>
-                                <th>Concepto</th>
+                                <th>Crédito a</th>
                                 <th data-plazo="12">12 meses</th>
                                 <th data-plazo="24">24 meses</th>
                                 <th data-plazo="36">36 meses</th>
@@ -522,7 +522,7 @@
                      RESUMEN POR AÑO
                 =========================== -->
                 <div class="credit-summary">
-                    <h4>Resumen del crédito por año</h4>
+                    <h4 id="creditSummaryTitle">Resumen del crédito</h4>
                     <div id="creditSummaryByYear"></div>
                 </div>
                 <!-- Cierre resumen por año -->
