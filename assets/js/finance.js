@@ -341,38 +341,32 @@ async function renderTablaFinanciamiento() {
 ========================= */
 
 function bindFinance() {
-  const btn = document.getElementById("btnCalcular");
-  if (btn) {
-    btn.addEventListener(
-      "click",
-      async e => {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        await renderTablaFinanciamiento();
-      },
-      true
-    );
-  }
-
   const plazoSel = document.getElementById("selectPlazo");
   const planSel = document.getElementById("selectDevicePlan");
   const chkDev = document.getElementById("chkDispositivo");
 
-  // Antes: solo actualizaba panel dispositivo.
-  // Ahora: también refresca tabla + resumen (sin romper lo anterior).
   plazoSel?.addEventListener("change", async () => {
     await renderResumenDispositivo();
-    await renderTablaFinanciamiento();
+
+    if (window.lastQuoteResult) {
+      await renderTablaFinanciamiento();
+    }
   });
 
   planSel?.addEventListener("change", async () => {
     await renderResumenDispositivo();
-    await renderTablaFinanciamiento();
+
+    if (window.lastQuoteResult) {
+      await renderTablaFinanciamiento();
+    }
   });
 
   chkDev?.addEventListener("change", async () => {
     await renderResumenDispositivo();
-    await renderTablaFinanciamiento();
+
+    if (window.lastQuoteResult) {
+      await renderTablaFinanciamiento();
+    }
   });
 }
 
