@@ -165,6 +165,18 @@
     "activo": true
   },
   {
+    "componentId": "CAR0149",
+    "ProveedorMarca": "VARMA",     
+    "descripcion": "CARROCERIAS VARMA CITYBUSS VM7, FC 2026, AC, 33 PASEJREOS, 1 PUERTA CONDUCTOR, COLOR 1 AMARILLO, COLOR 2 NEGRO",
+    "valorPVP": 67670.002,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "grupoComponente": "Carrocerias",
+    "financiable": true,
+    "asegurable": true,
+    "codigoCoberturaSeguro": "E05",
+    "activo": true
+  },
+  {
     "componentId": "CAR019",
     "ProveedorMarca": "PICOSA",     
     "descripcion": "CARROCERIA PICOSA PARA BUS INTRAPROVINCIAL 2 PUERTAS LADO DERECHO, MODELO ATHOS I, 42 ASIENTOS INCLUIDO CONDUCTOR",
