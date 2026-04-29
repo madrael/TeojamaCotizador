@@ -2,7 +2,7 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : finance.js
  Versión       : V 2.0
- Compilación   : 1.61
+ Compilación   : 1.62
  Estado        : AJUSTE MODELO FINANCIERO (SEGURO FINANCIADO)
  Descripción   :
    - Seguro anual se financia
@@ -417,27 +417,29 @@ function calculateQuote(input, data) {
   const entry = Number(input.entry) || 0;
 
   // 3. BASE
-  const baseAmount = Math.max(vehiclePrice - entry, 0);
+  const vehicleCreditValue = vehiclePrice + componentsTotal;
+  const baseAmount = Math.max(vehicleCreditValue - entry, 0);
 
   // 4. COMPONENTES
-  let additionalTotal = 0;
+let componentsTotal = 0;
+let deviceTotal = 0;
 
-  // 4.1 Dispositivo
-  if (input.devicePlan) {
-    const plan = data?.devicePlansById?.[input.devicePlan];
+// 4.1 Componentes adicionales (parte del vehículo)
+if (Array.isArray(input.additionalComponents)) {
+  componentsTotal = input.additionalComponents.reduce((acc, item) => {
+    return acc + (Number(item.valorPVP) || 0);
+  }, 0);
+}
 
-    if (plan && plan.valoresPorAnio) {
-      const years = String(Math.ceil((Number(input.term) || 0) / 12));
-      additionalTotal += Number(plan.valoresPorAnio[years]) || 0;
-    }
+// 4.2 Dispositivo (se financia separado)
+if (input.devicePlan) {
+  const plan = data?.devicePlansById?.[input.devicePlan];
+
+  if (plan && plan.valoresPorAnio) {
+    const years = String(Math.ceil((Number(input.term) || 0) / 12));
+    deviceTotal = Number(plan.valoresPorAnio[years]) || 0;
   }
-
-  // 4.2 Componentes adicionales financiables
-  if (Array.isArray(input.additionalComponents)) {
-    additionalTotal += input.additionalComponents.reduce((acc, item) => {
-      return acc + (Number(item.valorPVP) || 0);
-    }, 0);
-  }
+}
 
 // 5. SEGURO / LUCRO CESANTE
 let insuranceTotal = 0;
@@ -473,15 +475,15 @@ if (input.insuranceSelected && Array.isArray(input.insuranceAnnuals) && input.in
     segurosAnuales.reduce((acc, val) => acc + (Number(val) || 0), 0) +
     (lucroCesanteAnnual * years);
 
-  const financedAmount = baseAmount + additionalTotal + insuranceTotalWithLucro;
+  const financedAmount = baseAmount + deviceTotal + insuranceTotalWithLucro;
 
   const cuotaVehiculoMensual = cuotaFrancesa(baseAmount, rate, term);
   const totalVehiculoPayable = cuotaVehiculoMensual * term;
   const interesVehiculo = totalVehiculoPayable - baseAmount;
 
-  const cuotaDispositivoMensual = cuotaFrancesa(additionalTotal, rate, term);
+  const cuotaDispositivoMensual = cuotaFrancesa(deviceTotal, rate, term);
   const totalDispositivoPayable = cuotaDispositivoMensual * term;
-  const interesDispositivo = totalDispositivoPayable - additionalTotal;
+  const interesDispositivo = totalDispositivoPayable - deviceTotal;
 
   const cuotaSeguroMensualBase = cuotaFrancesa(insuranceTotalWithLucro, rate, term);
   const totalSeguroPayable = cuotaSeguroMensualBase * term;
@@ -526,11 +528,13 @@ if (input.insuranceSelected && Array.isArray(input.insuranceAnnuals) && input.in
       idClase: vehicle.IdClase,
       idSubClase: vehicle.IdSubClase
     },
-    breakdown: {
+      breakdown: {
       vehiclePrice,
+      componentsTotal,
+      vehicleCreditValue,
       entry,
       baseAmount,
-      additionalTotal,
+      deviceTotal,
       insuranceTotal: insuranceTotalWithLucro,
       lucroCesanteTotal: lucroCesanteAnnual * years,
       financedAmount
