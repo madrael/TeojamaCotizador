@@ -79,6 +79,20 @@ function getPVPEfectivo() {
   return !isNaN(val) && val > 0 ? val : getPVPBase();
 }
 
+function getPVPEfectivoDesdePVPSIVA(vehicle) {
+  const pvpSivaBase = Number(vehicle?.PVPSIVA) || 0;
+  const porcDesc = parseFloat(getEl("inputDescPorcentaje")?.value) || 0;
+
+  if (!pvpSivaBase || porcDesc <= 0) {
+    return getPVPEfectivo(); // fallback seguro
+  }
+
+  const pvpSivaConDescuento =
+    pvpSivaBase - (pvpSivaBase * porcDesc / 100);
+
+  return round2(pvpSivaConDescuento * 1.15);
+}
+
 /* =================================================
    INIT UI
 ================================================= */
@@ -546,7 +560,7 @@ btnCalcular?.addEventListener("click", async () => {
 
     const input = {
       vehicle: veh,
-      vehiclePrice: getPVPEfectivo(),  // 👈 AGREGAR ESTA LÍNEA
+      vehiclePrice: getPVPEfectivoDesdePVPSIVA(veh),  // 👈 AGREGAR ESTA LÍNEA
       entry: Number(inputEntrada?.value) || 0,
       rate: tasaAnual,
       term: Number(appState.plazo) || 0,
