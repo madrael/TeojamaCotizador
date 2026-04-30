@@ -304,32 +304,22 @@ function renderResumenPorAnio(yearlySummary, term) {
 ========================= */
 
 async function renderTablaFinanciamiento() {
-  const pvp = getPVP();
   const entrada = getEntrada();
-  const seguroAnual = getSeguro();
-  const tasaAnual = getTasaAnual();
 
   const plazoSeleccionado =
     Number(document.getElementById("selectPlazo")?.value) || 0;
 
-  let quoteResult = null;
-
-  if (window.lastQuoteResult) {
-    quoteResult = window.lastQuoteResult;
-  }
+  const quoteResult = window.lastQuoteResult || null;
 
   limpiarPlazoActivo();
 
   for (const plazo of PLAZOS_FIJOS) {
     const dispositivo = await getValorDispositivoPorPlazo(plazo);
 
-    // 🔹 MODELO FINANCIERO TABLA SUPERIOR
-    const montoTotal = pvp + seguroAnual + dispositivo;
-    const montoFinanciar = Math.max(montoTotal - entrada, 0);
-
     const set = (id, val) => {
       const el = document.getElementById(id);
       if (!el) return;
+
       if (typeof val === "string") {
         el.textContent = val;
       } else {
@@ -337,26 +327,55 @@ async function renderTablaFinanciamiento() {
       }
     };
 
-    set(`pvp-${plazo}`, pvp);
-
-    // Seguro anual total
+    let vehiclePrice = getPVP();
+    let componentsTotal = 0;
     let seguroAnualPlazo = 0;
+    let montoTotal = vehiclePrice + dispositivo;
+    let montoFinanciar = Math.max(montoTotal - entrada, 0);
 
-    if (quoteResult?.yearlySummary && plazo <= plazoSeleccionado) {
-      const yearIndex = Math.ceil(plazo / 12) - 1;
-      seguroAnualPlazo =
-        Number(quoteResult.yearlySummary[yearIndex]?.seguroAnualBase) || 0;
+    if (quoteResult) {
+      vehiclePrice = Number(quoteResult.breakdown?.vehiclePrice) || 0;
+      componentsTotal = Number(quoteResult.breakdown?.componentsTotal) || 0;
+
+      if (plazo === plazoSeleccionado) {
+        montoTotal =
+          vehiclePrice +
+          componentsTotal +
+          Number(quoteResult.breakdown?.deviceTotal || 0) +
+          Number(quoteResult.breakdown?.insuranceTotal || 0);
+
+        montoFinanciar =
+          Number(quoteResult.breakdown?.financedAmount) || 0;
+      } else {
+        montoTotal =
+          vehiclePrice +
+          componentsTotal +
+          dispositivo;
+
+        montoFinanciar =
+          Math.max(montoTotal - entrada, 0);
+      }
+
+      if (quoteResult.yearlySummary && plazo <= plazoSeleccionado) {
+        const yearIndex = Math.ceil(plazo / 12) - 1;
+        seguroAnualPlazo =
+          Number(quoteResult.yearlySummary[yearIndex]?.seguroAnualBase) || 0;
+      }
     }
 
+    set(`pvp-${plazo}`, vehiclePrice);
+    set(`components-${plazo}`, componentsTotal);
     set(`seguro-total-${plazo}`, seguroAnualPlazo);
     set(`device-${plazo}`, dispositivo);
-    set(`total-${plazo}`, montoTotal);
     set(`entrada-${plazo}`, entrada);
+    set(`total-${plazo}`, montoTotal);
     set(`fin-${plazo}`, montoFinanciar);
 
-    // Resumen inferior por año
     if (plazo === plazoSeleccionado && quoteResult) {
-      renderResumenPorAnio(quoteResult.yearlySummary, quoteResult.finance.term);
+      renderResumenPorAnio(
+        quoteResult.yearlySummary,
+        quoteResult.finance.term
+      );
     }
   }
 
