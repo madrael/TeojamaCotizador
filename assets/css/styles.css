@@ -521,4 +521,31 @@ p {
   }
 }
 
+/* =================================================
+   BOTÓN IMPRESIÓN / PDF
+================================================= */
 
+.print-icon-btn {
+  width: 46px;
+  height: 46px;
+  border: none;
+  background: transparent;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.print-icon-btn img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+
+.print-icon-btn:hover {
+  background-color: #eaeef2;
+  box-shadow: 0 1px 4px rgba(27,31,36,0.18);
+  transform: translateY(-1px);
+}
