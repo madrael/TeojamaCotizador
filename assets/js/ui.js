@@ -2,7 +2,7 @@
  * Archivo: ui.js
  * Proyecto: Cotizador Vehículos Teojama
  * Versión: V 2.0
- * Compilación: 2.02
+ * Compilación: 2.05
  * Estado: REORGANIZADO (sin cambios funcionales)
  *************************************************/
 
@@ -106,6 +106,7 @@ function initUI() {
   const selTasa = getEl("selectTasa");
   const selPlazo = getEl("selectPlazo");
   const btnCalcular = getEl("btnCalcular");
+  const btnPrintQuote = getEl("btnPrintQuote"); 
 
   /* Inputs descuento / entrada */
   const inputDescPorcentaje = getEl("inputDescPorcentaje");
@@ -585,6 +586,11 @@ btnCalcular?.addEventListener("click", async () => {
   }
 }
 );
+
+btnPrintQuote?.addEventListener("click", () => {
+  window.print();
+});
+   
 }
 
 /* SEGURO – Funcnion CARGA DE PROVEEDORES */
