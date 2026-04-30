@@ -2,7 +2,7 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : finance.js
  Versión       : V 2.0
- Compilación   : 1.62
+ Compilación   : 1.63
  Estado        : AJUSTE MODELO FINANCIERO (SEGURO FINANCIADO)
  Descripción   :
    - Seguro anual se financia
@@ -416,46 +416,50 @@ function calculateQuote(input, data) {
   // 2. ENTRADA
   const entry = Number(input.entry) || 0;
 
-  // 3. BASE
+  // 3. COMPONENTES ADICIONALES
+  let componentsTotal = 0;
+
+  if (Array.isArray(input.additionalComponents)) {
+    componentsTotal = input.additionalComponents.reduce((acc, item) => {
+      return acc + (Number(item.valorPVP) || 0);
+    }, 0);
+  }
+
+  // 4. BASE VEHÍCULO + COMPONENTES
   const vehicleCreditValue = vehiclePrice + componentsTotal;
   const baseAmount = Math.max(vehicleCreditValue - entry, 0);
 
-  // 4. COMPONENTES
-let componentsTotal = 0;
-let deviceTotal = 0;
+  // 5. DISPOSITIVO
+  let deviceTotal = 0;
 
-// 4.1 Componentes adicionales (parte del vehículo)
-if (Array.isArray(input.additionalComponents)) {
-  componentsTotal = input.additionalComponents.reduce((acc, item) => {
-    return acc + (Number(item.valorPVP) || 0);
-  }, 0);
-}
+  if (input.devicePlan) {
+    const plan = data?.devicePlansById?.[input.devicePlan];
 
-// 4.2 Dispositivo (se financia separado)
-if (input.devicePlan) {
-  const plan = data?.devicePlansById?.[input.devicePlan];
-
-  if (plan && plan.valoresPorAnio) {
-    const years = String(Math.ceil((Number(input.term) || 0) / 12));
-    deviceTotal = Number(plan.valoresPorAnio[years]) || 0;
+    if (plan && plan.valoresPorAnio) {
+      const yearsDevice = String(Math.ceil((Number(input.term) || 0) / 12));
+      deviceTotal = Number(plan.valoresPorAnio[yearsDevice]) || 0;
+    }
   }
-}
 
-// 5. SEGURO / LUCRO CESANTE
-let insuranceTotal = 0;
+  // 6. SEGURO / LUCRO CESANTE
+  let insuranceTotal = 0;
 
-const lucroCesanteAnnual =
-  input.insuranceSelected && input.lucroCesanteSelected
-    ? Number(input.lucroCesanteAnnual) || 0
-    : 0;
+  const lucroCesanteAnnual =
+    input.insuranceSelected && input.lucroCesanteSelected
+      ? Number(input.lucroCesanteAnnual) || 0
+      : 0;
 
-if (input.insuranceSelected && Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
-  insuranceTotal = input.insuranceAnnuals.reduce((acc, val) => {
-    return acc + (Number(val) || 0);
-  }, 0);
-}
+  if (
+    input.insuranceSelected &&
+    Array.isArray(input.insuranceAnnuals) &&
+    input.insuranceAnnuals.length > 0
+  ) {
+    insuranceTotal = input.insuranceAnnuals.reduce((acc, val) => {
+      return acc + (Number(val) || 0);
+    }, 0);
+  }
 
-  // 6. FINANCIAMIENTO
+  // 7. FINANCIAMIENTO
   const rate = Number(input.rate) || 0;
   const term = Number(input.term) || 0;
   const years = Math.ceil(term / 12);
@@ -513,9 +517,20 @@ if (input.insuranceSelected && Array.isArray(input.insuranceAnnuals) && input.in
     });
   }
 
-  const monthlyPayment = cuotaVehiculoMensual + cuotaDispositivoMensual + cuotaSeguroMensualBase;
-  const totalPayable = totalVehiculoPayable + totalDispositivoPayable + totalSeguroPayable;
-  const totalInterest = interesVehiculo + interesDispositivo + interesSeguro;
+  const monthlyPayment =
+    cuotaVehiculoMensual +
+    cuotaDispositivoMensual +
+    cuotaSeguroMensualBase;
+
+  const totalPayable =
+    totalVehiculoPayable +
+    totalDispositivoPayable +
+    totalSeguroPayable;
+
+  const totalInterest =
+    interesVehiculo +
+    interesDispositivo +
+    interesSeguro;
 
   return {
     vehicle: {
@@ -528,7 +543,7 @@ if (input.insuranceSelected && Array.isArray(input.insuranceAnnuals) && input.in
       idClase: vehicle.IdClase,
       idSubClase: vehicle.IdSubClase
     },
-      breakdown: {
+    breakdown: {
       vehiclePrice,
       componentsTotal,
       vehicleCreditValue,
