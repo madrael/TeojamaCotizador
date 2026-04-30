@@ -165,6 +165,18 @@
     "activo": true
   },
   {
+    "componentId": "CAR0148",
+    "ProveedorMarca": "CORPMEGABUSS",     
+    "descripcion": "CARROCERIA AK INTERPROVINCIAL 2026/CORPMEGABUSS CIA. LTDA- COLOR 1: ROJO- COLOR 2: BLANCO- NUMERO DE PASAJEROS: 42",
+    "valorPVP": 85217.3900,
+    "aplicaTipoVehiculo": ["Pesado"],
+    "grupoComponente": "Carrocerias",
+    "financiable": true,
+    "asegurable": true,
+    "codigoCoberturaSeguro": "E05",
+    "activo": true
+  },
+  {
     "componentId": "CAR0149",
     "ProveedorMarca": "VARMA",     
     "descripcion": "CARROCERIAS VARMA CITYBUSS VM7, FC 2026, AC, 33 PASEJREOS, 1 PUERTA CONDUCTOR, COLOR 1 AMARILLO, COLOR 2 NEGRO",
