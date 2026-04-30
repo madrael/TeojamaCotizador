@@ -2,12 +2,12 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : version.js
  Versión       : V 2.0
- Compilación   : 2.11
+ Compilación   : 2.12
  Estado        : ESTABLE
  Descripción   : Control centralizado de versión de la app
 ========================================================= */
 
-const APP_VERSION = "V 2.0 · Compilación 2.11";
+const APP_VERSION = "V 2.0 · Compilación 2.12";
 
 /* Inyecta versión en todos los elementos .app-version */
 document.addEventListener("DOMContentLoaded", () => {
