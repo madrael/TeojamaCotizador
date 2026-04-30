@@ -168,7 +168,7 @@
     "componentId": "CAR0148",
     "ProveedorMarca": "CORPMEGABUSS",     
     "descripcion": "CARROCERIA AK INTERPROVINCIAL 2026/CORPMEGABUSS CIA. LTDA- COLOR 1: ROJO- COLOR 2: BLANCO- NUMERO DE PASAJEROS: 42",
-    "valorPVP": 85217.3900,
+    "valorPVP": 98000,
     "aplicaTipoVehiculo": ["Pesado"],
     "grupoComponente": "Carrocerias",
     "financiable": true,
