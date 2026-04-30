@@ -2,7 +2,7 @@
  * Archivo: ui.js
  * Proyecto: Cotizador Vehículos Teojama
  * Versión: V 2.0
- * Compilación: 2.01
+ * Compilación: 2.02
  * Estado: REORGANIZADO (sin cambios funcionales)
  *************************************************/
 
@@ -565,6 +565,7 @@ btnCalcular?.addEventListener("click", async () => {
       rate: tasaAnual,
       term: Number(appState.plazo) || 0,
       devicePlan: appState.dispositivo ? appState.dispositivo.idPlan : null,
+      deviceRate: appState.dispositivo ? Number(appState.dispositivo.tasaDispositivo) / 100 : 0,
       additionalComponents: appState.componentesSeleccionados || [],
       insuranceSelected: !!appState.incluyeSeguro,
       insuranceTotal: 0,
