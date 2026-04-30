@@ -1,5 +1,5 @@
 /* =================================================
-   CSS BASE REVISADO  V2.0 Compilación 1.90
+   CSS BASE REVISADO  V2.0 Compilación 2.05
 ================================================= */
 
 body {
@@ -548,4 +548,44 @@ p {
   background-color: #eaeef2;
   box-shadow: 0 1px 4px rgba(27,31,36,0.18);
   transform: translateY(-1px);
+}
+
+/* =================================================
+   PRINT TEMPLATE
+================================================= */
+
+@media print {
+
+  /* Ocultar panel izquierdo */
+  .app-left {
+    display: none !important;
+  }
+
+  /* Ocultar header */
+  .app-header,
+  .app-user {
+    display: none !important;
+  }
+
+  /* Ocultar botones */
+  #btnCalcular,
+  .print-icon-btn {
+    display: none !important;
+  }
+
+  /* Expandir contenido derecho */
+  .app-content {
+    display: block;
+    padding: 0;
+  }
+
+  .app-right {
+    width: 100% !important;
+    border: none;
+    box-shadow: none;
+  }
+
+  body {
+    background: white;
+  }
 }
