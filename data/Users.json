@@ -38,6 +38,14 @@
     "nombre": "Javier Trujillo",
     "rol": "ASESOR_COMERCIAL",
     "activo": true
+  },
+  {
+    "id": 5,
+    "username": "cproano  ",
+    "password": "T2026",
+    "nombre": "Cristina Proaño",
+    "rol": "ASESOR_COMERCIAL",
+    "activo": true
   }
 ]
 
