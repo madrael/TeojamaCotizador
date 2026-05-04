@@ -1,38 +1,62 @@
 {
-  "version": "1.0",
-  "iva": 0.15,
+  "version": "2.0",
+  "lastUpdated": "2026-05-04",
   "brokers": {
-    "TECNISEGUROS": {
-      "meta": {
-        "appliesTo": ["LIVIANO"]
-      },
-      "eligibility": {
-        "lucroCesante": {
-          "ageMax": 65,
-          "default": true,
-          "allowOverride": true
-        }
+    "PRV001": {
+      "active": true,
+      "appliesTo": ["Liviano"],
+      "baseField": "PVPSIVA",
+      "depreciationByYear": {
+        "1": 1.000,
+        "2": 0.908,
+        "3": 0.867,
+        "4": 0.828,
+        "5": 0.828,
+        "6": 0.828
       },
       "vehicle": {
-        "ratesByCategory": {
-          "AUTO_SUV": 0.028,
-          "CAMIONETA_DOBLE_CABINA": 0.026
-        },
-        "depreciationByYear": {
-          "1": 1.00,
-          "2": 0.90,
-          "3": 0.85,
-          "4": 0.80,
-          "5": 0.80
-        },
-        "emissionFee": 3.00
+        "defaultRate": 0.0274,
+        "brandRates": {
+          "MG ECUADOR": 0.0274,
+          "MERCEDES-BENZ ECUADOR": 0.0284
+        }
+      }
+    },
+    "PRV002": {
+      "active": true,
+      "appliesTo": ["Pesado"],
+      "baseField": "PVPSIVA",
+      "depreciationByYear": {
+        "1": 1.000,
+        "2": 0.904,
+        "3": 0.861,
+        "4": 0.820,
+        "5": 0.820,
+        "6": 0.820
       },
-      "life": {
-        "rate": 0.003,
-        "emissionFee": 0.50
+      "vehicle": {
+        "defaultRate": 0.0453,
+        "brandRates": {
+          "HINO ECUADOR": 0.0453,
+          "MERCEDES-BENZ ECUADOR": 0.0463
+        }
+      }
+    },
+    "PRV003": {
+      "active": false,
+      "appliesTo": ["Liviano", "Pesado"],
+      "baseField": "PVPSIVA",
+      "depreciationByYear": {
+        "1": 1.000,
+        "2": 0.900,
+        "3": 0.855,
+        "4": 0.812,
+        "5": 0.812,
+        "6": 0.812
       },
-      "lucroCesante": {
-        "annualValue": 180.00
+      "vehicle": {
+        "defaultRate": 0,
+        "brandRates": {}
       }
     }
   }
