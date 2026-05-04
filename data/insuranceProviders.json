@@ -18,7 +18,7 @@
   {
     "providerId": "PRV003",
     "providerName": "PROV TEST",
-    "active": true,
+    "active": false,
     "aplicaTipoVehiculo": [
       { "TipoLinea": "Liviano", "Prioridad": 2 },
       { "TipoLinea": "Pesado", "Prioridad": 2 }
