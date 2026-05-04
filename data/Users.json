@@ -62,6 +62,14 @@
     "nombre": "José Luis Noroña",
     "rol": "ADMIN",
     "activo": true
+  },
+  {
+    "id": 8,
+    "username": "lserna",
+    "password": "Teojama2026",
+    "nombre": "Lady Serna",
+    "rol": "Asesor Comercial",
+    "activo": true
   }
 ]
 
