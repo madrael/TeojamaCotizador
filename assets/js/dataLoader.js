@@ -16,6 +16,7 @@ const cache = {
   rates: null,
   devicePlans: null,
   insuranceProviders: null,
+  insuranceRules: null,
   brokerProducts: null,
   lucroCesanteConfig: null,
   additionalComponents: null
@@ -73,6 +74,16 @@ async function loadInsuranceProviders() {
 }
 
 /**
+ * Reglas de seguro
+ */
+async function loadInsuranceRules() {
+  if (!cache.insuranceRules) {
+    cache.insuranceRules = await loadJson("data/insuranceRules.json");
+  }
+  return cache.insuranceRules;
+}
+
+/**
  * Dispositivos
  */
 async function loadDevicePlans() {
@@ -110,6 +121,7 @@ function clearCache() {
   cache.rates = null;
   cache.devicePlans = null;
   cache.insuranceProviders = null;
+  cache.insuranceRules = null;
   cache.additionalComponents = null;
 }
 
@@ -118,13 +130,15 @@ function clearCache() {
 // =========================================
 async function loadAllData() {
 
-  const vehicles = await loadVehicles();
-  const devicePlans = await loadDevicePlans();
+const vehicles = await loadVehicles();
+const devicePlans = await loadDevicePlans();
+const insuranceRules = await loadInsuranceRules();
 
-  const data = {
-    vehicles,
-    devicePlans
-  };
+const data = {
+  vehicles,
+  devicePlans,
+  insuranceRules
+};
 
   // =====================================
   // INDEXACIÓN
