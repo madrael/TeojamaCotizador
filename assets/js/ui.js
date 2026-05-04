@@ -569,6 +569,7 @@ btnCalcular?.addEventListener("click", async () => {
       deviceRate: appState.dispositivo ? Number(appState.dispositivo.tasaDispositivo) / 100 : 0,
       additionalComponents: appState.componentesSeleccionados || [],
       insuranceSelected: !!appState.incluyeSeguro,
+      insuranceProviderId: getEl("selectInsuranceProvider")?.value || null,
       insuranceTotal: 0,
       lucroCesanteSelected: !!appState.incluyeLucroCesante,
       lucroCesanteAnnual: Number(getEl("selectLucroCesante")?.value) || 0
