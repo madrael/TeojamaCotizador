@@ -419,6 +419,122 @@ function bindFinance() {
 
 document.addEventListener("DOMContentLoaded", bindFinance);
 
+
+// =========================================
+// SEGURO – CÁLCULO DE PRIMAS ANUALES
+// =========================================
+function calcularPrimasSeguroAnuales(input, data, vehicle) {
+
+  if (!input.insuranceSelected) {
+    return {
+      insuranceAnnuals: [],
+      insuranceTotal: 0,
+      brokerRule: null,
+      insuranceRate: 0
+    };
+  }
+
+  const providerId = input.insuranceProviderId;
+  const rules = data?.insuranceRules;
+
+  if (!providerId || !rules?.brokers?.[providerId]) {
+    console.warn("No se encontró regla de seguro para proveedor:", providerId);
+    return {
+      insuranceAnnuals: [],
+      insuranceTotal: 0,
+      brokerRule: null,
+      insuranceRate: 0
+    };
+  }
+
+  const brokerRule = rules.brokers[providerId];
+
+  if (!brokerRule.active) {
+    console.warn("Broker de seguro inactivo:", providerId);
+    return {
+      insuranceAnnuals: [],
+      insuranceTotal: 0,
+      brokerRule,
+      insuranceRate: 0
+    };
+  }
+
+  const tipoVehiculo = vehicle.TipoVehiculo;
+
+  if (
+    Array.isArray(brokerRule.appliesTo) &&
+    !brokerRule.appliesTo.includes(tipoVehiculo)
+  ) {
+    console.warn(`El broker ${providerId} no aplica para ${tipoVehiculo}`);
+    return {
+      insuranceAnnuals: [],
+      insuranceTotal: 0,
+      brokerRule,
+      insuranceRate: 0
+    };
+  }
+
+  const baseField = brokerRule.baseField || "PVPSIVA";
+  const baseSeguro =
+    Number(input.vehicleInsuranceBase) ||
+    Number(vehicle?.[baseField]) ||
+    Number(vehicle?.PVPSIVA) ||
+    0;
+
+  const marca = vehicle.Marca || "";
+  const brandRates = brokerRule.vehicle?.brandRates || {};
+  const defaultRate = Number(brokerRule.vehicle?.defaultRate) || 0;
+
+  const insuranceRate =
+    brandRates[marca] != null
+      ? Number(brandRates[marca])
+      : defaultRate;
+
+  if (!insuranceRate || insuranceRate <= 0) {
+    console.warn("No existe tasa válida para seguro:", {
+      providerId,
+      marca,
+      insuranceRate
+    });
+
+    return {
+      insuranceAnnuals: [],
+      insuranceTotal: 0,
+      brokerRule,
+      insuranceRate: 0
+    };
+  }
+
+  const term = Number(input.term) || 0;
+  const years = Math.ceil(term / 12);
+  const depreciation = brokerRule.depreciationByYear || {};
+
+  const insuranceAnnuals = [];
+
+  for (let y = 1; y <= years; y++) {
+    const factor =
+      depreciation[String(y)] != null
+        ? Number(depreciation[String(y)])
+        : Number(depreciation[String(Object.keys(depreciation).length)]) || 1;
+
+    const primaAnual = baseSeguro * insuranceRate * factor;
+    insuranceAnnuals.push(Number(primaAnual.toFixed(2)));
+  }
+
+  const insuranceTotal = insuranceAnnuals.reduce((acc, val) => {
+    return acc + (Number(val) || 0);
+  }, 0);
+
+  return {
+    insuranceAnnuals,
+    insuranceTotal: Number(insuranceTotal.toFixed(2)),
+    brokerRule,
+    insuranceRate,
+    baseSeguro
+  };
+}
+
+
 // =========================================
 // QUOTE ENGINE (ORQUESTADOR)
 // =========================================
@@ -465,38 +581,27 @@ function calculateQuote(input, data) {
   }
 
   // 6. SEGURO / LUCRO CESANTE
-  let insuranceTotal = 0;
+     const insuranceCalc = calcularPrimasSeguroAnuales(input, data, vehicle);
 
-  const lucroCesanteAnnual =
-    input.insuranceSelected && input.lucroCesanteSelected
-      ? Number(input.lucroCesanteAnnual) || 0
-      : 0;
+   let insuranceTotal = Number(insuranceCalc.insuranceTotal) || 0;
 
-  if (
-    input.insuranceSelected &&
-    Array.isArray(input.insuranceAnnuals) &&
-    input.insuranceAnnuals.length > 0
-  ) {
-    insuranceTotal = input.insuranceAnnuals.reduce((acc, val) => {
-      return acc + (Number(val) || 0);
-    }, 0);
-  }
+   const lucroCesanteAnnual =
+         input.insuranceSelected && input.lucroCesanteSelected
+         ? Number(input.lucroCesanteAnnual) || 0
+    : 0;
 
   // 7. FINANCIAMIENTO
   const rate = Number(input.rate) || 0;
   const term = Number(input.term) || 0;
   const years = Math.ceil(term / 12);
 
-  let segurosAnuales = [];
+ let segurosAnuales = [];
 
-  if (Array.isArray(input.insuranceAnnuals) && input.insuranceAnnuals.length > 0) {
-    segurosAnuales = input.insuranceAnnuals.map(v => Number(v) || 0);
-  } else if (insuranceTotal > 0 && years > 0) {
-    const promedioAnual = insuranceTotal / years;
-    segurosAnuales = Array.from({ length: years }, () => promedioAnual);
-  } else {
-    segurosAnuales = Array.from({ length: years }, () => 0);
-  }
+if (Array.isArray(insuranceCalc.insuranceAnnuals) && insuranceCalc.insuranceAnnuals.length > 0) {
+  segurosAnuales = insuranceCalc.insuranceAnnuals.map(v => Number(v) || 0);
+} else {
+  segurosAnuales = Array.from({ length: years }, () => 0);
+}
 
   const insuranceTotalWithLucro =
     segurosAnuales.reduce((acc, val) => acc + (Number(val) || 0), 0) +
@@ -577,6 +682,13 @@ function calculateQuote(input, data) {
       insuranceTotal: insuranceTotalWithLucro,
       lucroCesanteTotal: lucroCesanteAnnual * years,
       financedAmount
+    },
+      insurance: {
+      providerId: input.insuranceProviderId || null,
+      rate: insuranceCalc.insuranceRate || 0,
+      baseSeguro: insuranceCalc.baseSeguro || 0,
+      annuals: segurosAnuales,
+      totalBase: insuranceTotal
     },
     finance: {
       rate,
