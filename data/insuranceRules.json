@@ -1,6 +1,6 @@
 {
-  "version": "2.0",
-  "lastUpdated": "2026-05-04",
+  "version": "2.1",
+  "lastUpdated": "2026-05-05",
   "brokers": {
     "PRV001": {
       "active": true,
@@ -19,6 +19,14 @@
         "brandRates": {
           "MG ECUADOR": 0.0274,
           "MERCEDES-BENZ ECUADOR": 0.0284
+        },
+        "fees": {
+          "apply": true,
+          "items": {
+            "emision": 0.005,
+            "seguroCampesino": 0.0025,
+            "otros": 0.0025
+          }
         }
       }
     },
@@ -39,6 +47,14 @@
         "brandRates": {
           "HINO ECUADOR": 0.0453,
           "MERCEDES-BENZ ECUADOR": 0.0463
+        },
+        "fees": {
+          "apply": false,
+          "items": {
+            "emision": 0,
+            "seguroCampesino": 0,
+            "otros": 0
+          }
         }
       }
     },
@@ -56,7 +72,11 @@
       },
       "vehicle": {
         "defaultRate": 0,
-        "brandRates": {}
+        "brandRates": {},
+        "fees": {
+          "apply": false,
+          "items": {}
+        }
       }
     }
   }
