@@ -2,7 +2,7 @@
  Proyecto      : Cotizador de Vehículos Teojama
  Archivo       : finance.js
  Versión       : V 2.0
- Compilación   : 1.67
+ Compilación   : 1.68
  Estado        : AJUSTE MODELO FINANCIERO (SEGURO FINANCIADO)
  Descripción   :
    - Seguro anual se financia
@@ -505,22 +505,34 @@ function calcularPrimasSeguroAnuales(input, data, vehicle) {
     };
   }
 
-  const term = Number(input.term) || 0;
-  const years = Math.ceil(term / 12);
-  const depreciation = brokerRule.depreciationByYear || {};
+const term = Number(input.term) || 0;
+const years = Math.ceil(term / 12);
+const depreciation = brokerRule.depreciationByYear || {};
 
-  const insuranceAnnuals = [];
+let feeRate = 0;
 
-  for (let y = 1; y <= years; y++) {
-    const factor =
-      depreciation[String(y)] != null
-        ? Number(depreciation[String(y)])
-        : Number(depreciation[String(Object.keys(depreciation).length)]) || 1;
+const fees = brokerRule.vehicle?.fees;
 
-    const primaAnual = baseSeguro * insuranceRate * factor;
-    insuranceAnnuals.push(Number(primaAnual.toFixed(2)));
-  }
+if (fees?.apply && fees?.items) {
+  feeRate = Object.values(fees.items).reduce((acc, val) => {
+    return acc + (Number(val) || 0);
+  }, 0);
+}
 
+const insuranceAnnuals = [];
+
+for (let y = 1; y <= years; y++) {
+  const factor =
+    depreciation[String(y)] != null
+      ? Number(depreciation[String(y)])
+      : Number(depreciation[String(Object.keys(depreciation).length)]) || 1;
+
+  const primaBase = baseSeguro * insuranceRate * factor;
+  const primaAnual = primaBase * (1 + feeRate);
+
+  insuranceAnnuals.push(Number(primaAnual.toFixed(2)));
+}
+ 
   const insuranceTotal = insuranceAnnuals.reduce((acc, val) => {
     return acc + (Number(val) || 0);
   }, 0);
@@ -531,6 +543,46 @@ function calcularPrimasSeguroAnuales(input, data, vehicle) {
     brokerRule,
     insuranceRate,
     baseSeguro
+  };
+}
+
+// =========================================
+// SEGURO – FINANCIAMIENTO
+// =========================================
+function calcularCreditoSeguro(insuranceTotal, annualRate, term) {
+
+  const capital = Number(insuranceTotal) || 0;
+  const tasaAnual = Number(annualRate) || 0;
+  const plazo = Number(term) || 0;
+
+  if (capital <= 0 || plazo <= 0) {
+    return {
+      monthlyPayment: 0,
+      totalInterest: 0,
+      totalPaid: 0
+    };
+  }
+
+  const tasaMensual = tasaAnual / 100 / 12;
+
+  let cuota = 0;
+
+  if (tasaMensual > 0) {
+    cuota =
+      capital *
+      (tasaMensual * Math.pow(1 + tasaMensual, plazo)) /
+      (Math.pow(1 + tasaMensual, plazo) - 1);
+  } else {
+    cuota = capital / plazo;
+  }
+
+  const totalPagado = cuota * plazo;
+  const totalInteres = totalPagado - capital;
+
+  return {
+    monthlyPayment: Number(cuota.toFixed(2)),
+    totalInterest: Number(totalInteres.toFixed(2)),
+    totalPaid: Number(totalPagado.toFixed(2))
   };
 }
 
@@ -585,6 +637,11 @@ function calculateQuote(input, data) {
 
    let insuranceTotal = Number(insuranceCalc.insuranceTotal) || 0;
 
+ const insuranceCredit = calcularCreditoSeguro(
+  insuranceTotal,
+  input.rate,
+  input.term
+);
    const lucroCesanteAnnual =
          input.insuranceSelected && input.lucroCesanteSelected
          ? Number(input.lucroCesanteAnnual) || 0
