@@ -637,11 +637,6 @@ function calculateQuote(input, data) {
 
    let insuranceTotal = Number(insuranceCalc.insuranceTotal) || 0;
 
- const insuranceCredit = calcularCreditoSeguro(
-  insuranceTotal,
-  input.rate,
-  input.term
-);
    const lucroCesanteAnnual =
          input.insuranceSelected && input.lucroCesanteSelected
          ? Number(input.lucroCesanteAnnual) || 0
