@@ -647,12 +647,12 @@ function calculateQuote(input, data) {
          ? Number(input.lucroCesanteAnnual) || 0
     : 0;
 
-  // 7. FINANCIAMIENTO
-  const rate = Number(input.rate) || 0;
-  const term = Number(input.term) || 0;
-  const years = Math.ceil(term / 12);
+ // 7. FINANCIAMIENTO
+const rate = Number(input.rate) || 0;
+const term = Number(input.term) || 0;
+const years = Math.ceil(term / 12);
 
- let segurosAnuales = [];
+let segurosAnuales = [];
 
 if (Array.isArray(insuranceCalc.insuranceAnnuals) && insuranceCalc.insuranceAnnuals.length > 0) {
   segurosAnuales = insuranceCalc.insuranceAnnuals.map(v => Number(v) || 0);
@@ -660,116 +660,128 @@ if (Array.isArray(insuranceCalc.insuranceAnnuals) && insuranceCalc.insuranceAnnu
   segurosAnuales = Array.from({ length: years }, () => 0);
 }
 
-  const insuranceTotalWithLucro =
-    segurosAnuales.reduce((acc, val) => acc + (Number(val) || 0), 0) +
-    (lucroCesanteAnnual * years);
+const insuranceTotalWithLucro =
+  segurosAnuales.reduce((acc, val) => acc + (Number(val) || 0), 0) +
+  (lucroCesanteAnnual * years);
 
-  const financedAmount = baseAmount + deviceTotal + insuranceTotalWithLucro;
+const financedAmount = baseAmount + deviceTotal + insuranceTotalWithLucro;
 
-  const cuotaVehiculoMensual = cuotaFrancesa(baseAmount, rate, term);
-  const totalVehiculoPayable = cuotaVehiculoMensual * term;
-  const interesVehiculo = totalVehiculoPayable - baseAmount;
+const cuotaVehiculoMensual = cuotaFrancesa(baseAmount, rate, term);
+const totalVehiculoPayable = cuotaVehiculoMensual * term;
+const interesVehiculo = totalVehiculoPayable - baseAmount;
 
-  const deviceRate = Number(input.deviceRate) || rate;
-  const cuotaDispositivoMensual = cuotaFrancesa(deviceTotal, deviceRate, term);
-  const totalDispositivoPayable = cuotaDispositivoMensual * term;
-  const interesDispositivo = totalDispositivoPayable - deviceTotal;
+const deviceRate = Number(input.deviceRate) || rate;
+const cuotaDispositivoMensual = cuotaFrancesa(deviceTotal, deviceRate, term);
+const totalDispositivoPayable = cuotaDispositivoMensual * term;
+const interesDispositivo = totalDispositivoPayable - deviceTotal;
 
-  const cuotaSeguroMensualBase = cuotaFrancesa(insuranceTotalWithLucro, rate, term);
-  const totalSeguroPayable = cuotaSeguroMensualBase * term;
-  const interesSeguro = totalSeguroPayable - insuranceTotalWithLucro;
+// Seguro financiado como crédito independiente
+const insuranceCredit = calcularCreditoSeguro(
+  insuranceTotalWithLucro,
+  rate,
+  term
+);
 
-  const yearlySummary = [];
+const cuotaSeguroMensualBase = insuranceCredit.monthlyPayment;
+const totalSeguroPayable = insuranceCredit.totalPaid;
+const interesSeguro = insuranceCredit.totalInterest;
 
-  for (let y = 1; y <= years; y++) {
-    const seguroAnualBase = Number(segurosAnuales[y - 1]) || 0;
-    const seguroAnual = seguroAnualBase + lucroCesanteAnnual;
-    const cuotaSeguroMensual = seguroAnual / 12;
+const yearlySummary = [];
 
-    const cuotaTotalMensual =
-      cuotaVehiculoMensual +
-      cuotaDispositivoMensual +
-      cuotaSeguroMensual;
+for (let y = 1; y <= years; y++) {
+  const seguroAnualBase = Number(segurosAnuales[y - 1]) || 0;
+  const seguroAnual = seguroAnualBase + lucroCesanteAnnual;
 
-    yearlySummary.push({
-      year: y,
-      seguroAnualBase,
-      lucroCesanteAnnual,
-      seguroAnual,
-      cuotaVehiculo: cuotaVehiculoMensual,
-      cuotaDispositivo: cuotaDispositivoMensual,
-      cuotaSeguro: cuotaSeguroMensual,
-      cuotaTotalMensual
-    });
-  }
+  // SAP no prorratea la póliza; la financia.
+  const cuotaSeguroMensual = cuotaSeguroMensualBase;
 
-  const monthlyPayment =
+  const cuotaTotalMensual =
     cuotaVehiculoMensual +
     cuotaDispositivoMensual +
-    cuotaSeguroMensualBase;
+    cuotaSeguroMensual;
 
-  const totalPayable =
-    totalVehiculoPayable +
-    totalDispositivoPayable +
-    totalSeguroPayable;
-
-  const totalInterest =
-    interesVehiculo +
-    interesDispositivo +
-    interesSeguro;
-
-  return {
-    vehicle: {
-      itemCode: vehicle.ItemCode,
-      modelo: vehicle.Modelo,
-      versionModelo: vehicle.VersionModelo || vehicle["Version Modelo"] || "",
-      marca: vehicle.Marca,
-      tipoVehiculo: vehicle.TipoVehiculo,
-      pvp: vehiclePrice,
-      idClase: vehicle.IdClase,
-      idSubClase: vehicle.IdSubClase
-    },
-    breakdown: {
-      vehiclePrice,
-      componentsTotal,
-      vehicleCreditValue,
-      entry,
-      baseAmount,
-      deviceTotal,
-      insuranceTotal: insuranceTotalWithLucro,
-      lucroCesanteTotal: lucroCesanteAnnual * years,
-      financedAmount
-    },
-      insurance: {
-      providerId: input.insuranceProviderId || null,
-      rate: insuranceCalc.insuranceRate || 0,
-      baseSeguro: insuranceCalc.baseSeguro || 0,
-      annuals: segurosAnuales,
-      totalBase: insuranceTotal
-    },
-    finance: {
-      rate,
-      term,
-      years,
-      monthlyPayment,
-      totalInterest,
-      totalPayable,
-      vehicle: {
-        monthly: cuotaVehiculoMensual,
-        total: totalVehiculoPayable,
-        interest: interesVehiculo
-      },
-      device: {
-        monthly: cuotaDispositivoMensual,
-        total: totalDispositivoPayable,
-        interest: interesDispositivo
-      },
-      insurance: {
-        monthly: cuotaSeguroMensualBase,
-        total: totalSeguroPayable,
-        interest: interesSeguro
-      }
-    },
-    yearlySummary
-  };
+  yearlySummary.push({
+    year: y,
+    seguroAnualBase,
+    lucroCesanteAnnual,
+    seguroAnual,
+    cuotaVehiculo: cuotaVehiculoMensual,
+    cuotaDispositivo: cuotaDispositivoMensual,
+    cuotaSeguro: cuotaSeguroMensual,
+    cuotaTotalMensual
+  });
 }
+
+const monthlyPayment =
+  cuotaVehiculoMensual +
+  cuotaDispositivoMensual +
+  cuotaSeguroMensualBase;
+
+const totalPayable =
+  totalVehiculoPayable +
+  totalDispositivoPayable +
+  totalSeguroPayable;
+
+const totalInterest =
+  interesVehiculo +
+  interesDispositivo +
+  interesSeguro;
+
+return {
+  vehicle: {
+    itemCode: vehicle.ItemCode,
+    modelo: vehicle.Modelo,
+    versionModelo: vehicle.VersionModelo || vehicle["Version Modelo"] || "",
+    marca: vehicle.Marca,
+    tipoVehiculo: vehicle.TipoVehiculo,
+    pvp: vehiclePrice,
+    idClase: vehicle.IdClase,
+    idSubClase: vehicle.IdSubClase
+  },
+  breakdown: {
+    vehiclePrice,
+    componentsTotal,
+    vehicleCreditValue,
+    entry,
+    baseAmount,
+    deviceTotal,
+    insuranceTotal: insuranceTotalWithLucro,
+    lucroCesanteTotal: lucroCesanteAnnual * years,
+    financedAmount
+  },
+  insurance: {
+    providerId: input.insuranceProviderId || null,
+    rate: insuranceCalc.insuranceRate || 0,
+    baseSeguro: insuranceCalc.baseSeguro || 0,
+    annuals: segurosAnuales,
+    totalBase: insuranceTotal,
+    totalWithLucro: insuranceTotalWithLucro,
+    monthlyPayment: cuotaSeguroMensualBase,
+    totalInterest: interesSeguro,
+    totalPaid: totalSeguroPayable
+  },
+  finance: {
+    rate,
+    term,
+    years,
+    monthlyPayment,
+    totalInterest,
+    totalPayable,
+    vehicle: {
+      monthly: cuotaVehiculoMensual,
+      total: totalVehiculoPayable,
+      interest: interesVehiculo
+    },
+    device: {
+      monthly: cuotaDispositivoMensual,
+      total: totalDispositivoPayable,
+      interest: interesDispositivo
+    },
+    insurance: {
+      monthly: cuotaSeguroMensualBase,
+      total: totalSeguroPayable,
+      interest: interesSeguro
+    }
+  },
+  yearlySummary
+};
