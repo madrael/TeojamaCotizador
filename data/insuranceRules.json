@@ -3,33 +3,33 @@
   "lastUpdated": "2026-05-05",
   "brokers": {
     "PRV001": {
-      "active": true,
-      "appliesTo": ["Liviano"],
-      "baseField": "PVPSIVA",
-      "depreciationByYear": {
-        "1": 1.000,
-        "2": 0.908,
-        "3": 0.867,
-        "4": 0.828,
-        "5": 0.828,
-        "6": 0.828
-      },
-      "vehicle": {
-        "defaultRate": 0.0274,
-        "brandRates": {
-          "MG ECUADOR": 0.0274,
-          "MERCEDES-BENZ ECUADOR": 0.0284
-        },
-        "fees": {
-          "apply": true,
-          "items": {
-            "emision": 0.005,
-            "seguroCampesino": 0.0025,
-            "otros": 0.0025
-          }
-        }
-      }
+  "active": true,
+  "appliesTo": ["Liviano"],
+  "baseField": "PVPSIVA",
+  "depreciationByYear": {
+    "1": 1.0000,
+    "2": 0.9096,
+    "3": 0.8690,
+    "4": 0.8307,
+    "5": 0.8307,
+    "6": 0.8307
+  },
+  "vehicle": {
+    "defaultRate": 0.039635,
+    "brandRates": {
+      "MG ECUADOR": 0.039635,
+      "MERCEDES-BENZ ECUADOR": 0.040635
     },
+    "fees": {
+      "apply": true,
+      "items": {
+        "emision": 0.005,
+        "seguroCampesino": 0.0025,
+        "otros": 0.0025
+      }
+    }
+  }
+},
     "PRV002": {
       "active": true,
       "appliesTo": ["Pesado"],
